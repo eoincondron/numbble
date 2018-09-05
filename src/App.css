@@ -1,0 +1,92 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+.table {
+  background-color: #999999;
+  color: rgb(240, 200, 200);
+  align-content: center;
+  height: 500px;
+  width: 500px;
+
+}
+.block {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  text-align: center;
+  font: 25px bold; 
+  color: black;
+}
+.num_tile {
+  background-color: yellow;
+  z-index: 0; 
+}
+.op_tile {
+  background-color: #eeeeee;
+  margin-right: 10px;
+  z-index: 1; 
+}
+.spacer {
+  background-color: transparent;
+  z-index: 0; 
+
+}
+.reset_tile {
+  background-color: #ccffcc;
+  width: 60px;
+  height: 30px;
+  font: 5px;
+}
+.equation {
+  background-color: #ccffcc;
+  text-align: center;
+  width: 250px;
+  height: 40px;
+  font: 8px;
+  top: 450px;
+}
+
+.brackets {
+  background-color: yellow; 
+  font: 35px bold;
+  text-align: top;
+}
+
+.play {
+  background-color: red; 
+  font: 25px bold;
+  text-align: center;
+  width: 60px;
+  height: 30px;
+}
+
+
+
+
