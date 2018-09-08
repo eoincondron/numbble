@@ -68,7 +68,18 @@ function OpTile(props) {
     </button>
   );
 }
-//
+// ==================================== ===
+
+
+function BracketTile(props) {
+  return (
+    <div className='bracket_tile block' style={props.style} onClick={props.onClick}>
+      '( )'
+    </div>
+    );
+}
+
+
 function ResetTile(props) {
   return (
     <button className="reset_tile" style={props.style} onClick={props.onClick}>
