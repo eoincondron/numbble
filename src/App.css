@@ -48,6 +48,10 @@
   background-color: yellow;
   z-index: 0; 
 }
+.bracket_tile {
+  background-color: yellow;
+  z-index: 0; 
+}
 .op_tile {
   background-color: #eeeeee;
   margin-right: 10px;
