@@ -199,6 +199,25 @@ class Board extends Component {
        style={{
           top: NUM_LINE_TOP + 'px', 
           left: left + 'px'}}
+       onClick={
+        () => this.handleNumClick(i)}
+    />
+    );
+  }
+
+  handleNumClick (i) {
+    let bstate = this.state.bracket_state;
+    let assgn = this.bracket_assignments.slice(); 
+    assgn[i] = this.state.bracket_state; 
+    if (bstate === 1) {
+        bstate = 2; 
+    } else if (bstate === 2) {
+        bstate = 0; 
+    }
+    this.setState({bracket_assignments: assgn, bracket_state: bstate})
+    log(bstate)
+  }
+
     />
     );
   }
