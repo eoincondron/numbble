@@ -143,6 +143,7 @@ class Board extends Component {
 
     let op_assignments = Array(N_OPS).fill(-1); 
     let space_contents = Array(N_TILES - 1).fill(0); 
+    let bracket_assignments = Array(N_TILES).fill(0);
 
     this.state = {
       numbers: numbers,
@@ -150,7 +151,9 @@ class Board extends Component {
       active_op: -1, 
       op_assignments: op_assignments,      // map from operation to space
       space_contents: space_contents,     // record of adjacent numbers to be joined
-      equation: ''
+      bracket_assignments: bracket_assignments,
+      equation: '',
+      bracket_state: 0
     };
   }
   //
