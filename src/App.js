@@ -156,7 +156,21 @@ class Board extends Component {
       bracket_state: 0
     };
   }
-  //
+
+  renderState () {
+    return (
+      <div>
+        State 
+        op flags this.state.op_assignments
+    // log('space contents' + this.state.space_contents)
+    // log('active op' + this.state.active_op)
+    // let eq = build_equation(this.state.numbers, this.state.space_contents);
+    // log('equation ' + eq)
+    // var objs = [];  
+    </div>
+  }
+
+  // NUM TILES
   renderNumTile(i) {
     let left = LEFT_MARGIN + 2*i*TILE_WIDTH; 
 
