@@ -173,6 +173,8 @@ class Board extends Component {
   // NUM TILES
   renderNumTile(i) {
     let left = LEFT_MARGIN + 2*i*TILE_WIDTH; 
+    let num = this.state.numbers[i];
+    let value = '';
 
     if (this.state.space_contents[i] == 'join') {
       left = left + TILE_WIDTH / 2; 
@@ -180,9 +182,20 @@ class Board extends Component {
     } else if (this.state.space_contents[i - 1] == 'join') {
       left = left - TILE_WIDTH / 2;
     }
+
+    if (this.state.bracket_assignments[i] === 1) {
+      value = '(' + num
+    }
+    else if (this.state.bracket_assignments[i] === 2) {
+      value = num + ')'
+    }
+    else {
+      value = num
+    }
+
     return (
     <NumTile 
-       value={this.state.numbers[i]}
+       value={value}
        style={{
           top: NUM_LINE_TOP + 'px', 
           left: left + 'px'}}
