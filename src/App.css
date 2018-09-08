@@ -88,7 +88,8 @@
   font: 25px bold;
   text-align: center;
   width: 60px;
-  height: 30px;
+  height: 30px
+  right 0;
 }
 
 
