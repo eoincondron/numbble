@@ -218,9 +218,43 @@ class Board extends Component {
     log(bstate)
   }
 
+  // BRACKETS TILES
+  renderBracketTile(i) {
+    var top = OP_LINE_TOP + 2 * TILE_WIDTH; 
+    let left = _get_spacer_position(0) - 2 * TILE_WIDTH;
+    
+    if (this.state.bracket_state > 0) {
+      top = top - 10;  // make it stand out
+    }
+
+    return (<OpTile 
+       style={{
+          top: top + 'px', 
+          left: left + 'px', 
+        }}
+       onClick={
+          () => this.handleBracketClick() 
+       }
     />
     );
   }
+  //
+  handleBracketClick () {
+    let bstate = this.state.bracket_state; 
+    if (bstate === 0) {
+      bstate = 1;
+    } else {
+      bstate = 0;
+    }
+    this.setState({bracket_state: bstate})
+  }
+
+  handleResetClick () {
+    this.setState({op_assignments: Array(N_OPS).fill(-1)})
+    this.setState({space_contents: Array(N_TILES - 1).fill(0)})
+    this.setState({active_op: -1}); 
+  }
+
 
   // OP TILES
   renderOpTile(i) {
