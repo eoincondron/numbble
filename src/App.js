@@ -410,6 +410,7 @@ class Board extends Component {
   objs.push(this.renderReset()); 
   objs.push(this.renderEquation()); 
   objs.push(this.renderPlay()); 
+  objs.push(this.renderBracketTile()); 
 
     return (
       <div className="table">
