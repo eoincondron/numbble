@@ -176,10 +176,9 @@ class Board extends Component {
     let num = this.state.numbers[i];
     let value = '';
 
-    if (this.state.space_contents[i] == 'join') {
+    if (this.state.space_contents[i] === 'join') {
       left = left + TILE_WIDTH / 2; 
-      log('shifting ' + i + ' right')
-    } else if (this.state.space_contents[i - 1] == 'join') {
+    } else if (this.state.space_contents[i - 1] === 'join') {
       left = left - TILE_WIDTH / 2;
     }
 
