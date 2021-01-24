@@ -84,7 +84,7 @@ function BracketTile(props) {
 function ResetTile(props) {
     return (
         <button className="reset_tile" style={props.style} onClick={props.onClick}>
-            'Reset'
+            Reset
         </button>
     );
 }
@@ -105,7 +105,7 @@ function Equation(props) {
 function PlayButton(props) {
     return (
         <div className='play button' onClick={props.onClick}>
-            'Play'
+            Play
         </div>
     );
 }
