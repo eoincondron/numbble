@@ -22,7 +22,7 @@ var OPERATIONS_MAP = {
   '-': ' - ', 
   '%': ' / ', 
   'X': ' * ', 
-  '=': ' == '
+  '=': ' === '
 };
 
 var equation = [];
@@ -267,7 +267,7 @@ class Board extends Component {
         top = NUM_LINE_TOP; 
         left = _get_spacer_position(assigned_space); 
         log('assigned_space ' + assigned_space)
-    } else if (this.state.active_op == i) {
+    } else if (this.state.active_op === i) {
       bg_color = ACTIVE_OP_TILE_COLOR;
       top = OP_LINE_TOP - 10;  // make it stand out
     }
@@ -298,7 +298,7 @@ class Board extends Component {
       ops[i] = -1;
     }
     // deactivate if activated
-    if (this.state.active_op == i) {
+    if (this.state.active_op === i) {
       this.setState({active_op: -1});        
     } 
     // activate
@@ -324,23 +324,23 @@ class Board extends Component {
   //
   handleSpaceClick (i) {
     log('clicked space ' + i)
-    const sc = this.state.space_contents.slice(); 
+    const space_contents = this.state.space_contents.slice(); 
     // Cancel join if joined
-    if (this.state.space_contents[i] == 'join') {
-      sc[i] = 0; 
+    if (this.state.space_contents[i] === 'join') {
+      space_contents[i] = 0; 
     } 
     // Join if no operator is active
-    else if (this.state.active_op == -1) {
-      sc[i] = 'join'; 
+    else if (this.state.active_op === -1) {
+      space_contents[i] = 'join'; 
     // assign this space to active operator
   }
     else {
       const ops = this.state.op_assignments.slice(); 
       ops[this.state.active_op] = i; 
       this.setState({op_assignments: ops});
-      sc[i] = this.state.operators[this.state.active_op];   // add operator to space contents; 
+      space_contents[i] = this.state.operators[this.state.active_op];   // add operator to space contents; 
     }
-    this.setState({space_contents: sc});
+    this.setState({space_contents: space_contents});
   }
 
   renderReset () {
@@ -471,7 +471,7 @@ function build_equation (numbers, space_contents) {
     }
     sc = space_contents[i]
     if (i < n - 1) {
-      if (sc == 0) {
+      if (sc === 0) {
         if (started) {
           finished = true 
         } else {
@@ -481,7 +481,7 @@ function build_equation (numbers, space_contents) {
       else if (finished) {
         return ''// Equation contains gaps
       }
-      else if (sc != 'join') {
+      else if (sc !== 'join') {
         equation += OPERATIONS_MAP[sc];     // add operator
         started = true;  
       } 

@@ -17,7 +17,7 @@ var OPERATIONS_MAP = {
 	'-': ' - ', 
 	'%': ' / ', 
 	'X': ' * ', 
-	'=': ' == '
+	'=': ' === '
 };
 
 var equation = [];
@@ -45,7 +45,7 @@ function update_number(tile) {
 
 
 function update_operation(tile) {
-	if (get_tile_number(tile) == op_tiles.length) {
+	if (get_tile_number(tile) === op_tiles.length) {
 		tile.innerHTML = '=';
 	} else {
 		tile.innerHTML = OPERATIONS[random_digit(OPERATIONS.length)];
@@ -138,16 +138,16 @@ function build_equation (numbers, space_contents) {
 		equation += numbers[i]
 		sc = space_contents[i]
 		if (i < n - 1) {
-			if (sc == 0 && started) {
+			if (sc === 0 && started) {
 				return equation
-			} else if (sc != 'join') {
+			} else if (sc !== 'join') {
 				equation += sc;     // add operator
 				started = 1; 
 			} 
 			// otherwise we have join in which case we just continue as the next number is appended on the next iterations
 		}
 	}
-	if (started == 1) {
+	if (started === 1) {
 		return equation
 	}
 	else {
@@ -165,7 +165,7 @@ function play () {
 	var op = '';
 
 	for (i = 1; i < 6; i++) {
-		if (equation[2*i - 1] != undefined) {
+		if (equation[2*i - 1] !== undefined) {
 			filled[i] = true;
 			if (first && !filled[i - 1]) {
 				alert('No gaps allowed in equation!'); 
@@ -180,10 +180,10 @@ function play () {
 		eq += equation[2*(i - 1)];
 		op = equation[2*i - 1]; 
 		eq += op;
-		if (op == OPERATIONS_MAP['=']) {
+		if (op === OPERATIONS_MAP['=']) {
 			has_equals = true;
 		}
-		if (i == last) {
+		if (i === last) {
 			eq += equation[2*i];
 		}
 	}
@@ -197,7 +197,7 @@ function play () {
 		alert("Well done!");
 		for (i = first; i <= last; i++) {
 			set_numtile(num_tiles[i - 1]);
-			if (i == last) {
+			if (i === last) {
 				set_numtile(num_tiles[i]);
 			}
 		reset_played();
@@ -256,7 +256,7 @@ function activate_block () {
 
 
 function deactivate_current_block () {
-	if (active_block_id != "") {
+	if (active_block_id !== "") {
 		let elem = document.getElementById(active_block_id);
 		elem.style.backgroundColor = OP_TILE_COLOR;
 		active_block_id = "";
@@ -345,7 +345,7 @@ function deactivate_brackets () {
 
 function add_bracket () {
 	var tile = document.getElementById('brackets');
-	if (bracket_flag == 0) {
+	if (bracket_flag === 0) {
 		this.innerHTML = '(' + this.innerHTML;
 		bracket_flag = 1;
 		tile.innerHTML = ' )'
