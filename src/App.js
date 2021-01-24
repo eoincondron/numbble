@@ -388,14 +388,14 @@ class Board extends Component {
     log('equation ' + eq)
     var objs = [];  
 
-  for (var i = 0; i < N_TILES; i++) {
-      objs.push(this.renderNumTile(i));
+  for (var tile_num = 0; tile_num < N_TILES; tile_num++) {
+      objs.push(this.renderNumTile(tile_num));
   }
-  for (var i = 0; i <= N_OPS; i++) {
-      objs.push(this.renderOpTile(i));
+  for (var tile_num = 0; tile_num <= N_OPS; tile_num++) {
+      objs.push(this.renderOpTile(tile_num));
   }  
-  for (var i = 0; i < N_TILES - 1; i++) {
-      objs.push(this.renderSpacer(i));
+  for (var tile_num = 0; tile_num < N_TILES - 1; tile_num++) {
+      objs.push(this.renderSpacer(tile_num));
   }
 
   objs.push(this.renderReset()); 
