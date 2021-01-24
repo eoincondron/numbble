@@ -31,7 +31,6 @@ var bracket_flag = 0;
 let log = console.log;
 
 
-
 function random_digit(max) {
   return Math.floor(Math.random() * max);
 }
@@ -127,7 +126,6 @@ class Board extends Component {
     this.populate_board()
 
   }
-
 
   populate_board () {
     let numbers = Array(N_TILES);
@@ -247,13 +245,6 @@ class Board extends Component {
     }
     this.setState({bracket_state: bstate})
   }
-
-  handleResetClick () {
-    this.setState({op_assignments: Array(N_OPS).fill(-1)})
-    this.setState({space_contents: Array(N_TILES - 1).fill(0)})
-    this.setState({active_op: -1}); 
-  }
-
 
   // OP TILES
   renderOpTile(i) {
