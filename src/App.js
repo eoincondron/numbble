@@ -95,7 +95,7 @@ function ResetTile(props) {
 function Equation(props) {
     return (
         <div className="equation">
-            {props.equation}
+            Equation: {props.equation}
         </div>
     );
 }
