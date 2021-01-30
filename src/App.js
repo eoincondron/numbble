@@ -128,8 +128,7 @@ class Board extends Component {
 
     constructor(props) {
         super(props);
-        this.populate_board()
-
+        this.state = this.populate_board()
     }
 
     populate_board() {
@@ -150,7 +149,7 @@ class Board extends Component {
         let space_contents = Array(N_TILES - 1).fill(0);
         let bracket_assignments = Array(N_TILES).fill(0);
 
-        this.state = {
+        return {
             numbers: numbers,
             operators: operators,
             active_op: -1,
@@ -370,12 +369,11 @@ class Board extends Component {
         let eq = build_equation(this.state.numbers, this.state.space_contents);
         if (eval(eq)) {
             alert(eq + " is correct. Well done !");
-            this.populate_board();
+            this.setState(this.populate_board());
         } else {
             alert("Sorry, the equation is invalid: " + eq);
         }
     }
-
 
     render() {
         log('op flags' + this.state.op_assignments)
