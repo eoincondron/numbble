@@ -9,14 +9,14 @@ let N_TILES = 6;
 let N_OPS = 6;
 let JOINED = N_OPS;
 
-var OP_TILE_COLOR = '#cccccc';
-var ACTIVE_OP_TILE_COLOR = '#cfcccc';
-var LEFT_MARGIN = 100;
-var TILE_WIDTH = 30;
-var NUM_LINE_TOP = 250;
-var OP_LINE_TOP = 350;
-var OPERATIONS = ['+', '+', '-', '-', '%', 'X'];
-var OPERATIONS_MAP = {
+let OP_TILE_COLOR = '#cccccc';
+let ACTIVE_OP_TILE_COLOR = '#cfcccc';
+let LEFT_MARGIN = 100;
+let TILE_WIDTH = 30;
+let NUM_LINE_TOP = 250;
+let OP_LINE_TOP = 350;
+let OPERATIONS = ['+', '+', '-', '-', '%', 'X'];
+let OPERATIONS_MAP = {
     '+': ' + ',
     '-': ' - ',
     '%': ' / ',
@@ -24,8 +24,8 @@ var OPERATIONS_MAP = {
     '=': ' === '
 };
 
-var equation = [];
-var bracket_flag = 0;
+let equation = [];
+let bracket_flag = 0;
 
 let log = console.log;
 
@@ -207,9 +207,10 @@ class Board extends Component {
         log(bstate)
     }
 
+
     // BRACKETS TILES
     renderBracketTile(i) {
-        var top = OP_LINE_TOP + 2 * TILE_WIDTH;
+        let top = OP_LINE_TOP + 2 * TILE_WIDTH;
         let left = _get_spacer_position(0) - 2 * TILE_WIDTH;
 
         if (this.state.bracket_state > 0) {
@@ -381,15 +382,15 @@ class Board extends Component {
         log('active op' + this.state.active_op)
         let eq = build_equation(this.state.numbers, this.state.space_contents);
         log('equation ' + eq)
-        var objs = [];
+        let objs = [];
 
-        for (var tile_num = 0; tile_num < N_TILES; tile_num++) {
+        for (let tile_num = 0; tile_num < N_TILES; tile_num++) {
             objs.push(this.renderNumTile(tile_num));
         }
-        for (var tile_num = 0; tile_num <= N_OPS; tile_num++) {
+        for (let tile_num = 0; tile_num <= N_OPS; tile_num++) {
             objs.push(this.renderOpTile(tile_num));
         }
-        for (var tile_num = 0; tile_num < N_TILES - 1; tile_num++) {
+        for (let tile_num = 0; tile_num < N_TILES - 1; tile_num++) {
             objs.push(this.renderSpacer(tile_num));
         }
 
@@ -439,13 +440,12 @@ export default Game;
 
 function build_equation(numbers, space_contents) {
     let equation = '';
-    var sc;
-    var i;
+    let sc;
+    let i;
     let n = numbers.length;
     let started = false;
     let finished = false;
     let has_equals = false;
-
 
     for (i = 0; i < n; i++) {
         if (!finished) {
