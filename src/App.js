@@ -75,7 +75,7 @@ function OpTile(props) {
 function BracketTile(props) {
     return (
         <div className='bracket_tile block' style={props.style} onClick={props.onClick}>
-            '( )'
+            ( )
         </div>
     );
 }
@@ -195,18 +195,17 @@ class Board extends Component {
     }
 
     handleNumClick(i) {
-        let bstate = this.state.bracket_state;
+        let bracket_state = this.state.bracket_state;
         let assgn = this.bracket_assignments.slice();
         assgn[i] = this.state.bracket_state;
-        if (bstate === 1) {
-            bstate = 2;
-        } else if (bstate === 2) {
-            bstate = 0;
+        if (bracket_state === 1) {
+            bracket_state = 2;
+        } else if (bracket_state === 2) {
+            bracket_state = 0;
         }
-        this.setState({bracket_assignments: assgn, bracket_state: bstate})
-        log(bstate)
+        this.setState({bracket_assignments: assgn, bracket_state: bracket_state})
+        log(bracket_state)
     }
-
 
     // BRACKETS TILES
     renderBracketTile(i) {
@@ -217,7 +216,7 @@ class Board extends Component {
             top = top - 10;  // make it stand out
         }
 
-        return (<OpTile
+        return (<BracketTile
                 style={{
                     top: top + 'px',
                     left: left + 'px',
@@ -231,13 +230,13 @@ class Board extends Component {
 
     //
     handleBracketClick() {
-        let bstate = this.state.bracket_state;
-        if (bstate === 0) {
-            bstate = 1;
+        let bracket_state = this.state.bracket_state;
+        if (bracket_state === 0) {
+            bracket_state = 1;
         } else {
-            bstate = 0;
+            bracket_state = 0;
         }
-        this.setState({bracket_state: bstate})
+        this.setState({bracket_state: bracket_state})
     }
 
     // OP TILES
