@@ -463,11 +463,15 @@ function build_equation(numbers, space_contents) {
             } else if (sc !== 'join') {
                 equation += OPERATIONS_MAP[sc];     // add operator
                 started = true;
+                if (sc === '=') {
+                    has_equals = true;
+                }
             }
-            // otherwise we have join in which case we just continue as the next number is appended on the next iterations
+            // otherwise we have join in which case we just continue as
+            // the next number is appended on the next iterations
         }
     }
-    if (started) {
+    if (started & has_equals) {
         return equation
     } else {
         return ''
