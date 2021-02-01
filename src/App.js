@@ -107,12 +107,6 @@ function PlayButton(props) {
 
 //  =================================== ===
 
-function State(props) {
-    return (
-        <div>
-            Op Assignments {props.op_assignments}
-        </div>)
-}
 
 // Tile movements are managed as follows; 
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
