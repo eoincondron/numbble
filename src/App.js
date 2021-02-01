@@ -16,6 +16,8 @@ let TILE_WIDTH = 30;
 let NUM_LINE_TOP = 250;
 let OP_LINE_TOP = 350;
 let OPERATIONS = ['+', '+', '-', '-', '/', 'X'];
+const JOIN = 'join';
+
 
 let equation = [];
 let bracket_flag = 0;
@@ -160,9 +162,9 @@ class Board extends Component {
         let num = this.state.numbers[i];
         let value = '';
 
-        if (this.state.space_contents[i] === 'join') {
+        if (this.state.space_contents[i] === JOIN) {
             left = left + TILE_WIDTH / 2;
-        } else if (this.state.space_contents[i - 1] === 'join') {
+        } else if (this.state.space_contents[i - 1] === JOIN) {
             left = left - TILE_WIDTH / 2;
         }
 
@@ -305,12 +307,12 @@ class Board extends Component {
         log('clicked space ' + i)
         const space_contents = this.state.space_contents.slice();
         // Cancel join if joined
-        if (this.state.space_contents[i] === 'join') {
+        if (this.state.space_contents[i] === JOIN) {
             space_contents[i] = 0;
         }
         // Join if no operator is active
         else if (this.state.active_op === -1) {
-            space_contents[i] = 'join';
+            space_contents[i] = JOIN;
             // assign this space to active operator
         } else {
             const ops = this.state.op_assignments.slice();
@@ -454,8 +456,8 @@ function build_equation(numbers, space_contents) {
                 }
             } else if (finished) {
                 return ''// Equation contains gaps
-            } else if (sc !== 'join') {
-                equation += OPERATIONS_MAP[sc];     // add operator
+            } else if (sc !== JOIN) {
+                equation += sc;     // add operator
                 started = true;
                 if (sc === '=') {
                     has_equals = true;
