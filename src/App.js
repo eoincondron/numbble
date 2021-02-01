@@ -143,7 +143,7 @@ class Board extends Component {
             operators: operators,
             active_op: -1,
             op_assignments: op_assignments,      // map from operation to space
-            space_contents: space_contents,     // record of adjacent numbers to be joined
+            space_contents: space_contents,     // record of adjacent numbers to be joined and placement of operations
             bracket_assignments: bracket_assignments,
             equation: '',
             bracket_state: 0
@@ -263,12 +263,15 @@ class Board extends Component {
 
     //
     handleOpClick(i) {
-        const ops = this.state.op_assignments.slice()
+        const op_assignments = this.state.op_assignments.slice()
+        const space_contents = this.state.space_contents.slice()
+        const assignment = op_assignments[i];
 
         log('clicked op ' + i)
         // reset if assigned
-        if (ops[i] > -1) {
-            ops[i] = -1;
+        if (assignment > -1) {
+            op_assignments[i] = -1;
+            space_contents[assignment] = 0
         }
         // deactivate if activated
         if (this.state.active_op === i) {
@@ -278,7 +281,7 @@ class Board extends Component {
         else {
             this.setState({active_op: i});
         }
-        this.setState({op_assignments: ops})
+        this.setState({op_assignments: op_assignments, space_contents: space_contents})
     }
 
 
@@ -306,12 +309,12 @@ class Board extends Component {
         }
         // Join if no operator is active
         else if (this.state.active_op === -1) {
-            space_contents[i] = JOIN;
-            // assign this space to active operator
+            space_contents[i] = JOIN
         } else {
-            const ops = this.state.op_assignments.slice();
-            ops[this.state.active_op] = i;
-            this.setState({op_assignments: ops});
+            // assign this space to active operator
+            const op_assignments = this.state.op_assignments.slice();
+            op_assignments[this.state.active_op] = i;
+            this.setState({op_assignments: op_assignments});
             space_contents[i] = this.state.operators[this.state.active_op];   // add operator to space contents;
         }
         this.setState({space_contents: space_contents});
