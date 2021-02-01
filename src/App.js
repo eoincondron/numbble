@@ -173,22 +173,22 @@ class Board extends Component {
                     left: left + 'px'
                 }}
                 onClick={
-                    () => this.handleNumClick(i)}
+                    () => this.handleNumClick(i)
+                }
             />
         );
     }
 
     handleNumClick(i) {
         let bracket_state = this.state.bracket_state;
-        let assgn = this.bracket_assignments.slice();
-        assgn[i] = this.state.bracket_state;
+        const bracket_assignments = this.state.bracket_assignments.slice();
+        bracket_assignments[i] = this.state.bracket_state;
         if (bracket_state === 1) {
             bracket_state = 2;
         } else if (bracket_state === 2) {
             bracket_state = 0;
         }
-        this.setState({bracket_assignments: assgn, bracket_state: bracket_state})
-        log(bracket_state)
+        this.setState({bracket_assignments: bracket_assignments, bracket_state: bracket_state})
     }
 
     // BRACKETS TILES
