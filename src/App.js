@@ -7,7 +7,6 @@ import './tile.js';
 
 let N_TILES = 6;
 let N_OPS = 6;
-let JOINED = N_OPS;
 
 let OP_TILE_COLOR = '#cccccc';
 let ACTIVE_OP_TILE_COLOR = '#cfcccc';
@@ -17,10 +16,6 @@ let NUM_LINE_TOP = 250;
 let OP_LINE_TOP = 350;
 let OPERATIONS = ['+', '+', '-', '-', '/', 'X'];
 const JOIN = 'join';
-
-
-let equation = [];
-let bracket_flag = 0;
 
 let log = console.log;
 
