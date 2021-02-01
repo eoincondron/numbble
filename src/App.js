@@ -15,14 +15,7 @@ let LEFT_MARGIN = 100;
 let TILE_WIDTH = 30;
 let NUM_LINE_TOP = 250;
 let OP_LINE_TOP = 350;
-let OPERATIONS = ['+', '+', '-', '-', '%', 'X'];
-let OPERATIONS_MAP = {
-    '+': ' + ',
-    '-': ' - ',
-    '%': ' / ',
-    'X': ' * ',
-    '=': ' === '
-};
+let OPERATIONS = ['+', '+', '-', '-', '/', 'X'];
 
 let equation = [];
 let bracket_flag = 0;
@@ -367,7 +360,8 @@ class Board extends Component {
 
     handlePlayClick() {
         let eq = build_equation(this.state.numbers, this.state.space_contents);
-        if (eval(eq)) {
+        let eval_eq = eq.replace('=', '===').replace('X', '*');
+        if (eval(eval_eq)) {
             alert(eq + " is correct. Well done !");
             this.setState(this.populate_board());
         } else {
