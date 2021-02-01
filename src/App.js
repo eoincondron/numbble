@@ -32,7 +32,7 @@ function _get_spacer_position(i) {
 
 function NumTile(props) {
     return (
-        <div className="num_tile block" style={props.style}>
+        <div className="num_tile block" style={props.style} onClick={props.onClick}>
             {props.value}
         </div>
     );
