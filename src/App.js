@@ -145,25 +145,29 @@ class Board extends Component {
         };
     }
 
+    _getNumTileContent(i) {
+        let value = '';
+        let num = this.state.numbers[i];
+        if (this.state.bracket_assignments[i] === 1) {
+            value = '(' + num;
+        } else if (this.state.bracket_assignments[i] === 2) {
+            value = num + ')';
+        } else {
+            value = num
+        }
+        return value
+    }
+
     // NUM TILES
     renderNumTile(i) {
         let left = LEFT_MARGIN + 2 * i * TILE_WIDTH;
-        let num = this.state.numbers[i];
-        let value = '';
 
         if (this.state.space_contents[i] === JOIN) {
             left = left + TILE_WIDTH / 2;
         } else if (this.state.space_contents[i - 1] === JOIN) {
             left = left - TILE_WIDTH / 2;
         }
-
-        if (this.state.bracket_assignments[i] === 1) {
-            value = '(' + num
-        } else if (this.state.bracket_assignments[i] === 2) {
-            value = num + ')'
-        } else {
-            value = num
-        }
+        let value = this._getNumTileContent(i);
 
         return (
             <NumTile
