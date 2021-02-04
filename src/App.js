@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import './tile.js';
 
 
 let N_TILES = 6;
