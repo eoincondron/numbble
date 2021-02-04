@@ -237,7 +237,6 @@ class Board extends Component {
         if (assigned_space >= 0) {
             top = NUM_LINE_TOP;
             left = _get_spacer_position(assigned_space);
-            log('assigned_space ' + assigned_space)
         } else if (this.state.active_op === i) {
             bg_color = ACTIVE_OP_TILE_COLOR;
             top = OP_LINE_TOP - 10;  // make it stand out
@@ -265,7 +264,6 @@ class Board extends Component {
         const space_contents = this.state.space_contents.slice()
         const assignment = op_assignments[i];
 
-        log('clicked op ' + i)
         // reset if assigned
         if (assignment > -1) {
             op_assignments[i] = -1;
@@ -299,7 +297,6 @@ class Board extends Component {
 
     //
     handleSpaceClick(i) {
-        log('clicked space ' + i)
         const space_contents = this.state.space_contents.slice();
         // Cancel join if joined
         if (this.state.space_contents[i] === JOIN) {
