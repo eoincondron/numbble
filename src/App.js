@@ -340,9 +340,7 @@ class Board extends Component {
     }
 
     renderEquation() {
-        let eq = build_equation(this.state.numbers, this.state.space_contents);
-        // this.setState({equation: eq});
-        log(eq)
+        let eq = this.build_equation();
         return (<Equation
                 equation={eq}
             />
@@ -357,7 +355,7 @@ class Board extends Component {
     }
 
     handlePlayClick() {
-        let eq = build_equation(this.state.numbers, this.state.space_contents);
+        let eq = this.build_equation();
         let eval_eq = eq.replace('=', '===').replace('X', '*');
         if (eval(eval_eq)) {
             alert(eq + " is correct. Well done !");
@@ -367,12 +365,49 @@ class Board extends Component {
         }
     }
 
+    build_equation() {
+        let equation = '';
+        let space_content;
+        let i;
+        let n_nums = this.state.numbers.length;
+        let started = false;
+        let finished = false;
+        let has_equals = false;
+
+        for (i = 0; i < n_nums; i++) {
+            if (!finished) {
+                equation += this._getNumTileContent(i)
+            }
+            space_content = this.state.space_contents[i];
+            if (i < n_nums - 1) {
+                if (space_content === 0) {
+                    if (started) {
+                        finished = true
+                    } else {
+                        equation = ''
+                    }
+                } else if (finished) {
+                    return ''// Equation contains gaps
+                } else if (space_content !== JOIN) {
+                    equation += space_content;     // add operator
+                    started = true;
+                    if (space_content === '=') {
+                        has_equals = true;
+                    }
+                }
+                // otherwise we have join in which case we just continue as
+                // the next number is appended on the next iterations
+            }
+        }
+        if (started & has_equals) {
+            return equation
+        } else {
+            return ''
+        }
+    }
+
+
     render() {
-        log('op flags' + this.state.op_assignments)
-        log('space contents' + this.state.space_contents)
-        log('active op' + this.state.active_op)
-        let eq = build_equation(this.state.numbers, this.state.space_contents);
-        log('equation ' + eq)
         let objs = [];
 
         for (let tile_num = 0; tile_num < N_TILES; tile_num++) {
@@ -429,45 +464,5 @@ ReactDOM.render(
 export default Game;
 
 
-function build_equation(numbers, space_contents) {
-    let equation = '';
-    let sc;
-    let i;
-    let n = numbers.length;
-    let started = false;
-    let finished = false;
-    let has_equals = false;
-
-    for (i = 0; i < n; i++) {
-        if (!finished) {
-            equation += numbers[i]
-        }
-        sc = space_contents[i]
-        if (i < n - 1) {
-            if (sc === 0) {
-                if (started) {
-                    finished = true
-                } else {
-                    equation = ''
-                }
-            } else if (finished) {
-                return ''// Equation contains gaps
-            } else if (sc !== JOIN) {
-                equation += sc;     // add operator
-                started = true;
-                if (sc === '=') {
-                    has_equals = true;
-                }
-            }
-            // otherwise we have join in which case we just continue as
-            // the next number is appended on the next iterations
-        }
-    }
-    if (started & has_equals) {
-        return equation
-    } else {
-        return ''
-    }
-}
 
 
