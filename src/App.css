@@ -68,12 +68,14 @@
   height: 30px;
   font: 5px;
 }
+
 .equation {
   background-color: #ccffcc;
-  text-align: center;
+  color: black;
+  text-align: left;
   width: 250px;
   height: 40px;
-  font: 8px;
+  font: 12px;
   top: 450px;
 }
 
