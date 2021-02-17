@@ -101,4 +101,20 @@ export class TileArray {
         this._check_contain_num_at(num_location, 'insert a bracket')
         this.array.splice(num_location + 1, 0, R_BRACKET)
     }
+
+    remove_brackets(num_location) {
+        // Remove brackets adjacent to a number at a given location
+        // Throw if the array does not contain a number here
+        this._check_contain_num_at(num_location, "remove brackets")
+        let i = num_location - 1;
+        while (this.array[i] === L_BRACKET) {
+            this.array.splice(i, 1)
+            i -= 1;
+        }
+        i = num_location + 1;
+        while (this.array[i] === R_BRACKET) {
+            this.array.splice(i, 1)
+            i += 1;
+        }
+    }
 }
