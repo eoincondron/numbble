@@ -25,8 +25,10 @@ export class TileArray {
     }
 
     join_numbers(space_location) {
-        // Join adjacent numbers by removing a space. This is triggered when an empty space tile is clicked.
-        // If brackets are in the way we do nothing. If space is not empty we throw.
+        // Join adjacent numbers by removing a space. This should be called when an empty space tile is clicked.
+        // If brackets are in the way we do nothing as this is valid state.
+        // If space is not empty we throw as the method should not be called in this state
+        // If the space has other non-numeric characters adjacent we throw as this is invalid state.
         let content = this.array[space_location];
         if (content !== SPACE) {
             throw "Cannot join numbers, space contains " + content;
@@ -38,8 +40,11 @@ export class TileArray {
             // We may also want to allow it if there is a left bracket to the right.
         }
         let to_right = this.array[space_location + 1];
-        if (to_left === L_BRACKET) {
+        if (to_right === L_BRACKET) {
             return
+        }
+        if (!(NUMBERS.includes(to_left) && NUMBERS.includes(to_right))) {
+            throw "Space is adjacent non-numeric characters :".concat(to_left, ', ', to_right)
         }
         this.array[space_location - 1] = to_left + to_right; // numbers are represented as strings
         this.array.splice(space_location, 2);
