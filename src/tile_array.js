@@ -23,4 +23,25 @@ export class TileArray {
         }
         return array;
     }
+
+    join_numbers(space_location) {
+        // Join adjacent numbers by removing a space. This is triggered when an empty space tile is clicked.
+        // If brackets are in the way we do nothing. If space is not empty we throw.
+        let content = this.array[space_location];
+        if (content !== SPACE) {
+            throw "Cannot join numbers, space contains " + content;
+        }
+        let to_left = this.array[space_location - 1];
+        if (to_left === R_BRACKET) {
+            return
+            // Maybe we want to raise here and catch downstream. Decide Later.
+            // We may also want to allow it if there is a left bracket to the right.
+        }
+        let to_right = this.array[space_location + 1];
+        if (to_left === L_BRACKET) {
+            return
+        }
+        this.array[space_location - 1] = to_left + to_right; // numbers are represented as strings
+        this.array.splice(space_location, 2);
+    }
 }
