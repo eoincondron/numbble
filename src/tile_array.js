@@ -1,5 +1,5 @@
 
-import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS} from './util.js';
+import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, split_num_string} from './util.js';
 
 
 export class TileArray {
@@ -49,4 +49,13 @@ export class TileArray {
         this.array[space_location - 1] = to_left + to_right; // numbers are represented as strings
         this.array.splice(space_location, 2);
     }
+
+    split_numbers(location) {
+        // Replace multi-digit number at location with a sub-list of individual digits and spaces.
+        // Used to reverse calls to join_numbers
+        let content = this.array[location];
+        let split = split_num_string(content);
+        this.array.splice(location, 1, ...split)
+    }
+
 }
