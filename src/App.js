@@ -19,9 +19,6 @@ const JOIN = 'join';
 let log = console.log;
 
 
-function random_digit(max) {
-    return Math.floor(Math.random() * max);
-}
 
 
 function _get_spacer_position(i) {
