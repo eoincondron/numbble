@@ -11,6 +11,18 @@ export function random_digit(max) {
 }
 
 
+export function is_num_string(string) {
+    // Check if a string contains digits only except for an optional negative sign at the beginning
+    // Feels like this should be easier but functions like Number do not handle empty strings and '+'
+    // the way we want
+    let chars = string.split('');
+    if (chars[0] === '-') {
+        chars = chars.slice(1)
+    }
+    return (chars.length > 0) && !!Math.min(...chars.map(x => NUMBERS.includes(x)))
+}
+
+
 export function split_num_string(num_string) {
     // Splits a string into a list of individual characters separated by spaces.
     // Example: split_num_string('123') -. ['1', ' ', '2', ' ', '3']
