@@ -119,6 +119,17 @@ export class TileArray {
         }
     }
 
+    negate_number(num_location) {
+        // Negates a number at the location by prefixing a '-'
+        // Do nothing if number is already negative
+        // Throw if a number is not contained at the given location
+        this._check_contains_num_at(num_location, "negate number")
+        let num_string = this.array[num_location];
+        if (!num_string.startsWith('-')) {
+            this.array[num_location] = '-' + num_string
+        }
+    }
+
     _build_display_string() {
         return this.array.join('')
     }
