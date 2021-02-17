@@ -69,4 +69,14 @@ export class TileArray {
         }
     }
 
+    remove_operation(op_location) {
+        // Remove an operation from the array, replacing with a SPACE.
+        // Throw if array does not contain an operation at the given location.
+        let content = this.array[op_location];
+        if (OPERATIONS.includes(content)) {
+            this.array[op_location] = SPACE;
+        } else {
+            throw "Cannot remove operation, space contains " + content;
+        }
+    }
 }
