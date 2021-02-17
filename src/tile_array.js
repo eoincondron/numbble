@@ -1,5 +1,6 @@
 
-import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, split_num_string, is_num_string} from './util.js';
+
+import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, EQUALS, split_num_string, is_num_string} from './util.js';
 
 
 export class TileArray {
@@ -116,5 +117,28 @@ export class TileArray {
             this.array.splice(i, 1)
             i += 1;
         }
+    }
+
+    _build_display_string() {
+        return this.array.join('')
+    }
+
+    _get_sub_lists() {
+        // Split the array into sublists where each space defines the start of a new list
+        let i = 0;
+        let content = '';
+        let sub_lists = [];
+        let current_list = [];
+
+        for (i = 0; i < this.array.length; i++) {
+            content = this.array[i];
+            if (content === SPACE) {
+                sub_lists.push(current_list);
+                current_list = [];
+            } else {
+                current_list.push(content)
+            }
+        }
+        return sub_lists
     }
 }
