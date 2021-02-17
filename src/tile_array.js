@@ -58,4 +58,15 @@ export class TileArray {
         this.array.splice(location, 1, ...split)
     }
 
+    insert_operation(space_location, operation) {
+        // Insert an operation into an empty space.
+        // Throw if array does not contain a SPACE at space_location.
+        let content = this.array[space_location];
+        if (content === SPACE) {
+            this.array[space_location] = operation;
+        } else {
+            throw "Cannot insert operation, space contains " + content;
+        }
+    }
+
 }
