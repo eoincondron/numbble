@@ -1,6 +1,6 @@
 
-
-import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, EQUALS, split_num_string, is_num_string} from './util.js';
+import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS,
+    EQUALS, split_num_string, is_num_string, OP_EVAL_MAP} from './util.js';
 
 
 export class TileArray {
@@ -140,5 +140,40 @@ export class TileArray {
             }
         }
         return sub_lists
+    }
+
+    build_equation (evaluable = false) {
+        // Build a single string containing an equation from the board by concatenating
+        // a the unique sublist containing an equality if such exists.
+        // Returns SPACE if no such sub-list is found and throw if multiple are found.
+        // If evaluable is true then we use characters understood by the eval method, e.g., mapping '=' -> '==='.
+
+        let i;
+        let sub_lists = this._get_sub_lists();
+        let equation = [];
+
+        for (i = 0; i < sub_lists.length; i++) {
+            let sub_list = sub_lists[i];
+            // check if sublist has anything other than numbers
+            let has_ops = sub_list.filter(x => !NUMBERS.includes(x)).length > 0
+            if (!has_ops) {
+                continue;
+            }
+            if (!sub_list.includes(EQUALS)) {
+                throw "Cannot build valid equation. Array contains an active sub list with no equality";
+            } else if (equation.length === 0) {
+                equation = sub_list;
+            } else {
+                // We may want to allow this later, making it possible to play multiple separate equations
+                throw "Found more than one sub list containing an equality"
+            }
+
+        }
+        // We may want to throw if no equation was found, i.e., equation === SPACE
+        if (evaluable) {
+            equation = equation.map(x => OP_EVAL_MAP[x] || x)
+        }
+        equation = ''.concat(...equation)
+        return equation
     }
 }

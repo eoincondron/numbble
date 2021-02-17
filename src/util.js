@@ -2,7 +2,12 @@
 export const R_BRACKET = ')';
 export const L_BRACKET = '(';
 export const SPACE = ' ';
+export const EQUALS = '='
 export let OPERATIONS = ['+', '-', '/', 'X'];
+export let OP_EVAL_MAP = {
+    '=': '===',
+    'X': '*'
+};
 export let NUMBERS = '0123456789'.split('');
 
 
