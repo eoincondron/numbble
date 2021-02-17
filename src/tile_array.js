@@ -1,5 +1,5 @@
 
-import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, split_num_string} from './util.js';
+import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS, split_num_string, is_num_string} from './util.js';
 
 
 export class TileArray {
@@ -78,5 +78,27 @@ export class TileArray {
         } else {
             throw "Cannot remove operation, space contains " + content;
         }
+    }
+
+    _check_contain_num_at(num_location, action) {
+        let content = this.array[num_location];
+        let msg = "Cannot " + action;
+        if (!is_num_string(content)) {
+            throw msg.concat(" as there is no number at ", num_location, ". Content: ", content)
+        }
+    }
+
+    insert_left_bracket(num_location) {
+        // Insert a bracket to the left of the chosen number
+        // Throw if array does not contain number
+        this._check_contain_num_at(num_location, 'insert a bracket')
+        this.array.splice(num_location, 0, L_BRACKET)
+    }
+
+    insert_right_bracket(num_location) {
+        // Inert a bracket to the right of the chosen number
+        // Throw if array does not contain number
+        this._check_contain_num_at(num_location, 'insert a bracket')
+        this.array.splice(num_location + 1, 0, R_BRACKET)
     }
 }
