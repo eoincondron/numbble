@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
 import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
-    PlacedOpTile, DormantOpTile, WaitingOpTile} from './divs';
+    PlacedOpTile, DormantOpTile, WaitingOpTile, Spacer, Equation, PlayButton, ResetTile} from './divs';
 import {TileArray} from "./tile_array";
 import {L_BRACKET, R_BRACKET} from "./util";
 
