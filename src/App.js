@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile} from './divs';
+import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
+    PlacedOpTile, DormantOpTile, WaitingOpTile} from './divs';
 import {TileArray} from "./tile_array";
 import {L_BRACKET, R_BRACKET} from "./util";
 
@@ -135,14 +136,14 @@ class Board extends Component {
         return (<WaitingBracketTile
                 value={this._getBracketValue(is_left)}
                 onClick={
-                    () => this.handleWaitingBracketClick(is_left)
+                    () => this.handleWaitingClick()
                 }
             />
         );
     }
 
     //
-    handleWaitingBracketClick(is_left) {
+    handleWaitingClick() {
         // reset to dormant
         this.setState({active_op: ''})
     }
@@ -160,6 +161,57 @@ class Board extends Component {
     }
 
     // OP TILES
+    renderDormantOpTile(op_string) {
+        return (<DormantOpTile
+                value={op_string}
+                onClick={
+                    () => this.handleDormantOpClick(op_string)
+                }
+            />
+        );
+    }
+
+    //
+    handleDormantOpClick(op_string) {
+        this.setState({active_op: op_string})
+    }
+
+    renderWaitingOpTile(op_string) {
+        return (<WaitingOpTile
+                value={op_string}
+                onClick={
+                    () => this.handleWaitingClick()
+                }
+            />
+        );
+    }
+
+    renderUnplacedOpTile(op_string) {
+        if (this.state.active_op === op_string) {
+            this.renderWaitingOpTile(op_string)
+        } else {
+            this.renderDormantBracketTile(op_string)
+        }
+    }
+
+    renderPlacedOpTile(array_pos, left_position) {
+        let value = this.state.tile_array[array_pos]
+        return (<PlacedOpTile
+                value={value}
+                style={{
+                    left: left_position + 'px',
+                }}
+                onClick={
+                    () => this.handlePlacedOpTileClick(array_pos)
+                }
+            />
+        );
+    }
+
+    handlePlacedOpTileClick(array_pos) {
+        this.state.tile_array.remove_operation(array_pos)
+    }
+
     renderOpTile(i) {
         let bg_color = OP_TILE_COLOR;
         let top;
@@ -212,7 +264,6 @@ class Board extends Component {
         }
         this.setState({op_assignments: op_assignments, space_contents: space_contents})
     }
-
 
     // SPACE TILES
     renderSpacer(i) {
