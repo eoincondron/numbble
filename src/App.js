@@ -5,30 +5,15 @@ import './App.css';
 import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
     PlacedOpTile, DormantOpTile, WaitingOpTile, Spacer, Equation, PlayButton, ResetTile} from './divs';
 import {TileArray} from "./tile_array";
-import {L_BRACKET, R_BRACKET, SPACE, is_num_string} from "./util";
+import {L_BRACKET, R_BRACKET, SPACE, is_num_string, OPERATIONS} from "./util";
 
 
 let N_TILES = 6;
-let N_OPS = 6;
-
-let OP_TILE_COLOR = '#cccccc';
-let ACTIVE_OP_TILE_COLOR = '#cfcccc';
 let LEFT_MARGIN = 100;
 let TILE_WIDTH = 30;
-let NUM_LINE_TOP = 250;
-let OP_LINE_TOP = 350;
-let OPERATIONS = ['+', '+', '-', '-', '/', 'X'];
-const JOIN = 'join';
+
 
 let log = console.log;
-
-
-
-
-function _get_spacer_position(i) {
-    return LEFT_MARGIN + (2 * i + 1) * TILE_WIDTH
-}
-
 
 
 //  =================================== ===
