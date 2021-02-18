@@ -159,37 +159,6 @@ class Board extends Component {
         );
     }
 
-    renderBracketTile(i) {
-        let top = OP_LINE_TOP + 2 * TILE_WIDTH;
-        let left = _get_spacer_position(0) - 2 * TILE_WIDTH;
-
-        if (this.state.bracket_state > 0) {
-            top = top - 10;  // make it stand out
-        }
-
-        return (<BracketTile
-                style={{
-                    top: top + 'px',
-                    left: left + 'px',
-                }}
-                onClick={
-                    () => this.handleBracketClick()
-                }
-            />
-        );
-    }
-
-    //
-    handleBracketClick() {
-        let bracket_state = this.state.bracket_state;
-        if (bracket_state === 0) {
-            bracket_state = 1;
-        } else {
-            bracket_state = 0;
-        }
-        this.setState({bracket_state: bracket_state})
-    }
-
     // OP TILES
     renderOpTile(i) {
         let bg_color = OP_TILE_COLOR;
