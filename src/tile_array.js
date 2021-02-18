@@ -9,20 +9,33 @@ export class TileArray {
     // Has interface for manipulating an array in allowable ways and knows how to build and resolve its equation.
     // All entries are represented as strings.
 
-    constructor(n_numbers) {
-        this.n_numbers = n_numbers;
-        this.array = this.initialize_array()
+    constructor(numbers) {
+        // If an integer is passed we build a random array of numbers that size
+        if (typeof numbers === 'number') {
+            numbers = this.build_random_num_array(numbers);
+        }
+        this.num_array = numbers;
+        this.tile_array = this.build_tile_array_from_numbers(this.num_array)
     }
 
-    initialize_array() {
-        let array = Array(2 * this.n_numbers - 1);  // length accommodates spaces and numbers
-        for (let i = 0; i < this.n_numbers; i++) {
-            array[2 * i] = random_digit(10).toString();
-            if (i <= this.n_numbers) {
-                array[2 * i + 1] = SPACE;
+    build_random_num_array(n_numbers) {
+        let num_array = Array(n_numbers);
+        for (let i = 0; i < n_numbers; i++) {
+            num_array[i] = random_digit(10);
+        }
+        return num_array
+    }
+
+    build_tile_array_from_numbers(num_array) {
+        let n_numbers = num_array.length;
+        let tile_array = Array(2 * n_numbers - 1);  // length accommodates spaces and numbers
+        for (let i = 0; i < n_numbers; i++) {
+            tile_array[2 * i] = num_array[i].toString();
+            if (i < n_numbers - 1) {
+                tile_array[2 * i + 1] = SPACE;
             }
         }
-        return array;
+        return tile_array
     }
 
     join_numbers(space_location) {
