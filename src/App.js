@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
+import './divs';
 
 
 let N_TILES = 6;
@@ -26,75 +27,6 @@ function _get_spacer_position(i) {
 }
 
 
-function NumTile(props) {
-    return (
-        <div className="num_tile block" style={props.style} onClick={props.onClick}>
-            {props.value}
-        </div>
-    );
-}
-
-//  ==================================== ===
-
-
-function Spacer(props) {
-    return (
-        <div className="spacer block" style={props.style} onClick={props.onClick}>
-        </div>
-    );
-}
-
-// ==================================== ===
-
-
-function OpTile(props) {
-    return (
-        <button className="op_tile block" style={props.style} onClick={props.onClick}>
-            {props.value}
-        </button>
-    );
-}
-
-// ==================================== ===
-
-
-function BracketTile(props) {
-    return (
-        <div className='bracket_tile block' style={props.style} onClick={props.onClick}>
-            ( )
-        </div>
-    );
-}
-
-
-function ResetTile(props) {
-    return (
-        <button className="reset_tile" style={props.style} onClick={props.onClick}>
-            Reset
-        </button>
-    );
-}
-
-//  =================================== ===
-
-
-function Equation(props) {
-    return (
-        <div className="equation">
-            Equation: {props.equation}
-        </div>
-    );
-}
-
-//  =================================== ===
-
-function PlayButton(props) {
-    return (
-        <div className='play button' onClick={props.onClick}>
-            Play
-        </div>
-    );
-}
 
 //  =================================== ===
 
