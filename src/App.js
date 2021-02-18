@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {MultiNumTile, SingleNumTile} from './divs';
+import {MultiNumTile, SingleNumTile, DormantBracketTile} from './divs';
 import {TileArray} from "./tile_array";
 import {L_BRACKET, R_BRACKET} from "./util";
 
@@ -112,6 +112,26 @@ class Board extends Component {
     }
 
     // BRACKETS TILES
+    _getBracketValue(left) {
+        return left ? L_BRACKET : R_BRACKET
+    }
+
+    renderDormantBracketTile(is_left) {
+        return (<DormantBracketTile
+                value={this._getBracketValue(is_left)}
+                onClick={
+                    () => this.handleDormantBracketClick(is_left)
+                }
+            />
+        );
+    }
+
+    //
+    handleDormantBracketClick(is_left) {
+        this.setState({active_op: this._getBracketValue(is_left)})
+    }
+
+
     renderBracketTile(i) {
         let top = OP_LINE_TOP + 2 * TILE_WIDTH;
         let left = _get_spacer_position(0) - 2 * TILE_WIDTH;
