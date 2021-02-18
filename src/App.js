@@ -266,7 +266,7 @@ class Board extends Component {
     }
 
     renderEquation() {
-        let eq = this.build_equation();
+        let eq = this.state.tile_array.build_equation();
         return (<Equation
                 equation={eq}
             />
@@ -281,54 +281,13 @@ class Board extends Component {
     }
 
     handlePlayClick() {
-        let eq = this.build_equation();
-        let eval_eq = eq.replace('=', '===').replace('X', '*');
+        let eq = this.state.tile_array.build_equation(false);
+        let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
             alert(eq + " is correct. Well done !");
             this.setState(this.populate_board());
         } else {
             alert("Sorry, the equation is invalid: " + eq);
-        }
-    }
-
-    build_equation() {
-        let equation = '';
-        let space_content;
-        let i;
-        let n_nums = this.state.numbers.length;
-        let started = false;
-        let finished = false;
-        let has_equals = false;
-
-        for (i = 0; i < n_nums; i++) {
-            if (!finished) {
-                equation += this._getNumTileContent(i)
-            }
-            space_content = this.state.space_contents[i];
-            if (i < n_nums - 1) {
-                if (space_content === 0) {
-                    if (started) {
-                        finished = true
-                    } else {
-                        equation = ''
-                    }
-                } else if (finished) {
-                    return ''// Equation contains gaps
-                } else if (space_content !== JOIN) {
-                    equation += space_content;     // add operator
-                    started = true;
-                    if (space_content === '=') {
-                        has_equals = true;
-                    }
-                }
-                // otherwise we have join in which case we just continue as
-                // the next number is appended on the next iterations
-            }
-        }
-        if (started & has_equals) {
-            return equation
-        } else {
-            return ''
         }
     }
 
