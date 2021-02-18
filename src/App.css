@@ -44,6 +44,16 @@
   font: 25px bold; 
   color: black;
 }
+.placed {
+  top: 250px;
+}
+.dormant {
+  top: 350px;
+}
+.waiting {
+  top: 320px;
+  background-color: #ff0000;
+}
 .num_tile {
   background-color: yellow;
   z-index: 0; 
