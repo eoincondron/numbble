@@ -36,9 +36,10 @@ export function Spacer(props) {
 // ==================================== ===
 
 
-export function OpTile(props) {
+export function DormantOpTile(props) {
+    // Render op tile in the initial state. On click will make it waiting.
     return (
-        <button className="op_tile block" style={props.style} onClick={props.onClick}>
+        <button className="op_tile block dormant" style={props.style} onClick={props.onClick}>
             {props.value}
         </button>
     );
@@ -46,6 +47,30 @@ export function OpTile(props) {
 
 // ==================================== ===
 
+
+export function WaitingOpTile(props) {
+    // Render op tile that has been clicked. This will have different style (place and colour) to highlight.
+    // Clicking will render dormant.
+    return (
+        <button className="op_tile block waiting" style={props.style} onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+
+// ==================================== ===
+
+export function PlacedOpTile(props) {
+    // Render op tile that has been placed. This will have a different position to the dormant op tile.
+    // Clicking will move it back to the dormant state.
+    return (
+        <button className="op_tile block placed" style={props.style} onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+
+// ==================================== ===
 
 export function BracketTile(props) {
     return (
