@@ -154,6 +154,17 @@ class Board extends Component {
         this.deactive_op()
     }
 
+    renderUnplacedBracketTile(is_left) {
+        let bracket = this._getBracketValue(is_left);
+        if (this.state.active_op === bracket) {
+            if (this.state.active_op === bracket) {
+                this.renderWaitingBracketTile(bracket)
+            } else {
+                this.renderDormantBracketTile(bracket)
+            }
+        }
+    }
+
     renderPlacedBracketTile(is_left, left_position) {
         // Clicking placed brackets does nothing. Click number to which they are assigned to remove
         return (<PlacedBracketTile
