@@ -54,6 +54,11 @@ class Board extends Component {
             active_op: ''
         };
     }
+
+    deactive_op () {
+        this.setState({active_op: ''})
+    }
+
     renderSingleNumTile(array_pos, left_position) {
         let value = this.state.tile_array.tile_array[array_pos]
         return (
@@ -74,9 +79,11 @@ class Board extends Component {
         // This could be the place for automatically activating a second bracket.
         if (this.state.active_op === R_BRACKET) {
             this.state.tile_array.insert_right_bracket(array_pos);
+            this.deactive_op()
             return true
         } else if (this.state.active_op === L_BRACKET) {
             this.state.tile_array.insert_left_bracket(array_pos)
+            this.deactive_op()
             return true
         } else {
             return false
@@ -127,7 +134,6 @@ class Board extends Component {
         );
     }
 
-    //
     handleDormantBracketClick(is_left) {
         this.setState({active_op: this._getBracketValue(is_left)})
     }
@@ -145,7 +151,7 @@ class Board extends Component {
     //
     handleWaitingClick() {
         // reset to dormant
-        this.setState({active_op: ''})
+        this.deactive_op()
     }
 
     renderPlacedBracketTile(is_left, left_position) {
