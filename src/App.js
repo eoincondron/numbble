@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
 import './divs';
+import {TileArray} from "./tile_array";
 
 
 let N_TILES = 6;
@@ -44,32 +45,11 @@ class Board extends Component {
     }
 
     populate_board() {
-        let numbers = Array(N_TILES);
-        for (let i = 0; i < N_TILES; i++) {
-            numbers[i] = random_digit(10);
-        }
-        ;
-
-        let operators = Array(N_OPS);
-        for (let i = 0; i < N_OPS; i++) {
-            operators[i] = OPERATIONS[random_digit(OPERATIONS.length)];
-        }
-        ;
-        operators[N_OPS] = '='
-
-        let op_assignments = Array(N_OPS).fill(-1);
-        let space_contents = Array(N_TILES - 1).fill(0);
-        let bracket_assignments = Array(N_TILES).fill(0);
+        let tile_array = new TileArray(N_TILES);
 
         return {
-            numbers: numbers,
-            operators: operators,
-            active_op: -1,
-            op_assignments: op_assignments,      // map from operation to space
-            space_contents: space_contents,     // record of adjacent numbers to be joined and placement of operations
-            bracket_assignments: bracket_assignments,
-            equation: '',
-            bracket_state: 0
+            tile_array: tile_array,
+            active_op: ''
         };
     }
 
