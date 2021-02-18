@@ -212,59 +212,6 @@ class Board extends Component {
         this.state.tile_array.remove_operation(array_pos)
     }
 
-    renderOpTile(i) {
-        let bg_color = OP_TILE_COLOR;
-        let top;
-        let left = _get_spacer_position(i) - 2 * TILE_WIDTH;
-
-        let assigned_space = this.state.op_assignments[i];
-
-        if (assigned_space >= 0) {
-            top = NUM_LINE_TOP;
-            left = _get_spacer_position(assigned_space);
-        } else if (this.state.active_op === i) {
-            bg_color = ACTIVE_OP_TILE_COLOR;
-            top = OP_LINE_TOP - 10;  // make it stand out
-        } else {
-            top = OP_LINE_TOP;
-        }
-
-        return (<OpTile
-                value={this.state.operators[i]}
-                style={{
-                    top: top + 'px',
-                    left: left + 'px',
-                    backgroundColor: bg_color
-                }}
-                onClick={
-                    () => this.handleOpClick(i)
-                }
-            />
-        );
-    }
-
-    //
-    handleOpClick(i) {
-        const op_assignments = this.state.op_assignments.slice()
-        const space_contents = this.state.space_contents.slice()
-        const assignment = op_assignments[i];
-
-        // reset if assigned
-        if (assignment > -1) {
-            op_assignments[i] = -1;
-            space_contents[assignment] = 0
-        }
-        // deactivate if activated
-        if (this.state.active_op === i) {
-            this.setState({active_op: -1});
-        }
-        // activate
-        else {
-            this.setState({active_op: i});
-        }
-        this.setState({op_assignments: op_assignments, space_contents: space_contents})
-    }
-
     // SPACE TILES
     renderSpacer(i) {
         return (<Spacer
