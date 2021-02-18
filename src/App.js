@@ -90,56 +90,6 @@ class Board extends Component {
         this.state.tile_array.split_numbers(array_pos)
     }
 
-    _getNumTileContent(i) {
-        let value = '';
-        let num = this.state.numbers[i];
-        if (this.state.bracket_assignments[i] === 1) {
-            value = '(' + num;
-        } else if (this.state.bracket_assignments[i] === 2) {
-            value = num + ')';
-        } else {
-            value = num
-        }
-        return value
-    }
-
-    // NUM TILES
-    renderNumTile(i) {
-        let left = LEFT_MARGIN + 2 * i * TILE_WIDTH;
-
-        if (this.state.space_contents[i] === JOIN) {
-            left = left + TILE_WIDTH / 2;
-        } else if (this.state.space_contents[i - 1] === JOIN) {
-            left = left - TILE_WIDTH / 2;
-        }
-        let value = this._getNumTileContent(i);
-
-        return (
-            <NumTile
-                value={value}
-                style={{
-                    top: NUM_LINE_TOP + 'px',
-                    left: left + 'px'
-                }}
-                onClick={
-                    () => this.handleNumClick(i)
-                }
-            />
-        );
-    }
-
-    handleNumClick(i) {
-        let bracket_state = this.state.bracket_state;
-        const bracket_assignments = this.state.bracket_assignments.slice();
-        bracket_assignments[i] = this.state.bracket_state;
-        if (bracket_state === 1) {
-            bracket_state = 2;
-        } else if (bracket_state === 2) {
-            bracket_state = 0;
-        }
-        this.setState({bracket_assignments: bracket_assignments, bracket_state: bracket_state})
-    }
-
     // BRACKETS TILES
     renderBracketTile(i) {
         let top = OP_LINE_TOP + 2 * TILE_WIDTH;
