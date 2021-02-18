@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {MultiNumTile, SingleNumTile, DormantBracketTile} from './divs';
+import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile} from './divs';
 import {TileArray} from "./tile_array";
 import {L_BRACKET, R_BRACKET} from "./util";
 
@@ -131,6 +131,33 @@ class Board extends Component {
         this.setState({active_op: this._getBracketValue(is_left)})
     }
 
+    renderWaitingBracketTile(is_left) {
+        return (<WaitingBracketTile
+                value={this._getBracketValue(is_left)}
+                onClick={
+                    () => this.handleWaitingBracketClick(is_left)
+                }
+            />
+        );
+    }
+
+    //
+    handleWaitingBracketClick(is_left) {
+        // reset to dormant
+        this.setState({active_op: ''})
+    }
+
+    renderPlacedBracketTile(is_left, left_position) {
+        // Clicking placed brackets does nothing. Click number to which they are assigned to remove
+        return (<PlacedBracketTile
+                value={this._getBracketValue(is_left)}
+                style={{
+                    left: left_position + 'px',
+                }}
+
+            />
+        );
+    }
 
     renderBracketTile(i) {
         let top = OP_LINE_TOP + 2 * TILE_WIDTH;
