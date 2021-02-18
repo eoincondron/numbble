@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import './divs';
+import {SingleNumTile} from './divs';
 import {TileArray} from "./tile_array";
 
 
@@ -51,6 +51,24 @@ class Board extends Component {
             tile_array: tile_array,
             active_op: ''
         };
+    }
+    renderSingleNumTile(array_pos, left_position) {
+        let value = this.state.tile_array[array_pos]
+        return (
+            <SingleNumTile
+                value={value}
+                style={{
+                    left: left_position + 'px'
+                }}
+                onClick={
+                    () => this.handleSingleNumClick(array_pos)
+                }
+            />
+        );
+    }
+
+    handleSingleNumClick(array_pos) {
+        this.state.tile_array.remove_brackets(array_pos)
     }
 
     _getNumTileContent(i) {
