@@ -5,7 +5,7 @@ import './App.css';
 import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
     PlacedOpTile, DormantOpTile, WaitingOpTile, Spacer, Equation, PlayButton, ResetTile} from './divs';
 import {TileArray} from "./tile_array";
-import {L_BRACKET, R_BRACKET} from "./util";
+import {L_BRACKET, R_BRACKET, SPACE, is_num_string} from "./util";
 
 
 let N_TILES = 6;
@@ -291,24 +291,45 @@ class Board extends Component {
         }
     }
 
-
     render() {
+        let left_position = LEFT_MARGIN;
         let objs = [];
+        let tiles = this.state.tile_array.array;
 
-        for (let tile_num = 0; tile_num < N_TILES; tile_num++) {
-            objs.push(this.renderNumTile(tile_num));
-        }
-        for (let tile_num = 0; tile_num <= N_OPS; tile_num++) {
-            objs.push(this.renderOpTile(tile_num));
-        }
-        for (let tile_num = 0; tile_num < N_TILES - 1; tile_num++) {
-            objs.push(this.renderSpacer(tile_num));
+        for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
+            let content = this.state.tile_array.array[array_pos];
+            if (content === L_BRACKET || content === R_BRACKET) {
+                objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
+                left_position += TILE_WIDTH / 2;
+            } else if (content === SPACE) {
+                objs.push(this.renderSpacer(left_position))
+                left_position += TILE_WIDTH;
+            } else if (OPERATIONS.includes(content)) {
+                objs.push(this.renderPlacedOpTile(left_position))
+                left_position += TILE_WIDTH;
+            } else {
+                if (!is_num_string(content)) {
+                    throw "content must be a space, bracket, operation or number"
+                }
+                if (content.length === 1) {
+                    objs.push(this.renderSingleNumTile(array_pos, left_position))
+                    left_position += TILE_WIDTH;
+                } else {
+                    objs.push(this.renderMultiNumTile(array_pos, left_position))
+                    left_position += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
+                }
+            }
         }
 
+        for (let i = 0; i < OPERATIONS.length; i++) {
+            let op_string = OPERATIONS[i];
+            this.renderUnplacedOpTile(op_string);
+        }
+        objs.push(this.renderUnplacedBracketTile(true));
+        objs.push(this.renderUnplacedBracketTile(false));
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
-        objs.push(this.renderBracketTile());
 
         return (
             <div className="table">
