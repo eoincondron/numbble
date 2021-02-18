@@ -38,6 +38,11 @@ export class TileArray {
         return tile_array
     }
 
+    reset_board () {
+        // return the board by to its original state
+        this.tile_array = this.build_tile_array_from_numbers(this.num_array)
+    }
+
     join_numbers(space_location) {
         // Join adjacent numbers by removing a space. This should be called when an empty space tile is clicked.
         // If brackets are in the way we do nothing as this is valid state.
