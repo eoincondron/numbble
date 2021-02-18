@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {SingleNumTile} from './divs';
+import {MultiNumTile, SingleNumTile} from './divs';
 import {TileArray} from "./tile_array";
 
 
@@ -69,6 +69,25 @@ class Board extends Component {
 
     handleSingleNumClick(array_pos) {
         this.state.tile_array.remove_brackets(array_pos)
+    }
+
+    renderMultiNumTile(array_pos, left_position) {
+        let value = this.state.tile_array[array_pos]
+        return (
+            <MultiNumTile
+                value={value}
+                style={{
+                    left: left_position + 'px'
+                }}
+                onClick={
+                    () => this.handleMultiNumClick(array_pos)
+                }
+            />
+        );
+    }
+
+    handleMultiNumClick(array_pos) {
+        this.state.tile_array.split_numbers(array_pos)
     }
 
     _getNumTileContent(i) {
