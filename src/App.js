@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import './App.css';
 import {MultiNumTile, SingleNumTile} from './divs';
 import {TileArray} from "./tile_array";
+import {L_BRACKET, R_BRACKET} from "./util";
 
 
 let N_TILES = 6;
@@ -67,8 +68,24 @@ class Board extends Component {
         );
     }
 
+    _maybeInsertBrackets(array_pos) {
+        // Insert brackets at array pos if current active op is a bracket and return boolean indicating if we did
+        // This could be the place for automatically activating a second bracket.
+        if (this.state.active_op === R_BRACKET) {
+            this.state.tile_array.insert_right_bracket(array_pos);
+            return true
+        } else if (this.state.active_op === L_BRACKET) {
+            this.state.tile_array.insert_left_bracket(array_pos)
+            return true
+        } else {
+            return false
+        }
+    }
+
     handleSingleNumClick(array_pos) {
-        this.state.tile_array.remove_brackets(array_pos)
+        if (!this._maybeInsertBrackets(array_pos)) {
+            this.state.tile_array.remove_brackets(array_pos)
+        }
     }
 
     renderMultiNumTile(array_pos, left_position) {
@@ -87,7 +104,9 @@ class Board extends Component {
     }
 
     handleMultiNumClick(array_pos) {
-        this.state.tile_array.split_numbers(array_pos)
+        if (!this._maybeInsertBrackets(array_pos)) {
+            this.state.tile_array.split_numbers(array_pos)
+        }
     }
 
     // BRACKETS TILES
