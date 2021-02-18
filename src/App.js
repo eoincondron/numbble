@@ -230,45 +230,28 @@ class Board extends Component {
     }
 
     // SPACE TILES
-    renderSpacer(i) {
+    renderSpacer(array_pos, left_position) {
         return (<Spacer
                 style={{
-                    top: NUM_LINE_TOP + 'px',
-                    left: _get_spacer_position(i) + 'px'
+                    left: left_position + 'px'
                 }}
                 onClick={
-                    () => this.handleSpaceClick(i)
+                    () => this.handleSpaceClick(array_pos)
                 }
             />
         );
     }
 
     //
-    handleSpaceClick(i) {
-        const space_contents = this.state.space_contents.slice();
-        // Cancel join if joined
-        if (this.state.space_contents[i] === JOIN) {
-            space_contents[i] = 0;
+    handleSpaceClick(array_pos) {
+        if (OPERATIONS.includes(this.state.active_op)) {
+            this.state.tile_array.insert_operation(array_pos, this.state.active_op)
+            this.deactive_op()
         }
-        // Join if no operator is active
-        else if (this.state.active_op === -1) {
-            space_contents[i] = JOIN
-        } else {
-            // assign this space to active operator
-            const op_assignments = this.state.op_assignments.slice();
-            op_assignments[this.state.active_op] = i;
-            this.setState({op_assignments: op_assignments});
-            space_contents[i] = this.state.operators[this.state.active_op];   // add operator to space contents;
-        }
-        this.setState({space_contents: space_contents});
     }
 
     renderReset() {
         return (<ResetTile
-                style={{
-                    top: NUM_LINE_TOP + 'px',
-                    left: _get_spacer_position(-2) + 'px'
-                }}
                 onClick={
                     () => this.handleResetClick()}
             />
@@ -278,9 +261,8 @@ class Board extends Component {
     //
 
     handleResetClick() {
-        this.setState({op_assignments: Array(N_OPS).fill(-1)})
-        this.setState({space_contents: Array(N_TILES - 1).fill(0)})
-        this.setState({active_op: -1});
+        this.deactive_op();
+        this.state.tile_array.reset_board();
     }
 
     renderEquation() {
