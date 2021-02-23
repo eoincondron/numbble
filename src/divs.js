@@ -28,7 +28,7 @@ export function MultiNumTile(props) {
 
 export function Spacer(props) {
     return (
-        <div className="spacer block" style={props.style} onClick={props.onClick}>
+        <div className="spacer block placed" style={props.style} onClick={props.onClick}>
         </div>
     );
 }
@@ -52,7 +52,7 @@ export function WaitingOpTile(props) {
     // Render op tile that has been clicked. This will have different style (place and colour) to highlight.
     // Clicking will render dormant.
     return (
-        <button className="op_tile block waiting" style={props.style} onClick={props.onClick}>
+        <button className="waiting op_tile block" style={props.style} onClick={props.onClick}>
             {props.value}
         </button>
     );
@@ -64,7 +64,7 @@ export function PlacedOpTile(props) {
     // Render op tile that has been placed. This will have a different position to the dormant op tile.
     // Clicking will move it back to the dormant state.
     return (
-        <button className="op_tile block placed" style={props.style} onClick={props.onClick}>
+        <button className="placed op_tile block" style={props.style} onClick={props.onClick}>
             {props.value}
         </button>
     );
