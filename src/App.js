@@ -90,7 +90,7 @@ class Board extends Component {
     }
 
     renderMultiNumTile(array_pos, left_position) {
-        let value = this.state.tile_array[array_pos]
+        let value = this.state.tile_array.tile_array[array_pos]
         return (
             <MultiNumTile
                 value={value}
@@ -108,6 +108,7 @@ class Board extends Component {
         if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.split_numbers(array_pos)
         }
+        this.setState({})
     }
 
     // BRACKETS TILES
