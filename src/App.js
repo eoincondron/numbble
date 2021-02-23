@@ -146,15 +146,13 @@ class Board extends Component {
         this.deactive_op()
     }
 
-    renderUnplacedBracketTile(is_left) {
+    renderUnplacedBracketTile(is_left, left_position) {
         let bracket = this._getBracketValue(is_left);
         if (this.state.active_op === bracket) {
-            if (this.state.active_op === bracket) {
-                this.renderWaitingBracketTile(bracket)
+                return this.renderWaitingBracketTile(is_left, left_position)
             } else {
-                this.renderDormantBracketTile(bracket)
+                return this.renderDormantBracketTile(is_left, left_position)
             }
-        }
     }
 
     renderPlacedBracketTile(is_left, left_position) {
