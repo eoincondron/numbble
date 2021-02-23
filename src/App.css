@@ -59,8 +59,8 @@
   z-index: 0; 
 }
 .bracket_tile {
-  background-color: yellow;
-  z-index: 0; 
+  z-index: 0;
+  width: 15px;
 }
 .op_tile {
   background-color: #eeeeee;
@@ -90,7 +90,6 @@
 }
 
 .brackets {
-  background-color: yellow; 
   font: 35px bold;
   text-align: top;
 }

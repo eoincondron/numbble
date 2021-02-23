@@ -74,8 +74,8 @@ export function PlacedOpTile(props) {
 
 export function DormantBracketTile(props) {
     return (
-        <div className='bracket_tile block dormant' style={props.style} onClick={props.onClick}>
-            ( )
+        <div className='dormant bracket_tile op_tile block' style={props.style} onClick={props.onClick}>
+            {props.value}
         </div>
     );
 }
@@ -84,8 +84,8 @@ export function DormantBracketTile(props) {
 
 export function WaitingBracketTile(props) {
     return (
-        <div className='bracket_tile block waiting' style={props.style} onClick={props.onClick}>
-            ( )
+        <div className='waiting bracket_tile op_tile block' style={props.style} onClick={props.onClick}>
+            {props.value}
         </div>
     );
 }
@@ -94,8 +94,8 @@ export function WaitingBracketTile(props) {
 
 export function PlacedBracketTile(props) {
     return (
-        <div className='bracket_tile block placed' style={props.style} onClick={props.onClick}>
-            ( )
+        <div className='bracket_tile block op_tile placed' style={props.style} onClick={props.onClick}>
+            {props.value}
         </div>
     );
 }
