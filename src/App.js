@@ -127,9 +127,12 @@ class Board extends Component {
         this.setState({active_op: this._getBracketValue(is_left)})
     }
 
-    renderWaitingBracketTile(is_left) {
+    renderWaitingBracketTile(is_left, left_position) {
         return (<WaitingBracketTile
                 value={this._getBracketValue(is_left)}
+                style={{
+                    left: left_position + 'px',
+                }}
                 onClick={
                     () => this.handleWaitingClick()
                 }
