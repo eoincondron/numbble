@@ -286,24 +286,25 @@ class Board extends Component {
             this.setState(this.populate_board());
         } else {
             alert("Sorry, the equation is invalid: " + eq);
+            log(this.state.tile_array.tile_array)
         }
     }
 
     render() {
         let left_position = LEFT_MARGIN;
         let objs = [];
-        let tiles = this.state.tile_array.array;
+        let tiles = this.state.tile_array.tile_array;
 
         for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
-            let content = this.state.tile_array.array[array_pos];
+            let content = tiles[array_pos];
             if (content === L_BRACKET || content === R_BRACKET) {
                 objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
                 left_position += TILE_WIDTH / 2;
             } else if (content === SPACE) {
-                objs.push(this.renderSpacer(left_position))
+                objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else if (OPERATIONS.includes(content)) {
-                objs.push(this.renderPlacedOpTile(left_position))
+                objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
                 if (!is_num_string(content)) {
@@ -319,12 +320,17 @@ class Board extends Component {
             }
         }
 
+        left_position = TILE_WIDTH;
         for (let i = 0; i < OPERATIONS.length; i++) {
             let op_string = OPERATIONS[i];
-            this.renderUnplacedOpTile(op_string);
+            objs.push(this.renderUnplacedOpTile(op_string, left_position));
+            left_position += TILE_WIDTH;
         }
-        objs.push(this.renderUnplacedBracketTile(true));
-        objs.push(this.renderUnplacedBracketTile(false));
+        left_position += TILE_WIDTH / 2;
+        objs.push(this.renderUnplacedBracketTile(true, left_position));
+        left_position += TILE_WIDTH / 2;
+        objs.push(this.renderUnplacedBracketTile(false, left_position));
+
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
