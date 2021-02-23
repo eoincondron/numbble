@@ -257,11 +257,10 @@ class Board extends Component {
         );
     }
 
-    //
-
     handleResetClick() {
         this.deactive_op();
         this.state.tile_array.reset_board();
+        // TODO: this is currently generating a new board
     }
 
     renderEquation() {
