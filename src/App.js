@@ -110,9 +110,12 @@ class Board extends Component {
         return left ? L_BRACKET : R_BRACKET
     }
 
-    renderDormantBracketTile(is_left) {
+    renderDormantBracketTile(is_left, left_position) {
         return (<DormantBracketTile
                 value={this._getBracketValue(is_left)}
+                style={{
+                    left: left_position + 'px',
+                }}
                 onClick={
                     () => this.handleDormantBracketClick(is_left)
                 }
