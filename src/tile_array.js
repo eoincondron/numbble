@@ -153,7 +153,7 @@ export class TileArray {
     }
 
     _get_sub_lists() {
-        // Split the array into sublists where each space defines the start of a new list
+        // Split the array into sub-lists where each space defines the start of a new list
         let i = 0;
         let content = '';
         let sub_lists = [];
@@ -167,6 +167,9 @@ export class TileArray {
             } else {
                 current_list.push(content)
             }
+        }
+        if (current_list.length > 0) {
+            sub_lists.push(current_list)
         }
         return sub_lists
     }
