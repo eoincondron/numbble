@@ -54,7 +54,7 @@ class Board extends Component {
         };
     }
     renderSingleNumTile(array_pos, left_position) {
-        let value = this.state.tile_array[array_pos]
+        let value = this.state.tile_array.tile_array[array_pos]
         return (
             <SingleNumTile
                 value={value}
@@ -86,6 +86,7 @@ class Board extends Component {
         if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.remove_brackets(array_pos)
         }
+        this.setState({})
     }
 
     renderMultiNumTile(array_pos, left_position) {
