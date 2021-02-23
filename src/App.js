@@ -240,7 +240,10 @@ class Board extends Component {
 
     //
     handleSpaceClick(array_pos) {
-        if (OPERATIONS.includes(this.state.active_op)) {
+        if (this.state.active_op === EMPTY) {
+            this.state.tile_array.join_numbers(array_pos, this.state.active_op)
+            this.setState({});
+        } else if (OPERATIONS.includes(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactive_op()
         }
