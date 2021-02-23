@@ -336,7 +336,7 @@ class Board extends Component {
         objs.push(this.renderPlay());
 
         return (
-            <div className="table">
+            <div className="board">
                 {objs}
             </div>
         );
