@@ -162,15 +162,17 @@ class Board extends Component {
                 style={{
                     left: left_position + 'px',
                 }}
-
             />
         );
     }
 
     // OP TILES
-    renderDormantOpTile(op_string) {
+    renderDormantOpTile(op_string, left_position) {
         return (<DormantOpTile
                 value={op_string}
+                style={{
+                    left: left_position + 'px',
+                }}
                 onClick={
                     () => this.handleDormantOpClick(op_string)
                 }
@@ -183,9 +185,12 @@ class Board extends Component {
         this.setState({active_op: op_string})
     }
 
-    renderWaitingOpTile(op_string) {
+    renderWaitingOpTile(op_string, left_position) {
         return (<WaitingOpTile
                 value={op_string}
+                style={{
+                    left: left_position + 'px',
+                }}
                 onClick={
                     () => this.handleWaitingClick()
                 }
@@ -193,16 +198,16 @@ class Board extends Component {
         );
     }
 
-    renderUnplacedOpTile(op_string) {
+    renderUnplacedOpTile(op_string, left_position) {
         if (this.state.active_op === op_string) {
-            this.renderWaitingOpTile(op_string)
+            return this.renderWaitingOpTile(op_string, left_position)
         } else {
-            this.renderDormantBracketTile(op_string)
+            return this.renderDormantOpTile(op_string, left_position)
         }
     }
 
     renderPlacedOpTile(array_pos, left_position) {
-        let value = this.state.tile_array[array_pos]
+        let value = this.state.tile_array.tile_array[array_pos];
         return (<PlacedOpTile
                 value={value}
                 style={{
@@ -217,6 +222,7 @@ class Board extends Component {
 
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
+        this.setState({})
     }
 
     // SPACE TILES
