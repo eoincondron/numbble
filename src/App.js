@@ -11,6 +11,7 @@ import {L_BRACKET, R_BRACKET, SPACE, is_num_string, OPERATIONS} from "./util";
 let N_TILES = 6;
 let LEFT_MARGIN = 100;
 let TILE_WIDTH = 30;
+let EMPTY = '';
 
 
 let log = console.log;
@@ -36,12 +37,12 @@ class Board extends Component {
 
         return {
             tile_array: tile_array,
-            active_op: ''
+            active_op: EMPTY
         };
     }
 
     deactive_op () {
-        this.setState({active_op: ''})
+        this.setState({active_op: EMPTY})
     }
 
     renderSingleNumTile(array_pos, left_position) {
