@@ -264,7 +264,7 @@ class Board extends Component {
     }
 
     renderEquation() {
-        let eq = this.state.tile_array.build_equation();
+        let eq = this.state.tile_array._build_display_string();
         return (<Equation
                 equation={eq}
             />
