@@ -2,10 +2,41 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
-    PlacedOpTile, DormantOpTile, WaitingOpTile, Spacer, Equation, PlayButton, ResetTile} from './divs';
+import {
+    MultiNumTile,
+    SingleNumTile,
+    DormantBracketTile,
+    WaitingBracketTile,
+    PlacedBracketTile,
+    PlacedOpTile,
+    DormantOpTile,
+    WaitingOpTile,
+    Spacer,
+    Equation,
+    PlayButton,
+    ResetTile
+} from './divs';
 import {TileArray} from "./tile_array";
-import {L_BRACKET, R_BRACKET, SPACE, is_num_string, OPERATIONS} from "./util";
+import {
+    L_BRACKET,
+    R_BRACKET,
+    SPACE,
+    is_num_string,
+    OPERATIONS
+} from "./util";
+
+
+// Tailwind configuration and custom styles
+const styles = {
+    board: 'bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto',
+    tile: 'inline-block text-center transition-all duration-200 ease-in-out',
+    numTile: 'bg-blue-500 text-white rounded-md hover:bg-blue-600',
+    opTile: 'bg-green-500 text-white rounded-md hover:bg-green-600',
+    bracketTile: 'bg-purple-500 text-white rounded-md hover:bg-purple-600',
+    dormantTile: 'opacity-50 cursor-pointer',
+    activeTile: 'ring-2 ring-blue-400',
+};
+
 
 
 let N_TILES = 6;
