@@ -130,3 +130,23 @@ export function PlayButton(props) {
         </div>
     );
 }
+
+export function BackgroundSelector(props) {
+    return (
+        <div className='bg-selector'>
+            <label htmlFor="bg-select" className="bg-selector-label">Background: </label>
+            <select 
+                id="bg-select"
+                value={props.currentBackground} 
+                onChange={(e) => props.onChange(e.target.value)}
+                className='bg-selector-dropdown'
+            >
+                {props.backgrounds.map(bg => (
+                    <option key={bg.id} value={bg.class}>
+                        {bg.name}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+}

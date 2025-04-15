@@ -14,7 +14,8 @@ import {
     Spacer,
     Equation,
     PlayButton,
-    ResetTile
+    ResetTile,
+    BackgroundSelector
 } from './divs';
 import {TileArray} from "./tile_array";
 import {
@@ -36,6 +37,15 @@ const styles = {
     dormantTile: 'opacity-50 cursor-pointer',
     activeTile: 'ring-2 ring-blue-400',
 };
+
+// Available background patterns
+const BACKGROUNDS = [
+    { id: 'solid', name: 'Indigo', class: 'bg-solid' },
+    { id: 'grid', name: 'Teal Grid', class: 'bg-grid' },
+    { id: 'dots', name: 'Purple Dots', class: 'bg-dots' },
+    { id: 'waves', name: 'Orange Waves', class: 'bg-waves' },
+    { id: 'circuit', name: 'Blue Circuit', class: 'bg-circuit' }
+];
 
 
 
@@ -63,7 +73,10 @@ class Board extends Component {
         super(props);
         // Calculate LEFT_MARGIN here to ensure TILE_WIDTH is defined
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
-        this.state = this.populate_board();
+        this.state = {
+            ...this.populate_board(),
+            backgroundClass: 'bg-solid'
+        };
     }
 
     populate_board() {
@@ -319,6 +332,16 @@ class Board extends Component {
                 () => this.handlePlayClick()}
         />)
     }
+    
+    renderBackgroundSelector() {
+        return (
+            <BackgroundSelector 
+                backgrounds={BACKGROUNDS}
+                currentBackground={this.state.backgroundClass}
+                onChange={(backgroundClass) => this.setState({ backgroundClass })}
+            />
+        );
+    }
 
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
@@ -402,9 +425,10 @@ class Board extends Component {
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
+        objs.push(this.renderBackgroundSelector());
 
         return (
-            <div className="board">
+            <div className={`board ${this.state.backgroundClass}`}>
                 {objs}
             </div>
         );

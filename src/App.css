@@ -29,8 +29,45 @@
 }
 
 
+/* Background patterns with vibrant, distinct colors */
+.bg-solid {
+  background-color: #303F9F; /* Indigo */
+}
+
+.bg-grid {
+  background-color: #00695C; /* Teal */
+  background-image: linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-dots {
+  background-color: #6A1B9A; /* Purple */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-waves {
+  background-color: #D84315; /* Deep Orange */
+  background-image: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%);
+  background-position: 10px 0, 10px 0, 0 0, 0 0;
+  background-size: 20px 20px;
+}
+
+.bg-circuit {
+  background-color: #0D47A1; /* Blue */
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+    radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
 .board {
-  background-color: #303F9F;
   color: rgb(240, 200, 200);
   align-content: center;
   height: 100vh;
@@ -43,6 +80,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: background-color 0.5s ease;
 }
 .block {
   height: 80px;
@@ -182,6 +220,46 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.bg-selector {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.bg-selector-label {
+  color: #333;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.bg-selector-dropdown {
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.bg-selector-dropdown:hover, 
+.bg-selector-dropdown:focus {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  outline: none;
 }
 
 
