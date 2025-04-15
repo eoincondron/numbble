@@ -40,8 +40,8 @@ const styles = {
 
 
 let N_TILES = 6;
-let LEFT_MARGIN = window.innerWidth / 2 - 150;
-let TILE_WIDTH = 40;
+let LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
+let TILE_WIDTH = 80;
 let EMPTY = '';
 
 
@@ -351,13 +351,18 @@ class Board extends Component {
             }
         }
 
-        left_position = TILE_WIDTH;
+        // Center the operations row
+        const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
+        left_position = (window.innerWidth - totalOperationsWidth) / 2;
+        
         for (let i = 0; i < OPERATIONS.length; i++) {
             let op_string = OPERATIONS[i];
             objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
-        left_position += TILE_WIDTH / 2;
+        
+        // Add some spacing between operations and brackets
+        left_position += TILE_WIDTH / 4;
         objs.push(this.renderUnplacedBracketTile(true, left_position));
         left_position += TILE_WIDTH / 2;
         objs.push(this.renderUnplacedBracketTile(false, left_position));
@@ -393,7 +398,7 @@ class Game extends Component {
     }
     
     updateWindowDimensions() {
-        LEFT_MARGIN = window.innerWidth / 2 - 150;
+        LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
         this.forceUpdate();
     }
     
