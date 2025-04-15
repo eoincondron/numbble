@@ -468,8 +468,8 @@ class Game extends Component {
             if (event.key === 'Enter') {
                 this.boardRef.current.handlePlayClick();
             }
-            // If Escape key is pressed, trigger the reset function
-            else if (event.key === 'Escape') {
+            // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
+            else if (event.key === 'r' || event.key === 'R') {
                 this.boardRef.current.handleResetClick();
             }
         }

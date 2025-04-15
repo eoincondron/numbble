@@ -105,7 +105,7 @@ export function PlacedBracketTile(props) {
 export function ResetTile(props) {
     return (
         <button className="reset_tile rounded-md shadow-md flex items-center justify-center transition-all hover:shadow-lg hover:bg-green-400" style={props.style} onClick={props.onClick}>
-            Reset
+            Reset (R)
         </button>
     );
 }
