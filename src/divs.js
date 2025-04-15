@@ -126,7 +126,7 @@ export function Equation(props) {
 export function PlayButton(props) {
     return (
         <div className='play button rounded-md shadow-md flex items-center justify-center font-semibold transition-all hover:shadow-lg hover:bg-red-600' onClick={props.onClick}>
-            Check Equation
+            Check Equation (↵)
         </div>
     );
 }
