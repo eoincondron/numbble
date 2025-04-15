@@ -298,7 +298,15 @@ class Board extends Component {
     }
 
     renderEquation() {
-        let eq = this.state.tile_array._build_display_string();
+        let eq;
+        try {
+            // Try to get the evaluable equation instead of the display string
+            eq = this.state.tile_array.build_equation(false);
+        } catch (error) {
+            // If there's an error building the equation (like no equals sign yet),
+            // just display a placeholder message
+            eq = "Build your equation...";
+        }
         return (<Equation
                 equation={eq}
             />

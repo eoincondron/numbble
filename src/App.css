@@ -127,17 +127,18 @@
 .equation {
   background-color: #E8F5E9;
   color: #333;
-  text-align: left;
+  text-align: center;
   width: 350px;
   height: 60px;
-  font-size: 22px;
-  font-weight: 500;
-  font-family: 'Inter', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: 'Roboto Mono', monospace;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 12px 18px;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: absolute;
   bottom: 30px;
   left: 30px;

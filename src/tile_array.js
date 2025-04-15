@@ -148,10 +148,6 @@ export class TileArray {
         }
     }
 
-    _build_display_string() {
-        return this.tile_array.join('')
-    }
-
     _get_sub_lists() {
         // Split the array into sub-lists where each space defines the start of a new list
         let i = 0;

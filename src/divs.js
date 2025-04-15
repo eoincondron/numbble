@@ -116,7 +116,7 @@ export function ResetTile(props) {
 export function Equation(props) {
     return (
         <div className="equation rounded-md shadow-md p-2">
-            Equation: {props.equation}
+            {props.equation}
         </div>
     );
 }
