@@ -114,12 +114,46 @@
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   font-size: 32px;
+  /* 3D effect */
+  border: 2px solid rgba(255, 220, 100, 0.8);
+  box-shadow: 
+    0 8px 12px rgba(0, 0, 0, 0.2),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  transform: perspective(100px) translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.num_tile:hover {
+  transform: perspective(100px) translateZ(5px);
+  box-shadow: 
+    0 12px 16px rgba(0, 0, 0, 0.2),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .bracket_tile {
   z-index: 0;
   width: 40px;
   font-family: 'Roboto Mono', monospace;
   font-size: 40px;
+  /* 3D effect matching other tiles */
+  border: 2px solid rgba(130, 100, 200, 0.7);
+  box-shadow: 
+    0 6px 10px rgba(0, 0, 0, 0.2),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  transform: perspective(100px) translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bracket_tile:hover {
+  transform: perspective(100px) translateZ(5px);
+  box-shadow: 
+    0 10px 14px rgba(0, 0, 0, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .op_tile {
   background-color: #3F51B5;
@@ -133,8 +167,24 @@
   font-weight: 600;
   font-family: 'Roboto Mono', monospace;
   font-size: 36px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   min-width: 60px;
+  /* 3D effect */
+  border: 2px solid rgba(100, 120, 255, 0.7);
+  box-shadow: 
+    0 6px 10px rgba(0, 0, 0, 0.2),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  transform: perspective(100px) translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.op_tile:hover {
+  transform: perspective(100px) translateZ(5px);
+  box-shadow: 
+    0 10px 14px rgba(0, 0, 0, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .spacer {
   background-color: transparent;
