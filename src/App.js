@@ -75,8 +75,52 @@ class Board extends Component {
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
         this.state = {
             ...this.populate_board(),
-            backgroundClass: 'bg-solid'
+            backgroundClass: 'bg-solid',
+            timer: 0,
+            isTimerRunning: false
         };
+        
+        this.timerInterval = null;
+        this.startTimer = this.startTimer.bind(this);
+        this.stopTimer = this.stopTimer.bind(this);
+        this.resetTimer = this.resetTimer.bind(this);
+        this.formatTime = this.formatTime.bind(this);
+    }
+    
+    componentDidMount() {
+        // Start the timer when component mounts
+        this.startTimer();
+    }
+    
+    componentWillUnmount() {
+        // Clear timer when component unmounts
+        this.stopTimer();
+    }
+    
+    startTimer() {
+        if (!this.timerInterval) {
+            this.setState({ isTimerRunning: true });
+            this.timerInterval = setInterval(() => {
+                this.setState(prevState => ({
+                    timer: prevState.timer + 1
+                }));
+            }, 1000);
+        }
+    }
+    
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+            this.setState({ isTimerRunning: false });
+        }
+    }
+    
+    resetTimer() {
+        this.stopTimer();
+        this.setState({ timer: 0 }, () => {
+            this.startTimer();
+        });
     }
 
     populate_board() {
@@ -307,6 +351,8 @@ class Board extends Component {
     handleResetClick() {
         this.deactive_op();
         this.state.tile_array.reset_board();
+        // Don't reset the timer when the reset button is hit
+        // Only reset timer after successful equation evaluation
         // TODO: this is currently generating a new board
     }
 
@@ -347,12 +393,33 @@ class Board extends Component {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
-            alert(eq + " is correct. Well done !");
+            // Stop the timer on successful solution
+            this.stopTimer();
+            const timeString = this.formatTime(this.state.timer);
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}`);
+            
+            // Reset the board and timer
             this.setState(this.populate_board());
+            this.resetTimer();
         } else {
             alert("Sorry, the equation is invalid: " + eq);
             log(this.state.tile_array.tile_array)
         }
+    }
+    
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    renderTimer() {
+        const timeString = this.formatTime(this.state.timer);
+        return (
+            <div className="timer">
+                {timeString}
+            </div>
+        );
     }
 
     render() {
@@ -426,6 +493,7 @@ class Board extends Component {
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
         objs.push(this.renderBackgroundSelector());
+        objs.push(this.renderTimer());
 
         return (
             <div className={`board ${this.state.backgroundClass}`}>
@@ -450,11 +518,40 @@ class Game extends Component {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
         window.addEventListener('keydown', this.handleKeyDown);
+        // Start the timer when component mounts
+        this.startTimer();
     }
     
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
         window.removeEventListener('keydown', this.handleKeyDown);
+        // Clear timer when component unmounts
+        this.stopTimer();
+    }
+    
+    startTimer() {
+        if (!this.timerInterval) {
+            this.setState({ isTimerRunning: true });
+            this.timerInterval = setInterval(() => {
+                this.setState(prevState => ({
+                    timer: prevState.timer + 1
+                }));
+            }, 1000);
+        }
+    }
+    
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+            this.setState({ isTimerRunning: false });
+        }
+    }
+    
+    resetTimer() {
+        this.stopTimer();
+        this.setState({ timer: 0 });
+        this.startTimer();
     }
     
     updateWindowDimensions() {
