@@ -40,8 +40,9 @@ const styles = {
 
 
 let N_TILES = 6;
-let LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
 let TILE_WIDTH = 80;
+// LEFT_MARGIN will be calculated after TILE_WIDTH is defined
+let LEFT_MARGIN;
 let EMPTY = '';
 
 
@@ -60,7 +61,9 @@ class Board extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.populate_board()
+        // Calculate LEFT_MARGIN here to ensure TILE_WIDTH is defined
+        LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
+        this.state = this.populate_board();
     }
 
     populate_board() {
@@ -322,12 +325,33 @@ class Board extends Component {
     }
 
     render() {
-        let left_position = LEFT_MARGIN;
-        let objs = [];
-        let tiles = this.state.tile_array.tile_array;
-
+        // Calculate the total width needed for all tiles
+        let totalWidth = 0;
+        const tiles = this.state.tile_array.tile_array;
+        
+        // First pass to calculate the total width
         for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
-            let content = tiles[array_pos];
+            const content = tiles[array_pos];
+            if (content === L_BRACKET || content === R_BRACKET) {
+                totalWidth += TILE_WIDTH / 2;
+            } else if (content === SPACE || OPERATIONS.includes(content)) {
+                totalWidth += TILE_WIDTH;
+            } else {
+                if (content.length === 1) {
+                    totalWidth += TILE_WIDTH;
+                } else {
+                    totalWidth += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
+                }
+            }
+        }
+        
+        // Center the array horizontally
+        let left_position = (window.innerWidth - totalWidth) / 2;
+        let objs = [];
+        const tiles_array = this.state.tile_array.tile_array;
+
+        for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
+            let content = tiles_array[array_pos];
             if (content === L_BRACKET || content === R_BRACKET) {
                 objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
                 left_position += TILE_WIDTH / 2;
