@@ -463,11 +463,14 @@ class Game extends Component {
     }
     
     handleKeyDown(event) {
-        // If Enter key is pressed, simulate a click on the Play button
-        if (event.key === 'Enter') {
-            // Find the board instance and trigger its handlePlayClick method
-            if (this.boardRef.current) {
+        if (this.boardRef.current) {
+            // If Enter key is pressed, simulate a click on the Play button
+            if (event.key === 'Enter') {
                 this.boardRef.current.handlePlayClick();
+            }
+            // If Escape key is pressed, trigger the reset function
+            else if (event.key === 'Escape') {
+                this.boardRef.current.handleResetClick();
             }
         }
     }
