@@ -153,11 +153,11 @@
 .play {
   background-color: #E91E63;
   color: white;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   text-align: center;
-  width: 120px;
+  width: 200px;
   height: 70px;
   border-radius: 15px;
   cursor: pointer;
@@ -169,6 +169,8 @@
   right: 30px;
   bottom: 30px;
   position: absolute;
+  padding: 0 15px;
+  line-height: 1.2;
 }
 
 .game {

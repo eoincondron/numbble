@@ -410,15 +410,19 @@ class Game extends Component {
     constructor(props) {
         super(props);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.boardRef = React.createRef();
     }
     
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
+        window.addEventListener('keydown', this.handleKeyDown);
     }
     
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
     
     updateWindowDimensions() {
@@ -426,11 +430,21 @@ class Game extends Component {
         this.forceUpdate();
     }
     
+    handleKeyDown(event) {
+        // If Enter key is pressed, simulate a click on the Play button
+        if (event.key === 'Enter') {
+            // Find the board instance and trigger its handlePlayClick method
+            if (this.boardRef.current) {
+                this.boardRef.current.handlePlayClick();
+            }
+        }
+    }
+    
     render() {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board/>
+                    <Board ref={this.boardRef}/>
                 </div>
             </div>
         );
