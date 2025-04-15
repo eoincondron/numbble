@@ -40,8 +40,8 @@ const styles = {
 
 
 let N_TILES = 6;
-let LEFT_MARGIN = 100;
-let TILE_WIDTH = 30;
+let LEFT_MARGIN = window.innerWidth / 2 - 150;
+let TILE_WIDTH = 40;
 let EMPTY = '';
 
 
@@ -378,15 +378,30 @@ class Board extends Component {
 
 
 class Game extends Component {
+    constructor(props) {
+        super(props);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+    
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    
+    updateWindowDimensions() {
+        LEFT_MARGIN = window.innerWidth / 2 - 150;
+        this.forceUpdate();
+    }
+    
     render() {
         return (
             <div className="game">
                 <div className="game-board">
                     <Board/>
-                </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
                 </div>
             </div>
         );
