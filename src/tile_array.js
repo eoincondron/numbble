@@ -123,11 +123,10 @@ export class TileArray {
         // Insert a bracket to adjacent to the chosen number
         // Throw if array does not contain a number at the given location
         this._check_contains_num_at(num_location, 'insert a bracket')
-        let offset = 0
-        if (bracket_type === R_BRACKET) {
-            offset = 1
-        }
-        this.string_array.splice(num_location + offset, 0, bracket_type)
+        let value = this.string_array[num_location];
+        value = (bracket_type === L_BRACKET) ? L_BRACKET + value: value + R_BRACKET;
+        this.string_array[num_location] = value;
+
         if (this.open_bracket === bracket_type) {
             throw "Inserting a bracket when there is already an open bracket of the same side is not allowed" }
         else if (this.open_bracket === EMPTY) {
