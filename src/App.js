@@ -442,10 +442,7 @@ class Board extends Component {
 
         for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
             let content = tiles_array[array_pos];
-            if (content === L_BRACKET || content === R_BRACKET) {
-                objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
-                left_position += TILE_WIDTH / 2;
-            } else if (content === SPACE) {
+            if (content === SPACE) {
                 objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else if (OPERATIONS.includes(content)) {
