@@ -477,7 +477,7 @@ class Board extends Component {
                 left_position += TILE_WIDTH;
             } else {
                 if (!is_num_string(content)) {
-                    throw "content must be a space, bracket, operation or number"
+                    throw `content must be a space, bracket, operation or number. Saw ${content}`
                 }
                 if (content.length === 1) {
                     objs.push(this.renderSingleNumTile(array_pos, left_position))
