@@ -19,11 +19,12 @@ import {
 } from './divs';
 import {TileArray} from "./tile_array";
 import {
+    MINUS,
     L_BRACKET,
     R_BRACKET,
     SPACE,
     is_num_string,
-    OPERATIONS
+    OPERATIONS,
 } from "./util";
 
 
@@ -170,6 +171,10 @@ class Board extends Component {
     handleSingleNumClick(array_pos) {
         if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.remove_brackets(array_pos)
+        }
+        if (this.state.active_op === MINUS) {
+            this.state.tile_array.negate_number(array_pos)
+            this.deactive_op()
         }
         this.setState({})
     }

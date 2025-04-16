@@ -3,7 +3,11 @@ export const R_BRACKET = ')';
 export const L_BRACKET = '(';
 export const SPACE = ' ';
 export const EQUALS = '='
-export let OPERATIONS = ['+', '-', '/', 'X', '='];
+export const PLUS = '+'
+export const MINUS = '-'
+export const MULTIPLY = 'X'
+export const DIVIDE = '/'
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, EQUALS];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
