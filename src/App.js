@@ -314,6 +314,10 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
+        if (OPERATIONS.includes(this.state.active_op)) {
+            this.state.tile_array.insert_operation(array_pos, this.state.active_op);
+            this.deactive_op();
+        }
     }
 
     // SPACE TILES
