@@ -27,8 +27,13 @@ export function MultiNumTile(props) {
 
 
 export function Spacer(props) {
+    // Add highlighted class if the prop is true
+    const className = props.isHighlighted 
+        ? "spacer block placed highlightable highlighted" 
+        : "spacer block placed highlightable";
+        
     return (
-        <div className="spacer block placed" style={props.style} onClick={props.onClick}>
+        <div className={className} style={props.style} onClick={props.onClick}>
         </div>
     );
 }

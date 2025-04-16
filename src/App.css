@@ -189,7 +189,30 @@
 .spacer {
   background-color: transparent;
   z-index: 0; 
+}
 
+/* Styling for highlightable spaces */
+.highlightable {
+  border: 2px dashed transparent;
+  transition: all 0.3s ease;
+}
+
+/* Highlighted state with pulsing effect */
+.highlighted {
+  border: 2px dashed rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.1);
+  animation: pulse-shadow 1.5s infinite alternate;
+}
+
+/* Pulsing shadow animation for highlighted spaces */
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 
+                0 0 30px rgba(100, 120, 255, 0.4);
+  }
 }
 .reset_tile {
   background-color: #4CAF50;

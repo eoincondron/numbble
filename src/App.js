@@ -318,7 +318,11 @@ class Board extends Component {
 
     // SPACE TILES
     renderSpacer(array_pos, left_position) {
+        // Determine if this space should be highlighted (when an operator is active)
+        const isHighlighted = OPERATIONS.includes(this.state.active_op);
+        
         return (<Spacer
+                isHighlighted={isHighlighted}
                 style={{
                     left: left_position + 'px'
                 }}
