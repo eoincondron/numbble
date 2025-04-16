@@ -84,7 +84,6 @@
 }
 .block {
   height: 80px;
-  width: 80px;
   position: absolute;
   text-align: center;
   font-size: 36px;
@@ -105,6 +104,7 @@
   transition: all 0.2s ease;
 }
 .num_tile {
+  width: 80px;
   background-color: #FFC107;
   z-index: 0; 
   border-radius: 16px;
@@ -156,6 +156,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .op_tile {
+  width: 80px;
   background-color: #3F51B5;
   color: white;
   margin-right: 20px;
@@ -187,6 +188,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .spacer {
+  width: 80px;
   background-color: transparent;
   z-index: 0; 
 }
@@ -253,13 +255,6 @@
   position: absolute;
   bottom: 30px;
   left: 30px;
-}
-
-.brackets {
-  font-size: 20px;
-  font-weight: bold;
-  font-family: 'Roboto Mono', monospace;
-  text-align: top;
 }
 
 .play {
