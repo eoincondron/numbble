@@ -138,7 +138,7 @@ class Board extends Component {
     }
 
     renderSingleNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos]
+        let value = this.state.tile_array.string_array[array_pos]
         return (
             <SingleNumTile
                 value={value}
@@ -180,7 +180,7 @@ class Board extends Component {
     }
 
     renderMultiNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos]
+        let value = this.state.tile_array.string_array[array_pos]
         return (
             <MultiNumTile
                 value={value}
@@ -303,7 +303,7 @@ class Board extends Component {
     }
 
     renderPlacedOpTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos];
+        let value = this.state.tile_array.string_array[array_pos];
         return (<PlacedOpTile
                 value={value}
                 style={{
@@ -416,7 +416,7 @@ class Board extends Component {
             this.resetTimer();
         } else {
             alert("Sorry, the equation is invalid: " + eq);
-            log(this.state.tile_array.tile_array)
+            log(this.state.tile_array.string_array)
         }
     }
     
@@ -438,7 +438,7 @@ class Board extends Component {
     render() {
         // Calculate the total width needed for all tiles
         let totalWidth = 0;
-        const tiles = this.state.tile_array.tile_array;
+        const tiles = this.state.tile_array.string_array;
         
         // First pass to calculate the total width
         for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
@@ -459,7 +459,7 @@ class Board extends Component {
         // Center the array horizontally
         let left_position = (window.innerWidth - totalWidth) / 2;
         let objs = [];
-        const tiles_array = this.state.tile_array.tile_array;
+        const tiles_array = this.state.tile_array.string_array;
 
         for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
             let content = tiles_array[array_pos];
