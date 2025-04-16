@@ -74,7 +74,7 @@ export class TileArray {
         if (to_right === L_BRACKET) {
             return
         }
-        if (!(NUMBERS.includes(to_left) && NUMBERS.includes(to_right))) {
+        if (!(is_num_string(to_left) && is_num_string(to_right))) {
             throw "Space is adjacent non-numeric characters :".concat(to_left, ', ', to_right)
         }
         this.string_array[space_location - 1] = to_left + to_right; // numbers are represented as strings
@@ -222,7 +222,7 @@ export class TileArray {
         for (i = 0; i < sub_lists.length; i++) {
             let sub_list = sub_lists[i];
             // check if sublist has anything other than numbers
-            let has_ops = sub_list.filter(x => !NUMBERS.includes(x)).length > 0
+            let has_ops = sub_list.filter(x => OPERATIONS.includes(x)).length > 0
             if (!has_ops) {
                 continue;
             }

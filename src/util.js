@@ -37,13 +37,21 @@ export function is_num_string(string) {
 export function split_num_string(num_string) {
     // Splits a string into a list of individual characters separated by spaces.
     // Example: split_num_string('123') -. ['1', ' ', '2', ' ', '3']
-    let chars = num_string.split('')
-    if (chars.length === 0 || !NUMBERS.includes(chars[0])) {
-        throw "Cannot split num string: " + num_string;
+    let split_locations = [];
+    for (let i = 0; i < num_string.length - 1; i++) {
+        if (NUMBERS.includes(num_string[i]) && NUMBERS.includes(num_string[i + 1])) {
+            split_locations.push(i)
+        }
     }
-    let n_chars = chars.length;
-    for (let i = 0; i < n_chars - 1; i++) {
-        chars.splice(2*i + 1, 0, SPACE)
+
+    let start = 0;
+    let split = [];
+    for (const loc of split_locations) {
+        split.push(num_string.slice(start, loc + 1))
+        split.push(SPACE)
+        start = loc + 1
     }
-    return chars
+
+    split.push(num_string.slice(start))
+    return split
 }
