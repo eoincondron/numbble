@@ -394,8 +394,12 @@ class Board extends Component {
             this.setState(this.populate_board());
             this.resetTimer();
         } else {
-            alert("Sorry, the equation is invalid: " + eq);
-            // log(this.state.tile_array.string_array)
+            let sides = eval_eq.split('===')
+            let side_vals = sides.map(x => eval(x))
+            let simplified = side_vals.join(' = ')
+            alert(`Sorry, the equation is invalid: ${eq} \n (Simplifies to ${simplified})`);
+
+            console.log(this.state.tile_array.string_array)
         }
     }
     
