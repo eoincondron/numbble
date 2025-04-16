@@ -12,7 +12,7 @@ import {
     PlacedOpTile,
     PlayButton,
     ResetTile,
-    SingleNumTile,
+    NumTile,
     Spacer,
     WaitingBracketTile,
     WaitingOpTile
@@ -138,67 +138,43 @@ class Board extends Component {
         this.setState({active_op: EMPTY})
     }
 
-    renderSingleNumTile(array_pos, left_position) {
+    renderNumTile(array_pos, left_position) {
         let value = this.state.tile_array.string_array[array_pos]
         return (
-            <SingleNumTile
+            <NumTile
                 value={value}
                 style={{
                     left: left_position + 'px'
                 }}
                 onClick={
-                    () => this.handleSingleNumClick(array_pos)
+                    () => this.handleNumClick(array_pos)
                 }
             />
         );
     }
 
-    _maybeInsertBrackets(array_pos) {
+    _insertBrackets(array_pos) {
         // Insert brackets at array pos if current active op is a bracket and return boolean indicating if we did
         // This could be the place for automatically activating a second bracket.
         let outstanding_bracket = EMPTY;
-        if (BRACKETS.includes(this.state.active_op)) {
-            this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
-            this.deactive_op()
-            outstanding_bracket = this.state.tile_array._outstanding_bracket();
-            if (outstanding_bracket !== EMPTY) {
-                this.setState({active_op: outstanding_bracket})
-            }
-            return true
-        }
-        else {
-            return false
+        this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
+        this.deactive_op()
+        outstanding_bracket = this.state.tile_array._outstanding_bracket();
+        if (outstanding_bracket !== EMPTY) {
+            this.setState({active_op: outstanding_bracket})
         }
     }
 
-    handleSingleNumClick(array_pos) {
-        if (!this._maybeInsertBrackets(array_pos)) {
-            this.state.tile_array.remove_brackets(array_pos)
+    handleNumClick(array_pos) {
+        if (BRACKETS.includes(this.state.active_op)) {
+            this._insertBrackets(array_pos)
         }
-        if (this.state.active_op === MINUS) {
+        else if (this.state.active_op === MINUS) {
             this.state.tile_array.negate_number(array_pos)
             this.deactive_op()
         }
-        this.setState({})
-    }
-
-    renderMultiNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.string_array[array_pos]
-        return (
-            <MultiNumTile
-                value={value}
-                style={{
-                    left: left_position + 'px'
-                }}
-                onClick={
-                    () => this.handleMultiNumClick(array_pos)
-                }
-            />
-        );
-    }
-
-    handleMultiNumClick(array_pos) {
-        if (!this._maybeInsertBrackets(array_pos)) {
+        else {
+            this.state.tile_array.remove_brackets(array_pos)
             this.state.tile_array.split_numbers(array_pos)
         }
         this.setState({})
@@ -479,13 +455,9 @@ class Board extends Component {
                 if (!is_num_string(content)) {
                     throw `content must be a space, bracket, operation or number. Saw ${content}`
                 }
-                if (content.length === 1) {
-                    objs.push(this.renderSingleNumTile(array_pos, left_position))
-                    left_position += TILE_WIDTH;
-                } else {
-                    objs.push(this.renderMultiNumTile(array_pos, left_position))
-                    left_position += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
-                }
+                objs.push(this.renderNumTile(array_pos, left_position))
+                left_position += TILE_WIDTH;
+                log(left_position, content)
             }
         }
 

@@ -1,20 +1,8 @@
 import React from "react";
 
 
-export function SingleNumTile(props) {
+export function NumTile(props) {
     // clicking this will remove any adjacent brackets
-    return (
-        <div className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" style={props.style} onClick={props.onClick}>
-            {props.value}
-        </div>
-    );
-}
-
-//  ==================================== ===
-
-
-export function MultiNumTile(props) {
-    // Clicking will split this into single digits
     return (
         <div className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" style={props.style} onClick={props.onClick}>
             {props.value}

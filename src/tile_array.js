@@ -160,20 +160,26 @@ export class TileArray {
         this._insert_bracket(R_BRACKET, num_location)
     }
 
-    remove_brackets(num_location) {
+    _remove_brackets_of_type(bracket_type, location) {
         // Remove brackets adjacent to a number at a given location
         // Throw if the array does not contain a number here
-        this._check_contains_num_at(num_location, "remove brackets")
-        let i = num_location - 1;
-        while (this.string_array[i] === L_BRACKET) {
-            this.string_array.splice(i, 1)
-            i -= 1;
+        this._check_contains_num_at(location, "remove brackets")
+        let opposite = (bracket_type == L_BRACKET) ? R_BRACKET : L_BRACKET
+        while (this.string_array[location].includes(bracket_type)) {
+            this.string_array[location] = this.string_array[location].replace(bracket_type, '')
+            for (let i = location; i < this.string_array.length - 1; i++) {
+                let s = this.string_array[i]
+                if (s.includes(opposite)) {
+                    this.string_array[i] = s.replace(opposite, '')
+                    break
+                }
+            }
         }
-        i = num_location + 1;
-        while (this.string_array[i] === R_BRACKET) {
-            this.string_array.splice(i, 1)
-            i += 1;
-        }
+    }
+
+    remove_brackets(location) {
+        this._remove_brackets_of_type(L_BRACKET, location)
+        this._remove_brackets_of_type(R_BRACKET, location)
     }
 
     negate_number(num_location) {
