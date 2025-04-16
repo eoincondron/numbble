@@ -3,28 +3,30 @@ import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
 import {
-    MultiNumTile,
-    SingleNumTile,
+    BackgroundSelector,
     DormantBracketTile,
-    WaitingBracketTile,
+    DormantOpTile,
+    Equation,
+    MultiNumTile,
     PlacedBracketTile,
     PlacedOpTile,
-    DormantOpTile,
-    WaitingOpTile,
-    Spacer,
-    Equation,
     PlayButton,
     ResetTile,
-    BackgroundSelector
+    SingleNumTile,
+    Spacer,
+    WaitingBracketTile,
+    WaitingOpTile
 } from './divs';
 import {TileArray} from "./tile_array";
 import {
+    EMPTY,
+    is_num_string,
     MINUS,
+    OPERATIONS,
     L_BRACKET,
     R_BRACKET,
+    BRACKETS,
     SPACE,
-    is_num_string,
-    OPERATIONS,
 } from "./util";
 
 
@@ -54,7 +56,6 @@ let N_TILES = 6;
 let TILE_WIDTH = 80;
 // LEFT_MARGIN will be calculated after TILE_WIDTH is defined
 let LEFT_MARGIN;
-let EMPTY = '';
 
 
 let log = console.log;
@@ -155,15 +156,17 @@ class Board extends Component {
     _maybeInsertBrackets(array_pos) {
         // Insert brackets at array pos if current active op is a bracket and return boolean indicating if we did
         // This could be the place for automatically activating a second bracket.
-        if (this.state.active_op === R_BRACKET) {
-            this.state.tile_array.insert_right_bracket(array_pos);
+        let outstanding_bracket = EMPTY;
+        if (BRACKETS.includes(this.state.active_op)) {
+            this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
             this.deactive_op()
+            outstanding_bracket = this.state.tile_array._outstanding_bracket();
+            if (outstanding_bracket !== EMPTY) {
+                this.setState({active_op: outstanding_bracket})
+            }
             return true
-        } else if (this.state.active_op === L_BRACKET) {
-            this.state.tile_array.insert_left_bracket(array_pos)
-            this.deactive_op()
-            return true
-        } else {
+        }
+        else {
             return false
         }
     }

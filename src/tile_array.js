@@ -1,6 +1,17 @@
 
-import {random_digit, NUMBERS, L_BRACKET, R_BRACKET, SPACE, OPERATIONS,
-    EQUALS, split_num_string, is_num_string, OP_EVAL_MAP} from './util.js';
+import {
+    random_digit,
+    NUMBERS,
+    L_BRACKET,
+    R_BRACKET,
+    SPACE,
+    OPERATIONS,
+    EMPTY,
+    EQUALS,
+    split_num_string,
+    is_num_string,
+    OP_EVAL_MAP
+} from './util.js';
 
 
 export class TileArray {
@@ -15,7 +26,8 @@ export class TileArray {
             numbers = this.build_random_num_array(numbers);
         }
         this.num_array = numbers;
-        this.string_array = this.build_tile_array_from_numbers(this.num_array)
+        this.string_array = this.build_tile_array_from_numbers(this.num_array);
+        this.open_bracket = EMPTY;
     }
 
     build_random_num_array(n_numbers) {
@@ -107,18 +119,46 @@ export class TileArray {
         }
     }
 
+    _insert_bracket(bracket_type, num_location) {
+        // Insert a bracket to adjacent to the chosen number
+        // Throw if array does not contain a number at the given location
+        this._check_contains_num_at(num_location, 'insert a bracket')
+        let offset = 0
+        if (bracket_type === R_BRACKET) {
+            offset = 1
+        }
+        this.string_array.splice(num_location + offset, 0, bracket_type)
+        if (this.open_bracket === bracket_type) {
+            throw "Inserting a bracket when there is already an open bracket of the same side is not allowed" }
+        else if (this.open_bracket === EMPTY) {
+            this.open_bracket = bracket_type
+        } else {
+            this.open_bracket = EMPTY
+        }
+    }
+
+    _outstanding_bracket() {
+        switch (this.open_bracket) {
+            case L_BRACKET:
+                return R_BRACKET
+            case R_BRACKET:
+                return L_BRACKET
+            case EMPTY:
+                return EMPTY
+        }
+
+    }
+
     insert_left_bracket(num_location) {
         // Insert a bracket to the left of the chosen number
         // Throw if array does not contain a number at the given location
-        this._check_contains_num_at(num_location, 'insert a bracket')
-        this.string_array.splice(num_location, 0, L_BRACKET)
+        this._insert_bracket(L_BRACKET, num_location)
     }
 
     insert_right_bracket(num_location) {
         // Insert a bracket to the right of the chosen number
         // Throw if array does not contain a number at the given location
-        this._check_contains_num_at(num_location, 'insert a bracket')
-        this.string_array.splice(num_location + 1, 0, R_BRACKET)
+        this._insert_bracket(R_BRACKET, num_location)
     }
 
     remove_brackets(num_location) {

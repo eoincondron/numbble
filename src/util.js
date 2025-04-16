@@ -1,7 +1,8 @@
 
-export const R_BRACKET = ')';
-export const L_BRACKET = '(';
-export const SPACE = ' ';
+export const EMPTY = ''
+export const R_BRACKET = ')'
+export const L_BRACKET = '('
+export const SPACE = ' '
 export const EQUALS = '='
 export const PLUS = '+'
 export const MINUS = '-'
@@ -13,6 +14,7 @@ export let OP_EVAL_MAP = {
     'X': '*'
 };
 export let NUMBERS = '0123456789'.split('');
+export let BRACKETS = [L_BRACKET, R_BRACKET]
 
 
 export function random_digit(max) {
