@@ -7,7 +7,6 @@ import {
     DormantBracketTile,
     DormantOpTile,
     Equation,
-    MultiNumTile,
     PlacedBracketTile,
     PlacedOpTile,
     PlayButton,
@@ -353,10 +352,11 @@ class Board extends Component {
         try {
             // Try to get the evaluable equation instead of the display string
             eq = this.state.tile_array.build_equation(false);
+            eq = "Your Equation: " + eq;
         } catch (error) {
             // If there's an error building the equation (like no equals sign yet),
             // just display a placeholder message
-            eq = "Build your equation...";
+            eq = "Your Equation: ";
         }
         return (<Equation
                 equation={eq}
@@ -395,7 +395,7 @@ class Board extends Component {
             this.resetTimer();
         } else {
             alert("Sorry, the equation is invalid: " + eq);
-            log(this.state.tile_array.string_array)
+            // log(this.state.tile_array.string_array)
         }
     }
     
