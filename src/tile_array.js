@@ -192,6 +192,19 @@ export class TileArray {
         }
     }
 
+    index_of_nth_space(n) {
+        let space_count = 0;
+        for (let i in this.string_array) {
+            if (this.string_array[i] === SPACE) {
+                if (space_count === n) {
+                    return i
+                }
+                space_count += 1
+            }
+        }
+        return -1
+    }
+
     build_equation (evaluable = false) {
         // Build a single string containing an equation from the board by concatenating
         // the unique sublist containing an equality if such exists.

@@ -547,7 +547,6 @@ class Game extends Component {
         let active_op_index
         let active_space
         if (board) {
-            console.log(event.key)
             switch (event.key) {
                 case 'Enter':
                     // If Enter key is pressed, simulate a click on the Play button
@@ -556,6 +555,14 @@ class Game extends Component {
                 case 'r':
                     // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
                     board.handleResetClick();
+                    break;
+                case ' ':
+                    if (OPERATIONS.includes(board.state.active_op)) {
+                        let array_pos = board.state.tile_array.index_of_nth_space(board.state.active_space)
+                        if (array_pos >= 0) {
+                            board.handleSpaceClick(array_pos)
+                        }
+                    }
                     break;
                 case 'ArrowRight':
                     active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
