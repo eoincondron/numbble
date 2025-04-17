@@ -28,7 +28,8 @@ import {
     BRACKETS,
     SPACE,
 } from "./util";
-let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS)
+let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
+// Find a better way to state the ordering of the operation tiles.
 
 
 // Tailwind configuration and custom styles
@@ -70,6 +71,10 @@ let log = console.log;
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
 
+
+function _isPlaceable (tile_symbol) {
+    return OPERATIONS.includes(tile_symbol) || tile_symbol === EQUALS
+}
 
 class Board extends Component {
 
@@ -309,7 +314,7 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
-        if (OPERATIONS.includes(this.state.active_op)) {
+        if (_isPlaceable(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op);
             this.deactivate_op();
         }
@@ -319,7 +324,7 @@ class Board extends Component {
     renderSpacer(array_pos, left_position) {
         // Determine if this space should be highlighted (when an operator is active)
         let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
-        const isHighlighted = OPERATIONS.includes(this.state.active_op);
+        const isHighlighted = _isPlaceable(this.state.active_op);
         const isActive = space_count === this.state.active_space + 1
         
         // Handle drop for drag and drop
@@ -348,7 +353,7 @@ class Board extends Component {
         if (this.state.active_op === EMPTY) {
             this.state.tile_array.join_numbers(array_pos, this.state.active_op)
             this.setState({});
-        } else if (OPERATIONS.includes(this.state.active_op)) {
+        } else if (_isPlaceable(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactivate_op()
         }
@@ -454,7 +459,7 @@ class Board extends Component {
             if (content === SPACE) {
                 objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
-            } else if (OPERATIONS.includes(content)) {
+            } else if (_isPlaceable(content)) {
                 objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
@@ -470,17 +475,15 @@ class Board extends Component {
         const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
         left_position = (window.innerWidth - totalOperationsWidth) / 2;
 
-        // Push icons for operations other than '='
-        for (let i = 0; i < OPERATIONS.length - 1; i++) {
-            let op_string = OPERATIONS[i];
+        for (let op_string of OPERATIONS) {
             objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
         
-        objs.push(this.renderUnplacedBracketTile(true, left_position));
-        left_position += TILE_WIDTH / 2;
-        objs.push(this.renderUnplacedBracketTile(false, left_position));
-        left_position += TILE_WIDTH / 2;
+        for (let is_left of [true, false]) {
+            objs.push(this.renderUnplacedBracketTile(is_left, left_position));
+            left_position += TILE_WIDTH / 2;
+        }
 
         left_position += TILE_WIDTH / 2;
         objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
@@ -564,7 +567,7 @@ class Game extends Component {
                     board.handleResetClick();
                     break;
                 case ' ':
-                    if (OPERATIONS.includes(board.state.active_op)) {
+                    if (_isPlaceable(board.state.active_op)) {
                         let array_pos = board.state.tile_array.index_of_nth_space(board.state.active_space)
                         if (array_pos >= 0) {
                             board.handleSpaceClick(array_pos)

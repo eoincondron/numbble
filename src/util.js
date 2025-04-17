@@ -8,14 +8,14 @@ export const PLUS = '+'
 export const MINUS = '-'
 export const MULTIPLY = 'X'
 export const DIVIDE = '/'
-export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, EQUALS];
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
-let NUMBRACK = NUMBERS + BRACKETS
+let NUMBRACK = NUMBERS.concat(BRACKETS)
 
 
 export function random_digit(max) {
