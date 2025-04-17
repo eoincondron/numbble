@@ -429,7 +429,7 @@ class Board extends Component {
         );
     }
 
-    calculateScore(equation, time) {
+    calculateScore(equation, time, used_all_nums) {
         // Calculate the score based on operators used in the equation
         let score = 0;
         
@@ -441,28 +441,32 @@ class Board extends Component {
             }
         }
         
+        let scoreMessage = `Base Score: ${score} points`;
+
+        if (used_all_nums) {
+            score += 50
+            scoreMessage += "\n50 Bonus points for using all numbers!!\n"
+        }
+
         // Apply time bonus multiplier
         let timeBonus = 1.0; // Default multiplier
-        let bonusMessage = "";
-        
         if (time < 15) {
             // Double score if solved under 15 seconds
             timeBonus = 2.0;
-            bonusMessage = "Speed Bonus: 2× (under 15 seconds)";
+            scoreMessage += "Speed Bonus: 2× (under 15 seconds)";
         } else if (time < 60) {
             // 1.5× multiplier if solved under 60 seconds
             timeBonus = 1.5;
-            bonusMessage = "Speed Bonus: 1.5× (under 60 seconds)";
+            scoreMessage += "Speed Bonus: 1.5× (under 60 seconds)";
         }
-        
         // Calculate final score with time bonus
+
         const finalScore = Math.round(score * timeBonus);
-        
+        scoreMessage += `\nFinal Score: ${finalScore} points`;
+
         return { 
-            baseScore: score,
-            timeBonus: timeBonus,
             finalScore: finalScore,
-            bonusMessage: bonusMessage
+            scoreMessage: scoreMessage
         };
     }
 
@@ -476,18 +480,10 @@ class Board extends Component {
             const timeString = this.formatTime(time);
             
             // Calculate the score for this equation with time bonus
-            const scoreResult = this.calculateScore(eq, time);
-            
-            let scoreMessage = `Base Score: ${scoreResult.baseScore} points`;
-            
-            // Add time bonus message if applicable
-            if (scoreResult.timeBonus > 1.0) {
-                scoreMessage += `\n${scoreResult.bonusMessage}`;
-            }
-            
-            scoreMessage += `\nFinal Score: ${scoreResult.finalScore} points`;
-            
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreMessage}`);
+            const used_all_nums = !eval_eq.includes(SPACE)
+            const scoreResult = this.calculateScore(eq, time, used_all_nums);
+
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreResult.scoreMessage}`);
             
             // Reset the board and timer
             this.setState(this.populate_board());
