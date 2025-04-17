@@ -533,9 +533,6 @@ class Board extends Component {
                 objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
-                if (!is_num_string(content)) {
-                    throw `content must be a space, bracket, operation or number. Saw ${content}`
-                }
                 objs.push(this.renderNumTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             }
