@@ -27,7 +27,7 @@ import {
     BRACKETS,
     SPACE,
 } from "./util";
-let ALL_OP_SYMBOLS = OPERATIONS + BRACKETS
+let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS)
 
 
 // Tailwind configuration and custom styles
@@ -548,6 +548,7 @@ class Game extends Component {
     
     handleKeyDown(event) {
         let board = this.boardRef.current
+        let active_op_index
         if (board) {
             console.log(event.key)
             switch (event.key) {
@@ -558,6 +559,21 @@ class Game extends Component {
                 case 'r':
                     // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
                     board.handleResetClick();
+                    break;
+                case 'ArrowRight':
+                    active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
+                    active_op_index = (active_op_index + 1) % ALL_OP_SYMBOLS.length
+                    board.setState({active_op: ALL_OP_SYMBOLS[active_op_index]})
+                    break;
+                case 'ArrowLeft':
+                    active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
+                    if (active_op_index === -1) {
+                        active_op_index = ALL_OP_SYMBOLS.length - 1
+                    }
+                    else {
+                        active_op_index = (active_op_index - 1) % ALL_OP_SYMBOLS.length
+                    }
+                    board.setState({active_op: ALL_OP_SYMBOLS[active_op_index]})
                     break;
                 default:
                     return
