@@ -30,7 +30,7 @@ export const OP_SCORES = {
 };
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
-let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['**'])
+export let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*'])
 
 
 export function random_digit(max) {
