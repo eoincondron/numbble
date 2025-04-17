@@ -21,6 +21,7 @@ import {
     is_num_string,
     count_element,
     MINUS,
+    EQUALS,
     OPERATIONS,
     L_BRACKET,
     R_BRACKET,
@@ -440,25 +441,9 @@ class Board extends Component {
 
     render() {
         // Calculate the total width needed for all tiles
-        let totalWidth = 0;
         const tiles = this.state.tile_array.string_array;
-        
-        // First pass to calculate the total width
-        for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
-            const content = tiles[array_pos];
-            if (content === L_BRACKET || content === R_BRACKET) {
-                totalWidth += TILE_WIDTH / 2;
-            } else if (content === SPACE || OPERATIONS.includes(content)) {
-                totalWidth += TILE_WIDTH;
-            } else {
-                if (content.length === 1) {
-                    totalWidth += TILE_WIDTH;
-                } else {
-                    totalWidth += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
-                }
-            }
-        }
-        
+        let totalWidth = TILE_WIDTH * tiles.length;
+
         // Center the array horizontally
         let left_position = (window.innerWidth - totalWidth) / 2;
         let objs = [];
@@ -484,18 +469,21 @@ class Board extends Component {
         // Center the operations row
         const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
         left_position = (window.innerWidth - totalOperationsWidth) / 2;
-        
-        for (let i = 0; i < OPERATIONS.length; i++) {
+
+        // Push icons for operations other than '='
+        for (let i = 0; i < OPERATIONS.length - 1; i++) {
             let op_string = OPERATIONS[i];
             objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
         
-        // Add some spacing between operations and brackets
-        left_position += TILE_WIDTH / 4;
         objs.push(this.renderUnplacedBracketTile(true, left_position));
         left_position += TILE_WIDTH / 2;
         objs.push(this.renderUnplacedBracketTile(false, left_position));
+        left_position += TILE_WIDTH / 2;
+
+        left_position += TILE_WIDTH / 2;
+        objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
 
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
