@@ -56,3 +56,13 @@ export function split_num_string(num_string) {
     split.push(num_string.slice(start))
     return split
 }
+
+export function count_element(value, array) {
+    let count = 0;
+    for (let elem of array) {
+         if (elem === value) {
+             count += 1
+         }
+    }
+    return count
+}
