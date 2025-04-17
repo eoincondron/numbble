@@ -364,3 +364,13 @@ export function BackgroundSelector(props) {
         </div>
     );
 }
+
+export function SessionScore(props) {
+    return (
+        <div className='session-score'>
+            <div className="session-score-title">Session Score</div>
+            <div className="session-score-points">{props.totalScore}</div>
+            <div className="session-score-games">{props.gamesCompleted} {props.gamesCompleted === 1 ? 'game' : 'games'}</div>
+        </div>
+    );
+}

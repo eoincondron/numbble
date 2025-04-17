@@ -10,6 +10,7 @@ import {
     PlacedOpTile,
     PlayButton,
     ResetTile,
+    SessionScore,
     SkipTile,
     NumTile,
     Spacer,
@@ -96,7 +97,9 @@ class Board extends Component {
             ...this.populate_board(),
             backgroundClass: 'bg-solid',
             timer: 0,
-            isTimerRunning: false
+            isTimerRunning: false,
+            totalScore: 0,
+            gamesCompleted: 0
         };
         
         this.timerInterval = null;
@@ -418,8 +421,12 @@ class Board extends Component {
         // Create a new tile array with random numbers
         const newState = this.populate_board();
         
-        // Reset state with the new board but keep the timer running
-        this.setState(newState);
+        // Reset state with the new board but keep the timer running and total score
+        this.setState({
+            ...newState,
+            totalScore: this.state.totalScore,
+            gamesCompleted: this.state.gamesCompleted
+        });
     }
 
     renderEquation() {
@@ -509,11 +516,24 @@ class Board extends Component {
             // Calculate the score for this equation with time bonus
             const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
             const scoreResult = this.calculateScore(eq, time, used_all_nums);
-
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreResult.scoreMessage}`);
             
-            // Reset the board and timer
-            this.setState(this.populate_board());
+            // Update the total score and games completed
+            const newTotalScore = this.state.totalScore + scoreResult.finalScore;
+            const newGamesCompleted = this.state.gamesCompleted + 1;
+            
+            // Add session total to the score message
+            const updatedScoreMessage = scoreResult.scoreMessage + 
+                `\n\nSession Total: ${newTotalScore} points (${newGamesCompleted} games)`;
+
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${updatedScoreMessage}`);
+            
+            // Reset the board and timer, but keep the total score and games count
+            const newState = this.populate_board();
+            this.setState({
+                ...newState,
+                totalScore: newTotalScore,
+                gamesCompleted: newGamesCompleted
+            });
             this.resetTimer();
         } else {
             let sides = eval_eq.split('===')
@@ -535,6 +555,15 @@ class Board extends Component {
             <div className="timer">
                 {timeString}
             </div>
+        );
+    }
+    
+    renderSessionScore() {
+        return (
+            <SessionScore
+                totalScore={this.state.totalScore}
+                gamesCompleted={this.state.gamesCompleted}
+            />
         );
     }
 
@@ -587,6 +616,7 @@ class Board extends Component {
         objs.push(this.renderPlay());
         objs.push(this.renderBackgroundSelector());
         objs.push(this.renderTimer());
+        objs.push(this.renderSessionScore());
 
         return (
             <div className={`board ${this.state.backgroundClass}`}>
