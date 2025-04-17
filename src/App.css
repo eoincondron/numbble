@@ -206,6 +206,36 @@
   animation: pulse-shadow 1.5s infinite alternate;
 }
 
+/* Drag over state for drop targets */
+.drag-over {
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px dashed rgba(255, 220, 100, 0.9);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 
+              0 0 40px rgba(255, 220, 100, 0.6);
+  transform: scale(1.1);
+}
+
+/* Dragging state for draggable elements */
+.dragging {
+  opacity: 0.8;
+  transform: scale(1.2);
+  cursor: grabbing;
+}
+
+/* Add specific styling for bracket dragging */
+.bracket_tile.dragging {
+  opacity: 0.6;
+  transform: scale(1.1);
+  background-color: rgba(130, 100, 200, 0.8);
+}
+
+/* Add specific styling for number tiles when brackets are dragged over them */
+.num_tile.drag-over {
+  box-shadow: 0 0 10px rgba(130, 100, 200, 0.8) !important;
+  border: 2px dashed rgba(130, 100, 200, 0.8) !important;
+  background-color: rgba(130, 100, 200, 0.1);
+}
+
 /* Pulsing shadow animation for highlighted spaces */
 @keyframes pulse-shadow {
   0% {

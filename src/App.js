@@ -150,6 +150,16 @@ class Board extends Component {
 
     renderNumTile(array_pos, left_position) {
         let value = this.state.tile_array.string_array[array_pos]
+        
+        // Handle drop for drag and drop of brackets
+        const handleDrop = (bracket) => {
+            // Set this bracket as active
+            this.setState({ active_op: bracket }, () => {
+                // Then trigger the number click handler to place the bracket
+                this.handleNumClick(array_pos);
+            });
+        };
+        
         return (
             <NumTile
                 value={value}
@@ -159,6 +169,7 @@ class Board extends Component {
                 onClick={
                     () => this.handleNumClick(array_pos)
                 }
+                onDrop={handleDrop}
             />
         );
     }
@@ -309,6 +320,15 @@ class Board extends Component {
         let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
         const isHighlighted = OPERATIONS.includes(this.state.active_op);
         const isActive = space_count === this.state.active_space + 1
+        
+        // Handle drop for drag and drop
+        const handleDrop = (operator) => {
+            // Set this operator as active
+            this.setState({ active_op: operator }, () => {
+                // Then trigger the space click handler
+                this.handleSpaceClick(array_pos);
+            });
+        };
 
         return (<Spacer
                 isHighlighted={isHighlighted}
@@ -316,9 +336,8 @@ class Board extends Component {
                 style={{
                     left: left_position + 'px'
                 }}
-                onClick={
-                    () => this.handleSpaceClick(array_pos)
-                }
+                onClick={() => this.handleSpaceClick(array_pos)}
+                onDrop={handleDrop}
             />
         );
     }
