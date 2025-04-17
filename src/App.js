@@ -19,6 +19,7 @@ import {TileArray} from "./tile_array";
 import {
     EMPTY,
     is_num_string,
+    count_element,
     MINUS,
     OPERATIONS,
     L_BRACKET,
@@ -304,10 +305,13 @@ class Board extends Component {
     // SPACE TILES
     renderSpacer(array_pos, left_position) {
         // Determine if this space should be highlighted (when an operator is active)
+        let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
         const isHighlighted = OPERATIONS.includes(this.state.active_op);
-        
+        const isActive = space_count === this.state.active_space + 1
+
         return (<Spacer
                 isHighlighted={isHighlighted}
+                isActive={isActive}
                 style={{
                     left: left_position + 'px'
                 }}
