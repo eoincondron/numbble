@@ -1,7 +1,6 @@
 
 import {
     random_digit,
-    NUMBERS,
     L_BRACKET,
     R_BRACKET,
     SPACE,

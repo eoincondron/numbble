@@ -7,7 +7,6 @@ import {
     DormantBracketTile,
     DormantOpTile,
     Equation,
-    PlacedBracketTile,
     PlacedOpTile,
     PlayButton,
     ResetTile,
@@ -228,17 +227,6 @@ class Board extends Component {
             } else {
                 return this.renderDormantBracketTile(is_left, left_position)
             }
-    }
-
-    renderPlacedBracketTile(is_left, left_position) {
-        // Clicking placed brackets does nothing. Click number to which they are assigned to remove
-        return (<PlacedBracketTile
-                value={this._getBracketValue(is_left)}
-                style={{
-                    left: left_position + 'px',
-                }}
-            />
-        );
     }
 
     // OP TILES
@@ -533,12 +521,6 @@ class Game extends Component {
             this.timerInterval = null;
             this.setState({ isTimerRunning: false });
         }
-    }
-    
-    resetTimer() {
-        this.stopTimer();
-        this.setState({ timer: 0 });
-        this.startTimer();
     }
     
     updateWindowDimensions() {
