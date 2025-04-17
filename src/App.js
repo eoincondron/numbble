@@ -129,12 +129,21 @@ class Board extends Component {
 
         return {
             tile_array: tile_array,
-            active_op: EMPTY
+            active_op: EMPTY,
+            active_space: -1
         };
     }
 
-    deactive_op () {
+    activate_op (op_string) {
+        this.setState({active_op: op_string})
+        if (this.state.active_space === -1) {
+            this.setState({active_space: 0})
+        }
+    }
+
+    deactivate_op () {
         this.setState({active_op: EMPTY})
+        this.setState({active_space: -1})
     }
 
     renderNumTile(array_pos, left_position) {
@@ -157,10 +166,10 @@ class Board extends Component {
         // This could be the place for automatically activating a second bracket.
         let outstanding_bracket = EMPTY;
         this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
-        this.deactive_op()
+        this.deactivate_op()
         outstanding_bracket = this.state.tile_array._outstanding_bracket();
         if (outstanding_bracket !== EMPTY) {
-            this.setState({active_op: outstanding_bracket})
+            this.activate_op(outstanding_bracket)
         }
     }
 
@@ -170,7 +179,7 @@ class Board extends Component {
         }
         else if (this.state.active_op === MINUS) {
             this.state.tile_array.negate_number(array_pos)
-            this.deactive_op()
+            this.deactivate_op()
         }
         else {
             this.state.tile_array.remove_brackets(array_pos)
@@ -198,7 +207,7 @@ class Board extends Component {
     }
 
     handleDormantBracketClick(is_left) {
-        this.setState({active_op: this._getBracketValue(is_left)})
+        this.activate_op(this._getBracketValue(is_left))
     }
 
     renderWaitingBracketTile(is_left, left_position) {
@@ -217,7 +226,7 @@ class Board extends Component {
     //
     handleWaitingClick() {
         // reset to dormant
-        this.deactive_op()
+        this.deactivate_op()
     }
 
     renderUnplacedBracketTile(is_left, left_position) {
@@ -245,7 +254,7 @@ class Board extends Component {
 
     //
     handleDormantOpClick(op_string) {
-        this.setState({active_op: op_string})
+        this.activate_op(op_string)
     }
 
     renderWaitingOpTile(op_string, left_position) {
@@ -288,7 +297,7 @@ class Board extends Component {
         this.setState({})
         if (OPERATIONS.includes(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op);
-            this.deactive_op();
+            this.deactivate_op();
         }
     }
 
@@ -316,7 +325,7 @@ class Board extends Component {
             this.setState({});
         } else if (OPERATIONS.includes(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
-            this.deactive_op()
+            this.deactivate_op()
         }
     }
 
@@ -329,7 +338,7 @@ class Board extends Component {
     }
 
     handleResetClick() {
-        this.deactive_op();
+        this.deactivate_op();
         this.state.tile_array.reset_board();
         // Don't reset the timer when the reset button is hit
         // Only reset timer after successful equation evaluation
@@ -545,7 +554,7 @@ class Game extends Component {
                 case 'ArrowRight':
                     active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
                     active_op_index = (active_op_index + 1) % ALL_OP_SYMBOLS.length
-                    board.setState({active_op: ALL_OP_SYMBOLS[active_op_index]})
+                    board.activate_op(ALL_OP_SYMBOLS[active_op_index])
                     break;
                 case 'ArrowLeft':
                     active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
@@ -555,7 +564,7 @@ class Game extends Component {
                     else {
                         active_op_index = (active_op_index - 1) % ALL_OP_SYMBOLS.length
                     }
-                    board.setState({active_op: ALL_OP_SYMBOLS[active_op_index]})
+                    board.activate_op(ALL_OP_SYMBOLS[active_op_index])
                     break;
                 default:
                     return
