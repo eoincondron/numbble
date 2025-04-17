@@ -210,6 +210,7 @@ class Board extends Component {
         else {
             this.state.tile_array.remove_brackets(array_pos)
             this.state.tile_array.split_numbers(array_pos)
+            this.state.tile_array.remove_exponents(array_pos)
         }
         this.setState({})
     }
