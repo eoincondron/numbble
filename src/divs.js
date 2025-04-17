@@ -1,6 +1,27 @@
 import React from "react";
 import { OP_SCORES } from "./util";
 
+// Helper function to handle exponent display
+function formatExponentDisplay(value) {
+    let displayValue = value;
+    let exponentValue = null;
+    
+    // Special handling for exponent operators
+    if (value.startsWith('**')) {
+        // Extract the exponent part after the **
+        exponentValue = value.substring(2);
+        
+        // Format square root (1/2) to look better
+        if (exponentValue === '1/2') {
+            exponentValue = '½';
+        }
+        
+        displayValue = ''; // Base display is empty so we just show the exponent
+    }
+    
+    return { displayValue, exponentValue };
+}
+
 
 export function NumTile(props) {
     // clicking this will remove any adjacent brackets
@@ -118,6 +139,9 @@ export function DormantOpTile(props) {
     // Get the score for this operator
     const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
     
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
         <button 
             className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center relative"
@@ -127,7 +151,8 @@ export function DormantOpTile(props) {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
-            {props.value}
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
             {score > 0 && <span className="score">{score}</span>}
         </button>
     );
@@ -143,9 +168,13 @@ export function WaitingOpTile(props) {
     // Get the score for this operator
     const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
     
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
         <button className="waiting op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all relative" style={props.style} onClick={props.onClick}>
-            {props.value}
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
             {score > 0 && <span className="score">{score}</span>}
         </button>
     );
@@ -160,11 +189,15 @@ export function PlacedOpTile(props) {
     // Get the score for this operator
     const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
     
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
         <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center relative"
                 style={props.style}
                 onClick={props.onClick}>
-            {props.value}
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
             {score > 0 && <span className="score">{score}</span>}
         </button>
     );

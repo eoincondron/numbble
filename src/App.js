@@ -72,9 +72,10 @@ let log = console.log;
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
 
+let SPACE_FILLERS = OPERATIONS.slice(0, 4).concat([EQUALS])
 
-function _isPlaceable (tile_symbol) {
-    return OPERATIONS.includes(tile_symbol) || tile_symbol === EQUALS
+function _isSpaceFiller (tile_symbol) {
+    return SPACE_FILLERS.includes(tile_symbol)
 }
 
 class Board extends Component {
@@ -201,11 +202,28 @@ class Board extends Component {
             this.state.tile_array.negate_number(array_pos)
             this.deactivate_op()
         }
+        else if (this.state.active_op.startsWith('**')) {
+            // Apply exponent to the number by concatenating the string
+            this._appendExponent(array_pos, this.state.active_op)
+            this.deactivate_op()
+        }
         else {
             this.state.tile_array.remove_brackets(array_pos)
             this.state.tile_array.split_numbers(array_pos)
         }
         this.setState({})
+    }
+    
+    _appendExponent(array_pos, exponent) {
+        // Append the exponent string to the number at array_pos
+        const currentValue = this.state.tile_array.string_array[array_pos];
+        
+        // Only apply to numeric values
+        if (is_num_string(currentValue)) {
+            // Simply concatenate the exponent to the current value
+            // This will make entries like "5**2" or "10**1/2" that will be evaluated when the equation is calculated
+            this.state.tile_array.string_array[array_pos] = currentValue + exponent;
+        }
     }
 
     // BRACKETS TILES
@@ -315,7 +333,7 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
-        if (_isPlaceable(this.state.active_op)) {
+        if (_isSpaceFiller(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op);
             this.deactivate_op();
         }
@@ -325,7 +343,7 @@ class Board extends Component {
     renderSpacer(array_pos, left_position) {
         // Determine if this space should be highlighted (when an operator is active)
         let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
-        const isHighlighted = _isPlaceable(this.state.active_op);
+        const isHighlighted = _isSpaceFiller(this.state.active_op);
         const isActive = space_count === this.state.active_space + 1
         
         // Handle drop for drag and drop
@@ -354,7 +372,7 @@ class Board extends Component {
         if (this.state.active_op === EMPTY) {
             this.state.tile_array.join_numbers(array_pos, this.state.active_op)
             this.setState({});
-        } else if (_isPlaceable(this.state.active_op)) {
+        } else if (_isSpaceFiller(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactivate_op()
         }
@@ -511,7 +529,7 @@ class Board extends Component {
             if (content === SPACE) {
                 objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
-            } else if (_isPlaceable(content)) {
+            } else if (_isSpaceFiller(content)) {
                 objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
@@ -619,7 +637,7 @@ class Game extends Component {
                     board.handleResetClick();
                     break;
                 case ' ':
-                    if (_isPlaceable(board.state.active_op)) {
+                    if (_isSpaceFiller(board.state.active_op)) {
                         let array_pos = board.state.tile_array.index_of_nth_space(board.state.active_space)
                         if (array_pos >= 0) {
                             board.handleSpaceClick(array_pos)
