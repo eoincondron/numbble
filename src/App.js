@@ -53,6 +53,7 @@ const BACKGROUNDS = [
 
 
 let N_TILES = 6;
+let N_SPACES = N_TILES - 1;
 let TILE_WIDTH = 80;
 // LEFT_MARGIN will be calculated after TILE_WIDTH is defined
 let LEFT_MARGIN;
@@ -544,6 +545,7 @@ class Game extends Component {
     handleKeyDown(event) {
         let board = this.boardRef.current
         let active_op_index
+        let active_space
         if (board) {
             console.log(event.key)
             switch (event.key) {
@@ -569,6 +571,17 @@ class Game extends Component {
                         active_op_index = (active_op_index - 1) % ALL_OP_SYMBOLS.length
                     }
                     board.activate_op(ALL_OP_SYMBOLS[active_op_index])
+                    break;
+                case 'ArrowUp':
+                    active_space = (board.state.active_space + 1) % N_SPACES
+                    board.setState({active_space: active_space})
+                    break;
+                case 'ArrowDown':
+                    active_space = board.state.active_space - 1
+                    if (active_space < 0) {
+                        active_space = N_SPACES + active_space
+                    }
+                    board.setState({active_space: active_space})
                     break;
                 default:
                     return
