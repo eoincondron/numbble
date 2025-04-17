@@ -1,4 +1,5 @@
 import React from "react";
+import { OP_SCORES } from "./util";
 
 
 export function NumTile(props) {
@@ -114,9 +115,12 @@ export function DormantOpTile(props) {
         event.currentTarget.classList.remove("dragging");
     };
     
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
     return (
         <button 
-            className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center"
+            className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center relative"
             style={props.style} 
             onClick={props.onClick}
             draggable="true"
@@ -124,6 +128,7 @@ export function DormantOpTile(props) {
             onDragEnd={handleDragEnd}
         >
             {props.value}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }
@@ -134,9 +139,14 @@ export function DormantOpTile(props) {
 export function WaitingOpTile(props) {
     // Render op tile that has been clicked. This will have different style (place and colour) to highlight.
     // Clicking will render dormant.
+    
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
     return (
-        <button className="waiting op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all" style={props.style} onClick={props.onClick}>
+        <button className="waiting op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all relative" style={props.style} onClick={props.onClick}>
             {props.value}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }
@@ -146,11 +156,16 @@ export function WaitingOpTile(props) {
 export function PlacedOpTile(props) {
     // Render op tile that has been placed. This will have a different position to the dormant op tile.
     // Clicking will move it back to the dormant state.
+    
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
     return (
-        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center"
+        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center relative"
                 style={props.style}
                 onClick={props.onClick}>
             {props.value}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }

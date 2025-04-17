@@ -385,6 +385,18 @@
   outline: none;
 }
 
+/* Score display in the operation tiles */
+.score {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 1px 3px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
 
 
 

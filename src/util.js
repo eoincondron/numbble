@@ -14,6 +14,16 @@ export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
+
+// Scoring system for operations
+export const OP_SCORES = {
+    [PLUS]: 5,         // Plus: 5 points
+    [MINUS]: 5,        // Minus: 5 points
+    [MULTIPLY]: 10,    // Multiply: 10 points
+    [DIVIDE]: 10,      // Divide: 10 points
+    [DECIMAL_POINT]: 25, // Decimal: 25 points
+    [EQUALS]: 0        // Equals: No points
+};
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
 let NUMBRACK = NUMBERS.concat(BRACKETS)
