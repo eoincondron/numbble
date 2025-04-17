@@ -20,7 +20,12 @@ import {
     EMPTY,
     is_num_string,
     count_element,
+    PLUS,
     MINUS,
+    MULTIPLY,
+    DIVIDE,
+    SQUARE,
+    SQRT,
     EQUALS,
     OPERATIONS,
     L_BRACKET,
@@ -28,8 +33,10 @@ import {
     BRACKETS,
     SPACE,
     OP_SCORES,
+    DECIMAL_POINT,
 } from "./util";
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
+let ONE_USE_OPS = [SQUARE, SQRT]
 // Find a better way to state the ordering of the operation tiles.
 
 
@@ -72,7 +79,7 @@ let log = console.log;
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
 
-let SPACE_FILLERS = OPERATIONS.slice(0, 4).concat([EQUALS])
+let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
 
 function _isSpaceFiller (tile_symbol) {
     return SPACE_FILLERS.includes(tile_symbol)
@@ -540,7 +547,9 @@ class Board extends Component {
         left_position = (window.innerWidth - totalOperationsWidth) / 2;
 
         for (let op_string of OPERATIONS) {
-            objs.push(this.renderUnplacedOpTile(op_string, left_position));
+            let skip = ONE_USE_OPS.includes(op_string) && tiles_array.join('').includes(op_string)
+            if (!skip)
+                objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
         
