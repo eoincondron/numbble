@@ -27,6 +27,7 @@ import {
     BRACKETS,
     SPACE,
 } from "./util";
+let ALL_OP_SYMBOLS = OPERATIONS + BRACKETS
 
 
 // Tailwind configuration and custom styles
@@ -398,8 +399,6 @@ class Board extends Component {
             let side_vals = sides.map(x => eval(x))
             let simplified = side_vals.join(' = ')
             alert(`Sorry, the equation is invalid: ${eq} \n (Simplifies to ${simplified})`);
-
-            console.log(this.state.tile_array.string_array)
         }
     }
     
@@ -458,7 +457,6 @@ class Board extends Component {
                 }
                 objs.push(this.renderNumTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
-                log(left_position, content)
             }
         }
 

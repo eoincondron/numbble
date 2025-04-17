@@ -17,6 +17,7 @@ export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
 let NUMBRACK = NUMBERS + BRACKETS
 
+
 export function random_digit(max) {
     return Math.floor(Math.random() * max);
 }

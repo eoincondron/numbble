@@ -164,7 +164,7 @@ export class TileArray {
         // Remove brackets adjacent to a number at a given location
         // Throw if the array does not contain a number here
         this._check_contains_num_at(location, "remove brackets")
-        let opposite = (bracket_type == L_BRACKET) ? R_BRACKET : L_BRACKET
+        let opposite = (bracket_type === L_BRACKET) ? R_BRACKET : L_BRACKET
         while (this.string_array[location].includes(bracket_type)) {
             this.string_array[location] = this.string_array[location].replace(bracket_type, '')
             for (let i = location; i < this.string_array.length - 1; i++) {
