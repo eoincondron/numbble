@@ -16,7 +16,7 @@ export function NumTile(props) {
 
 export function Spacer(props) {
     // Add highlighted class if the prop is true
-    const className = props.isHighlighted 
+    const className = props.isHighlighted  && props.isActive
         ? "spacer block placed highlightable highlighted" 
         : "spacer block placed highlightable";
         
