@@ -507,7 +507,7 @@ class Board extends Component {
             const timeString = this.formatTime(time);
             
             // Calculate the score for this equation with time bonus
-            const used_all_nums = !eval_eq.includes(SPACE)
+            const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
             const scoreResult = this.calculateScore(eq, time, used_all_nums);
 
             alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreResult.scoreMessage}`);
