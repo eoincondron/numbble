@@ -8,7 +8,8 @@ export const PLUS = '+'
 export const MINUS = '-'
 export const MULTIPLY = 'X'
 export const DIVIDE = '/'
-export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE];
+export const DECIMAL_POINT = '.'
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
