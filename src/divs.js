@@ -316,6 +316,16 @@ export function ResetTile(props) {
 
 //  =================================== ===
 
+export function SkipTile(props) {
+    return (
+        <button className="skip_tile rounded-md shadow-md flex items-center justify-center transition-all hover:shadow-lg hover:bg-orange-400" style={props.style} onClick={props.onClick}>
+            Skip (S)
+        </button>
+    );
+}
+
+//  =================================== ===
+
 
 export function Equation(props) {
     return (

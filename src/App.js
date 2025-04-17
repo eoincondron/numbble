@@ -10,6 +10,7 @@ import {
     PlacedOpTile,
     PlayButton,
     ResetTile,
+    SkipTile,
     NumTile,
     Spacer,
     WaitingBracketTile,
@@ -401,6 +402,25 @@ class Board extends Component {
         // Only reset timer after successful equation evaluation
         // TODO: this is currently generating a new board
     }
+    
+    renderSkip() {
+        return (<SkipTile
+                onClick={
+                    () => this.handleSkipClick()}
+            />
+        );
+    }
+
+    handleSkipClick() {
+        // Reset the board and generate a new one with new numbers
+        this.deactivate_op();
+        
+        // Create a new tile array with random numbers
+        const newState = this.populate_board();
+        
+        // Reset state with the new board but keep the timer running
+        this.setState(newState);
+    }
 
     renderEquation() {
         let eq;
@@ -562,6 +582,7 @@ class Board extends Component {
         objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
 
         objs.push(this.renderReset());
+        objs.push(this.renderSkip());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
         objs.push(this.renderBackgroundSelector());
@@ -638,6 +659,10 @@ class Game extends Component {
                 case 'r':
                     // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
                     board.handleResetClick();
+                    break;
+                case 's':
+                    // Use 's' key for skipping/new game
+                    board.handleSkipClick();
                     break;
                 case ' ':
                     if (_isSpaceFiller(board.state.active_op)) {
