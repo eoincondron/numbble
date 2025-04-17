@@ -27,6 +27,7 @@ import {
     R_BRACKET,
     BRACKETS,
     SPACE,
+    OP_SCORES,
 } from "./util";
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
 // Find a better way to state the ordering of the operation tiles.
@@ -409,14 +410,65 @@ class Board extends Component {
         );
     }
 
+    calculateScore(equation, time) {
+        // Calculate the score based on operators used in the equation
+        let score = 0;
+        
+        // Loop through each character in the equation
+        for (const char of equation) {
+            // If this character is an operator with a score, add it
+            if (OP_SCORES[char] !== undefined) {
+                score += OP_SCORES[char];
+            }
+        }
+        
+        // Apply time bonus multiplier
+        let timeBonus = 1.0; // Default multiplier
+        let bonusMessage = "";
+        
+        if (time < 15) {
+            // Double score if solved under 15 seconds
+            timeBonus = 2.0;
+            bonusMessage = "Speed Bonus: 2× (under 15 seconds)";
+        } else if (time < 60) {
+            // 1.5× multiplier if solved under 60 seconds
+            timeBonus = 1.5;
+            bonusMessage = "Speed Bonus: 1.5× (under 60 seconds)";
+        }
+        
+        // Calculate final score with time bonus
+        const finalScore = Math.round(score * timeBonus);
+        
+        return { 
+            baseScore: score,
+            timeBonus: timeBonus,
+            finalScore: finalScore,
+            bonusMessage: bonusMessage
+        };
+    }
+
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
             // Stop the timer on successful solution
             this.stopTimer();
-            const timeString = this.formatTime(this.state.timer);
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}`);
+            const time = this.state.timer;
+            const timeString = this.formatTime(time);
+            
+            // Calculate the score for this equation with time bonus
+            const scoreResult = this.calculateScore(eq, time);
+            
+            let scoreMessage = `Base Score: ${scoreResult.baseScore} points`;
+            
+            // Add time bonus message if applicable
+            if (scoreResult.timeBonus > 1.0) {
+                scoreMessage += `\n${scoreResult.bonusMessage}`;
+            }
+            
+            scoreMessage += `\nFinal Score: ${scoreResult.finalScore} points`;
+            
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreMessage}`);
             
             // Reset the board and timer
             this.setState(this.populate_board());
