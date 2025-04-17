@@ -547,15 +547,22 @@ class Game extends Component {
     }
     
     handleKeyDown(event) {
-        if (this.boardRef.current) {
-            // If Enter key is pressed, simulate a click on the Play button
-            if (event.key === 'Enter') {
-                this.boardRef.current.handlePlayClick();
+        let board = this.boardRef.current
+        if (board) {
+            console.log(event.key)
+            switch (event.key) {
+                case 'Enter':
+                    // If Enter key is pressed, simulate a click on the Play button
+                    board.handlePlayClick();
+                    break;
+                case 'r':
+                    // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
+                    board.handleResetClick();
+                    break;
+                default:
+                    return
             }
-            // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
-            else if (event.key === 'r' || event.key === 'R') {
-                this.boardRef.current.handleResetClick();
-            }
+
         }
     }
     
