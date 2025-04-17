@@ -411,5 +411,22 @@
   justify-content: center;
 }
 
+/* Exponent display for numbers with exponents */
+.num-exponent {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: inherit;
+}
+
+/* Container for numbers with exponents */
+.num_tile .relative {
+  position: relative;
+  display: inline-block;
+  padding-right: 5px;
+}
+
 
 

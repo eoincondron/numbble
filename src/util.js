@@ -10,7 +10,7 @@ export const MULTIPLY = 'X'
 export const DIVIDE = '/'
 export const DECIMAL_POINT = '.'
 export const SQUARE = '**2'
-export const SQRT = '**1/2'
+export const SQRT = '**(1/2)'
 export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
 export let OP_EVAL_MAP = {
     '=': '===',

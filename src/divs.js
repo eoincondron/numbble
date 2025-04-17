@@ -12,7 +12,7 @@ function formatExponentDisplay(value) {
         exponentValue = value.substring(2);
         
         // Format square root (1/2) to look better
-        if (exponentValue === '1/2') {
+        if (exponentValue === '(1/2)') {
             exponentValue = '½';
         }
         
@@ -20,6 +20,35 @@ function formatExponentDisplay(value) {
     }
     
     return { displayValue, exponentValue };
+}
+
+// Helper function to parse and format number with exponents
+function formatNumberWithExponent(value) {
+    // Check if the value contains an exponent
+    const exponentMatch = value.match(/^(.+)(\*\*.+)$/);
+    
+    if (exponentMatch) {
+        const baseNumber = exponentMatch[1];
+        const exponentPart = exponentMatch[2].substring(2); // Remove '**'
+        
+        // Format square root (1/2) to look better
+        let formattedExponent = exponentPart;
+        if (formattedExponent === '(1/2)') {
+            formattedExponent = '½';
+        }
+        
+        return {
+            hasExponent: true,
+            baseNumber: baseNumber,
+            exponent: formattedExponent
+        };
+    }
+    
+    return {
+        hasExponent: false,
+        baseNumber: value,
+        exponent: null
+    };
 }
 
 
@@ -53,6 +82,9 @@ export function NumTile(props) {
         }
     };
     
+    // Parse and format the number to handle exponents
+    const { hasExponent, baseNumber, exponent } = formatNumberWithExponent(props.value);
+    
     return (
         <div 
             className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" 
@@ -62,7 +94,14 @@ export function NumTile(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {props.value}
+            {hasExponent ? (
+                <div className="relative">
+                    <span>{baseNumber}</span>
+                    <span className="num-exponent">{exponent}</span>
+                </div>
+            ) : (
+                props.value
+            )}
         </div>
     );
 }
