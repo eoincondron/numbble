@@ -10,6 +10,8 @@ import {
     PlacedOpTile,
     PlayButton,
     ResetTile,
+    SessionScore,
+    SkipTile,
     NumTile,
     Spacer,
     WaitingBracketTile,
@@ -20,15 +22,23 @@ import {
     EMPTY,
     is_num_string,
     count_element,
+    PLUS,
     MINUS,
+    MULTIPLY,
+    DIVIDE,
+    SQUARE,
+    SQRT,
     EQUALS,
     OPERATIONS,
     L_BRACKET,
     R_BRACKET,
     BRACKETS,
     SPACE,
+    OP_SCORES,
+    DECIMAL_POINT,
 } from "./util";
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
+let ONE_USE_OPS = [SQUARE, SQRT]
 // Find a better way to state the ordering of the operation tiles.
 
 
@@ -71,9 +81,10 @@ let log = console.log;
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
 
+let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
 
-function _isPlaceable (tile_symbol) {
-    return OPERATIONS.includes(tile_symbol) || tile_symbol === EQUALS
+function _isSpaceFiller (tile_symbol) {
+    return SPACE_FILLERS.includes(tile_symbol)
 }
 
 class Board extends Component {
@@ -86,7 +97,9 @@ class Board extends Component {
             ...this.populate_board(),
             backgroundClass: 'bg-solid',
             timer: 0,
-            isTimerRunning: false
+            isTimerRunning: false,
+            totalScore: 0,
+            gamesCompleted: 0
         };
         
         this.timerInterval = null;
@@ -200,11 +213,29 @@ class Board extends Component {
             this.state.tile_array.negate_number(array_pos)
             this.deactivate_op()
         }
+        else if (this.state.active_op.startsWith('**')) {
+            // Apply exponent to the number by concatenating the string
+            this._appendExponent(array_pos, this.state.active_op)
+            this.deactivate_op()
+        }
         else {
             this.state.tile_array.remove_brackets(array_pos)
             this.state.tile_array.split_numbers(array_pos)
+            this.state.tile_array.remove_exponents(array_pos)
         }
         this.setState({})
+    }
+    
+    _appendExponent(array_pos, exponent) {
+        // Append the exponent string to the number at array_pos
+        const currentValue = this.state.tile_array.string_array[array_pos];
+        
+        // Only apply to numeric values
+        if (is_num_string(currentValue)) {
+            // Simply concatenate the exponent to the current value
+            // This will make entries like "5**2" or "10**1/2" that will be evaluated when the equation is calculated
+            this.state.tile_array.string_array[array_pos] = currentValue + exponent;
+        }
     }
 
     // BRACKETS TILES
@@ -314,7 +345,7 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
-        if (_isPlaceable(this.state.active_op)) {
+        if (_isSpaceFiller(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op);
             this.deactivate_op();
         }
@@ -324,7 +355,7 @@ class Board extends Component {
     renderSpacer(array_pos, left_position) {
         // Determine if this space should be highlighted (when an operator is active)
         let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
-        const isHighlighted = _isPlaceable(this.state.active_op);
+        const isHighlighted = _isSpaceFiller(this.state.active_op);
         const isActive = space_count === this.state.active_space + 1
         
         // Handle drop for drag and drop
@@ -353,7 +384,7 @@ class Board extends Component {
         if (this.state.active_op === EMPTY) {
             this.state.tile_array.join_numbers(array_pos, this.state.active_op)
             this.setState({});
-        } else if (_isPlaceable(this.state.active_op)) {
+        } else if (_isSpaceFiller(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactivate_op()
         }
@@ -373,6 +404,29 @@ class Board extends Component {
         // Don't reset the timer when the reset button is hit
         // Only reset timer after successful equation evaluation
         // TODO: this is currently generating a new board
+    }
+    
+    renderSkip() {
+        return (<SkipTile
+                onClick={
+                    () => this.handleSkipClick()}
+            />
+        );
+    }
+
+    handleSkipClick() {
+        // Reset the board and generate a new one with new numbers
+        this.deactivate_op();
+        
+        // Create a new tile array with random numbers
+        const newState = this.populate_board();
+        
+        // Reset state with the new board but keep the timer running and total score
+        this.setState({
+            ...newState,
+            totalScore: this.state.totalScore,
+            gamesCompleted: this.state.gamesCompleted
+        });
     }
 
     renderEquation() {
@@ -409,17 +463,77 @@ class Board extends Component {
         );
     }
 
+    calculateScore(equation, time, used_all_nums) {
+        // Calculate the score based on operators used in the equation
+        let score = 0;
+        
+        // Loop through each character in the equation
+        for (const char of equation) {
+            // If this character is an operator with a score, add it
+            if (OP_SCORES[char] !== undefined) {
+                score += OP_SCORES[char];
+            }
+        }
+        
+        let scoreMessage = `Base Score: ${score} points`;
+
+        if (used_all_nums) {
+            score += 50
+            scoreMessage += "\n50 Bonus points for using all numbers!!\n"
+        }
+
+        // Apply time bonus multiplier
+        let timeBonus = 1.0; // Default multiplier
+        if (time < 15) {
+            // Double score if solved under 15 seconds
+            timeBonus = 2.0;
+            scoreMessage += "Speed Bonus: 2× (under 15 seconds)";
+        } else if (time < 60) {
+            // 1.5× multiplier if solved under 60 seconds
+            timeBonus = 1.5;
+            scoreMessage += "Speed Bonus: 1.5× (under 60 seconds)";
+        }
+        // Calculate final score with time bonus
+
+        const finalScore = Math.round(score * timeBonus);
+        scoreMessage += `\nFinal Score: ${finalScore} points`;
+
+        return { 
+            finalScore: finalScore,
+            scoreMessage: scoreMessage
+        };
+    }
+
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
             // Stop the timer on successful solution
             this.stopTimer();
-            const timeString = this.formatTime(this.state.timer);
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}`);
+            const time = this.state.timer;
+            const timeString = this.formatTime(time);
             
-            // Reset the board and timer
-            this.setState(this.populate_board());
+            // Calculate the score for this equation with time bonus
+            const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
+            const scoreResult = this.calculateScore(eq, time, used_all_nums);
+            
+            // Update the total score and games completed
+            const newTotalScore = this.state.totalScore + scoreResult.finalScore;
+            const newGamesCompleted = this.state.gamesCompleted + 1;
+            
+            // Add session total to the score message
+            const updatedScoreMessage = scoreResult.scoreMessage + 
+                `\n\nSession Total: ${newTotalScore} points (${newGamesCompleted} games)`;
+
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${updatedScoreMessage}`);
+            
+            // Reset the board and timer, but keep the total score and games count
+            const newState = this.populate_board();
+            this.setState({
+                ...newState,
+                totalScore: newTotalScore,
+                gamesCompleted: newGamesCompleted
+            });
             this.resetTimer();
         } else {
             let sides = eval_eq.split('===')
@@ -443,6 +557,15 @@ class Board extends Component {
             </div>
         );
     }
+    
+    renderSessionScore() {
+        return (
+            <SessionScore
+                totalScore={this.state.totalScore}
+                gamesCompleted={this.state.gamesCompleted}
+            />
+        );
+    }
 
     render() {
         // Calculate the total width needed for all tiles
@@ -459,13 +582,10 @@ class Board extends Component {
             if (content === SPACE) {
                 objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
-            } else if (_isPlaceable(content)) {
+            } else if (_isSpaceFiller(content)) {
                 objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
-                if (!is_num_string(content)) {
-                    throw `content must be a space, bracket, operation or number. Saw ${content}`
-                }
                 objs.push(this.renderNumTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             }
@@ -476,7 +596,9 @@ class Board extends Component {
         left_position = (window.innerWidth - totalOperationsWidth) / 2;
 
         for (let op_string of OPERATIONS) {
-            objs.push(this.renderUnplacedOpTile(op_string, left_position));
+            let skip = ONE_USE_OPS.includes(op_string) && tiles_array.join('').includes(op_string)
+            if (!skip)
+                objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
         
@@ -489,10 +611,12 @@ class Board extends Component {
         objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
 
         objs.push(this.renderReset());
+        objs.push(this.renderSkip());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
         objs.push(this.renderBackgroundSelector());
         objs.push(this.renderTimer());
+        objs.push(this.renderSessionScore());
 
         return (
             <div className={`board ${this.state.backgroundClass}`}>
@@ -566,8 +690,12 @@ class Game extends Component {
                     // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
                     board.handleResetClick();
                     break;
+                case 's':
+                    // Use 's' key for skipping/new game
+                    board.handleSkipClick();
+                    break;
                 case ' ':
-                    if (_isPlaceable(board.state.active_op)) {
+                    if (_isSpaceFiller(board.state.active_op)) {
                         let array_pos = board.state.tile_array.index_of_nth_space(board.state.active_space)
                         if (array_pos >= 0) {
                             board.handleSpaceClick(array_pos)

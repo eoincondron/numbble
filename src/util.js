@@ -9,14 +9,28 @@ export const MINUS = '-'
 export const MULTIPLY = 'X'
 export const DIVIDE = '/'
 export const DECIMAL_POINT = '.'
-export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT];
+export const SQUARE = '**2'
+export const SQRT = '**(1/2)'
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
+
+// Scoring system for operations
+export const OP_SCORES = {
+    [PLUS]: 5,         // Plus: 5 points
+    [MINUS]: 5,        // Minus: 5 points
+    [MULTIPLY]: 10,    // Multiply: 10 points
+    [DIVIDE]: 10,      // Divide: 10 points
+    [DECIMAL_POINT]: 25, // Decimal: 25 points
+    [SQUARE]: 15,      // Square: 15 points
+    [SQRT]: 20,        // Square root: 20 points
+    [EQUALS]: 0        // Equals: No points
+};
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
-let NUMBRACK = NUMBERS.concat(BRACKETS)
+export let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*'])
 
 
 export function random_digit(max) {
@@ -32,7 +46,7 @@ export function is_num_string(string) {
     if (chars[0] === '-') {
         chars = chars.slice(1)
     }
-    return (chars.length > 0) && !!Math.min(...chars.map(x => NUMBRACK.includes(x)))
+    return (chars.length > 0) && !!Math.min(...chars.map(x => NUMERICAL_STRINGS.includes(x)))
 }
 
 

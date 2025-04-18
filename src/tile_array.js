@@ -181,6 +181,9 @@ export class TileArray {
         this._remove_brackets_of_type(R_BRACKET, location)
     }
 
+    remove_exponents(location) {
+        this.string_array[location] = this.string_array[location].split('**')[0]
+    }
     negate_number(num_location) {
         // Negates a number at the location by prefixing a '-'
         // Do nothing if number is already negative
