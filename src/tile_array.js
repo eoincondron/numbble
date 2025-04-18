@@ -9,7 +9,8 @@ import {
     EQUALS,
     split_num_string,
     is_num_string,
-    OP_EVAL_MAP
+    OP_EVAL_MAP,
+    _isSpaceFiller
 } from './util.js';
 
 
@@ -103,7 +104,7 @@ export class TileArray {
         // Remove an operation from the array, replacing with a SPACE.
         // Throw if array does not contain an operation at the given location.
         let content = this.string_array[op_location];
-        if (OPERATIONS.includes(content)) {
+        if (_isSpaceFiller(content)) {
             this.string_array[op_location] = SPACE;
         } else {
             throw "Cannot remove operation, space contains " + content;

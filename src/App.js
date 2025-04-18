@@ -7,36 +7,38 @@ import {
     DormantBracketTile,
     DormantOpTile,
     Equation,
+    NumTile,
     PlacedOpTile,
     PlayButton,
     ResetTile,
     SessionScore,
     SkipTile,
-    NumTile,
     Spacer,
     WaitingBracketTile,
     WaitingOpTile
 } from './divs';
 import {TileArray} from "./tile_array";
 import {
-    EMPTY,
-    is_num_string,
+    _isSpaceFiller,
+    BRACKETS,
     count_element,
-    PLUS,
+    DECIMAL_POINT,
+    DIVIDE,
+    EMPTY,
+    EQUALS,
+    is_num_string,
+    L_BRACKET,
     MINUS,
     MULTIPLY,
-    DIVIDE,
-    SQUARE,
-    SQRT,
-    EQUALS,
-    OPERATIONS,
-    L_BRACKET,
-    R_BRACKET,
-    BRACKETS,
-    SPACE,
     OP_SCORES,
-    DECIMAL_POINT,
+    OPERATIONS,
+    PLUS,
+    R_BRACKET,
+    SPACE,
+    SQRT,
+    SQUARE,
 } from "./util";
+
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
 let ONE_USE_OPS = [SQUARE, SQRT]
 // Find a better way to state the ordering of the operation tiles.
@@ -80,12 +82,6 @@ let log = console.log;
 // Tile movements are managed as follows; 
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
-
-let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
-
-function _isSpaceFiller (tile_symbol) {
-    return SPACE_FILLERS.includes(tile_symbol)
-}
 
 class Board extends Component {
 

@@ -12,6 +12,8 @@ export const DECIMAL_POINT = '.'
 export const SQUARE = '**2'
 export const SQRT = '**(1/2)'
 export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
+export let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
+
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
@@ -80,4 +82,8 @@ export function count_element(value, array) {
          }
     }
     return count
+}
+
+export function _isSpaceFiller(tile_symbol) {
+    return SPACE_FILLERS.includes(tile_symbol)
 }
