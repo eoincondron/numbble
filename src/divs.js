@@ -1,4 +1,55 @@
 import React from "react";
+import { OP_SCORES } from "./util";
+
+// Helper function to handle exponent display
+function formatExponentDisplay(value) {
+    let displayValue = value;
+    let exponentValue = null;
+    
+    // Special handling for exponent operators
+    if (value.startsWith('**')) {
+        // Extract the exponent part after the **
+        exponentValue = value.substring(2);
+        
+        // Format square root (1/2) to look better
+        if (exponentValue === '(1/2)') {
+            exponentValue = '½';
+        }
+        
+        displayValue = ''; // Base display is empty so we just show the exponent
+    }
+    
+    return { displayValue, exponentValue };
+}
+
+// Helper function to parse and format number with exponents
+function formatNumberWithExponent(value) {
+    // Check if the value contains an exponent
+    const exponentMatch = value.match(/^(.+)(\*\*.+)$/);
+    
+    if (exponentMatch) {
+        const baseNumber = exponentMatch[1];
+        const exponentPart = exponentMatch[2].substring(2); // Remove '**'
+        
+        // Format square root (1/2) to look better
+        let formattedExponent = exponentPart;
+        if (formattedExponent === '(1/2)') {
+            formattedExponent = '½';
+        }
+        
+        return {
+            hasExponent: true,
+            baseNumber: baseNumber,
+            exponent: formattedExponent
+        };
+    }
+    
+    return {
+        hasExponent: false,
+        baseNumber: value,
+        exponent: null
+    };
+}
 
 
 export function NumTile(props) {
@@ -31,6 +82,9 @@ export function NumTile(props) {
         }
     };
     
+    // Parse and format the number to handle exponents
+    const { hasExponent, baseNumber, exponent } = formatNumberWithExponent(props.value);
+    
     return (
         <div 
             className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" 
@@ -40,7 +94,14 @@ export function NumTile(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {props.value}
+            {hasExponent ? (
+                <div className="relative">
+                    <span>{baseNumber}</span>
+                    <span className="num-exponent">{exponent}</span>
+                </div>
+            ) : (
+                props.value
+            )}
         </div>
     );
 }
@@ -114,16 +175,24 @@ export function DormantOpTile(props) {
         event.currentTarget.classList.remove("dragging");
     };
     
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
         <button 
-            className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center"
+            className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center relative"
             style={props.style} 
             onClick={props.onClick}
             draggable="true"
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
-            {props.value}
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }
@@ -134,9 +203,18 @@ export function DormantOpTile(props) {
 export function WaitingOpTile(props) {
     // Render op tile that has been clicked. This will have different style (place and colour) to highlight.
     // Clicking will render dormant.
+    
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
-        <button className="waiting op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all" style={props.style} onClick={props.onClick}>
-            {props.value}
+        <button className="waiting op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all relative" style={props.style} onClick={props.onClick}>
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }
@@ -146,11 +224,20 @@ export function WaitingOpTile(props) {
 export function PlacedOpTile(props) {
     // Render op tile that has been placed. This will have a different position to the dormant op tile.
     // Clicking will move it back to the dormant state.
+    
+    // Get the score for this operator
+    const score = OP_SCORES[props.value] !== undefined ? OP_SCORES[props.value] : 0;
+    
+    // Use the helper function to format the display
+    const { displayValue, exponentValue } = formatExponentDisplay(props.value);
+    
     return (
-        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center"
+        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center relative"
                 style={props.style}
                 onClick={props.onClick}>
-            {props.value}
+            {displayValue}
+            {exponentValue && <span className="exponent">{exponentValue}</span>}
+            {score > 0 && <span className="score">{score}</span>}
         </button>
     );
 }
@@ -229,6 +316,16 @@ export function ResetTile(props) {
 
 //  =================================== ===
 
+export function SkipTile(props) {
+    return (
+        <button className="skip_tile rounded-md shadow-md flex items-center justify-center transition-all hover:shadow-lg hover:bg-orange-400" style={props.style} onClick={props.onClick}>
+            Skip (S)
+        </button>
+    );
+}
+
+//  =================================== ===
+
 
 export function Equation(props) {
     return (
@@ -264,6 +361,16 @@ export function BackgroundSelector(props) {
                     </option>
                 ))}
             </select>
+        </div>
+    );
+}
+
+export function SessionScore(props) {
+    return (
+        <div className='session-score'>
+            <div className="session-score-title">Session Score</div>
+            <div className="session-score-points">{props.totalScore}</div>
+            <div className="session-score-games">{props.gamesCompleted} {props.gamesCompleted === 1 ? 'game' : 'games'}</div>
         </div>
     );
 }
