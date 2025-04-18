@@ -7,12 +7,10 @@ import {
     DormantBracketTile,
     DormantOpTile,
     Equation,
-    MultiNumTile,
-    PlacedBracketTile,
     PlacedOpTile,
     PlayButton,
     ResetTile,
-    SingleNumTile,
+    NumTile,
     Spacer,
     WaitingBracketTile,
     WaitingOpTile
@@ -21,13 +19,17 @@ import {TileArray} from "./tile_array";
 import {
     EMPTY,
     is_num_string,
+    count_element,
     MINUS,
+    EQUALS,
     OPERATIONS,
     L_BRACKET,
     R_BRACKET,
     BRACKETS,
     SPACE,
 } from "./util";
+let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
+// Find a better way to state the ordering of the operation tiles.
 
 
 // Tailwind configuration and custom styles
@@ -53,6 +55,7 @@ const BACKGROUNDS = [
 
 
 let N_TILES = 6;
+let N_SPACES = N_TILES - 1;
 let TILE_WIDTH = 80;
 // LEFT_MARGIN will be calculated after TILE_WIDTH is defined
 let LEFT_MARGIN;
@@ -68,6 +71,10 @@ let log = console.log;
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
 
+
+function _isPlaceable (tile_symbol) {
+    return OPERATIONS.includes(tile_symbol) || tile_symbol === EQUALS
+}
 
 class Board extends Component {
 
@@ -130,75 +137,71 @@ class Board extends Component {
 
         return {
             tile_array: tile_array,
-            active_op: EMPTY
+            active_op: EMPTY,
+            active_space: -1
         };
     }
 
-    deactive_op () {
-        this.setState({active_op: EMPTY})
+    activate_op (op_string) {
+        this.setState({active_op: op_string})
+        if (this.state.active_space === -1) {
+            this.setState({active_space: 0})
+        }
     }
 
-    renderSingleNumTile(array_pos, left_position) {
+    deactivate_op () {
+        this.setState({active_op: EMPTY})
+        this.setState({active_space: -1})
+    }
+
+    renderNumTile(array_pos, left_position) {
         let value = this.state.tile_array.string_array[array_pos]
+        
+        // Handle drop for drag and drop of brackets
+        const handleDrop = (bracket) => {
+            // Set this bracket as active
+            this.setState({ active_op: bracket }, () => {
+                // Then trigger the number click handler to place the bracket
+                this.handleNumClick(array_pos);
+            });
+        };
+        
         return (
-            <SingleNumTile
+            <NumTile
                 value={value}
                 style={{
                     left: left_position + 'px'
                 }}
                 onClick={
-                    () => this.handleSingleNumClick(array_pos)
+                    () => this.handleNumClick(array_pos)
                 }
+                onDrop={handleDrop}
             />
         );
     }
 
-    _maybeInsertBrackets(array_pos) {
+    _insertBrackets(array_pos) {
         // Insert brackets at array pos if current active op is a bracket and return boolean indicating if we did
         // This could be the place for automatically activating a second bracket.
         let outstanding_bracket = EMPTY;
+        this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
+        this.deactivate_op()
+        outstanding_bracket = this.state.tile_array._outstanding_bracket();
+        if (outstanding_bracket !== EMPTY) {
+            this.activate_op(outstanding_bracket)
+        }
+    }
+
+    handleNumClick(array_pos) {
         if (BRACKETS.includes(this.state.active_op)) {
-            this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
-            this.deactive_op()
-            outstanding_bracket = this.state.tile_array._outstanding_bracket();
-            if (outstanding_bracket !== EMPTY) {
-                this.setState({active_op: outstanding_bracket})
-            }
-            return true
+            this._insertBrackets(array_pos)
+        }
+        else if (this.state.active_op === MINUS) {
+            this.state.tile_array.negate_number(array_pos)
+            this.deactivate_op()
         }
         else {
-            return false
-        }
-    }
-
-    handleSingleNumClick(array_pos) {
-        if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.remove_brackets(array_pos)
-        }
-        if (this.state.active_op === MINUS) {
-            this.state.tile_array.negate_number(array_pos)
-            this.deactive_op()
-        }
-        this.setState({})
-    }
-
-    renderMultiNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.string_array[array_pos]
-        return (
-            <MultiNumTile
-                value={value}
-                style={{
-                    left: left_position + 'px'
-                }}
-                onClick={
-                    () => this.handleMultiNumClick(array_pos)
-                }
-            />
-        );
-    }
-
-    handleMultiNumClick(array_pos) {
-        if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.split_numbers(array_pos)
         }
         this.setState({})
@@ -223,7 +226,7 @@ class Board extends Component {
     }
 
     handleDormantBracketClick(is_left) {
-        this.setState({active_op: this._getBracketValue(is_left)})
+        this.activate_op(this._getBracketValue(is_left))
     }
 
     renderWaitingBracketTile(is_left, left_position) {
@@ -242,7 +245,7 @@ class Board extends Component {
     //
     handleWaitingClick() {
         // reset to dormant
-        this.deactive_op()
+        this.deactivate_op()
     }
 
     renderUnplacedBracketTile(is_left, left_position) {
@@ -252,17 +255,6 @@ class Board extends Component {
             } else {
                 return this.renderDormantBracketTile(is_left, left_position)
             }
-    }
-
-    renderPlacedBracketTile(is_left, left_position) {
-        // Clicking placed brackets does nothing. Click number to which they are assigned to remove
-        return (<PlacedBracketTile
-                value={this._getBracketValue(is_left)}
-                style={{
-                    left: left_position + 'px',
-                }}
-            />
-        );
     }
 
     // OP TILES
@@ -281,7 +273,7 @@ class Board extends Component {
 
     //
     handleDormantOpClick(op_string) {
-        this.setState({active_op: op_string})
+        this.activate_op(op_string)
     }
 
     renderWaitingOpTile(op_string, left_position) {
@@ -322,25 +314,36 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
-        if (OPERATIONS.includes(this.state.active_op)) {
+        if (_isPlaceable(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op);
-            this.deactive_op();
+            this.deactivate_op();
         }
     }
 
     // SPACE TILES
     renderSpacer(array_pos, left_position) {
         // Determine if this space should be highlighted (when an operator is active)
-        const isHighlighted = OPERATIONS.includes(this.state.active_op);
+        let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
+        const isHighlighted = _isPlaceable(this.state.active_op);
+        const isActive = space_count === this.state.active_space + 1
         
+        // Handle drop for drag and drop
+        const handleDrop = (operator) => {
+            // Set this operator as active
+            this.setState({ active_op: operator }, () => {
+                // Then trigger the space click handler
+                this.handleSpaceClick(array_pos);
+            });
+        };
+
         return (<Spacer
                 isHighlighted={isHighlighted}
+                isActive={isActive}
                 style={{
                     left: left_position + 'px'
                 }}
-                onClick={
-                    () => this.handleSpaceClick(array_pos)
-                }
+                onClick={() => this.handleSpaceClick(array_pos)}
+                onDrop={handleDrop}
             />
         );
     }
@@ -350,9 +353,9 @@ class Board extends Component {
         if (this.state.active_op === EMPTY) {
             this.state.tile_array.join_numbers(array_pos, this.state.active_op)
             this.setState({});
-        } else if (OPERATIONS.includes(this.state.active_op)) {
+        } else if (_isPlaceable(this.state.active_op)) {
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
-            this.deactive_op()
+            this.deactivate_op()
         }
     }
 
@@ -365,7 +368,7 @@ class Board extends Component {
     }
 
     handleResetClick() {
-        this.deactive_op();
+        this.deactivate_op();
         this.state.tile_array.reset_board();
         // Don't reset the timer when the reset button is hit
         // Only reset timer after successful equation evaluation
@@ -377,10 +380,11 @@ class Board extends Component {
         try {
             // Try to get the evaluable equation instead of the display string
             eq = this.state.tile_array.build_equation(false);
+            eq = "Your Equation: " + eq;
         } catch (error) {
             // If there's an error building the equation (like no equals sign yet),
             // just display a placeholder message
-            eq = "Build your equation...";
+            eq = "Your Equation: ";
         }
         return (<Equation
                 equation={eq}
@@ -418,8 +422,10 @@ class Board extends Component {
             this.setState(this.populate_board());
             this.resetTimer();
         } else {
-            alert("Sorry, the equation is invalid: " + eq);
-            log(this.state.tile_array.string_array)
+            let sides = eval_eq.split('===')
+            let side_vals = sides.map(x => eval(x))
+            let simplified = side_vals.join(' = ')
+            alert(`Sorry, the equation is invalid: ${eq} \n (Simplifies to ${simplified})`);
         }
     }
     
@@ -440,25 +446,9 @@ class Board extends Component {
 
     render() {
         // Calculate the total width needed for all tiles
-        let totalWidth = 0;
         const tiles = this.state.tile_array.string_array;
-        
-        // First pass to calculate the total width
-        for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
-            const content = tiles[array_pos];
-            if (content === L_BRACKET || content === R_BRACKET) {
-                totalWidth += TILE_WIDTH / 2;
-            } else if (content === SPACE || OPERATIONS.includes(content)) {
-                totalWidth += TILE_WIDTH;
-            } else {
-                if (content.length === 1) {
-                    totalWidth += TILE_WIDTH;
-                } else {
-                    totalWidth += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
-                }
-            }
-        }
-        
+        let totalWidth = TILE_WIDTH * tiles.length;
+
         // Center the array horizontally
         let left_position = (window.innerWidth - totalWidth) / 2;
         let objs = [];
@@ -466,44 +456,37 @@ class Board extends Component {
 
         for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
             let content = tiles_array[array_pos];
-            if (content === L_BRACKET || content === R_BRACKET) {
-                objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
-                left_position += TILE_WIDTH / 2;
-            } else if (content === SPACE) {
+            if (content === SPACE) {
                 objs.push(this.renderSpacer(array_pos, left_position))
                 left_position += TILE_WIDTH;
-            } else if (OPERATIONS.includes(content)) {
+            } else if (_isPlaceable(content)) {
                 objs.push(this.renderPlacedOpTile(array_pos, left_position))
                 left_position += TILE_WIDTH;
             } else {
                 if (!is_num_string(content)) {
-                    throw "content must be a space, bracket, operation or number"
+                    throw `content must be a space, bracket, operation or number. Saw ${content}`
                 }
-                if (content.length === 1) {
-                    objs.push(this.renderSingleNumTile(array_pos, left_position))
-                    left_position += TILE_WIDTH;
-                } else {
-                    objs.push(this.renderMultiNumTile(array_pos, left_position))
-                    left_position += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
-                }
+                objs.push(this.renderNumTile(array_pos, left_position))
+                left_position += TILE_WIDTH;
             }
         }
 
         // Center the operations row
         const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
         left_position = (window.innerWidth - totalOperationsWidth) / 2;
-        
-        for (let i = 0; i < OPERATIONS.length; i++) {
-            let op_string = OPERATIONS[i];
+
+        for (let op_string of OPERATIONS) {
             objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
         
-        // Add some spacing between operations and brackets
-        left_position += TILE_WIDTH / 4;
-        objs.push(this.renderUnplacedBracketTile(true, left_position));
+        for (let is_left of [true, false]) {
+            objs.push(this.renderUnplacedBracketTile(is_left, left_position));
+            left_position += TILE_WIDTH / 2;
+        }
+
         left_position += TILE_WIDTH / 2;
-        objs.push(this.renderUnplacedBracketTile(false, left_position));
+        objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
 
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
@@ -564,27 +547,63 @@ class Game extends Component {
         }
     }
     
-    resetTimer() {
-        this.stopTimer();
-        this.setState({ timer: 0 });
-        this.startTimer();
-    }
-    
     updateWindowDimensions() {
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
         this.forceUpdate();
     }
     
     handleKeyDown(event) {
-        if (this.boardRef.current) {
-            // If Enter key is pressed, simulate a click on the Play button
-            if (event.key === 'Enter') {
-                this.boardRef.current.handlePlayClick();
+        let board = this.boardRef.current
+        let active_op_index
+        let active_space
+        if (board) {
+            switch (event.key) {
+                case 'Enter':
+                    // If Enter key is pressed, simulate a click on the Play button
+                    board.handlePlayClick();
+                    break;
+                case 'r':
+                    // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
+                    board.handleResetClick();
+                    break;
+                case ' ':
+                    if (_isPlaceable(board.state.active_op)) {
+                        let array_pos = board.state.tile_array.index_of_nth_space(board.state.active_space)
+                        if (array_pos >= 0) {
+                            board.handleSpaceClick(array_pos)
+                        }
+                    }
+                    break;
+                case 'ArrowRight':
+                    active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
+                    active_op_index = (active_op_index + 1) % ALL_OP_SYMBOLS.length
+                    board.activate_op(ALL_OP_SYMBOLS[active_op_index])
+                    break;
+                case 'ArrowLeft':
+                    active_op_index = ALL_OP_SYMBOLS.indexOf(board.state.active_op)  // -1 if active_op is EMPTY
+                    if (active_op_index === -1) {
+                        active_op_index = ALL_OP_SYMBOLS.length - 1
+                    }
+                    else {
+                        active_op_index = (active_op_index - 1) % ALL_OP_SYMBOLS.length
+                    }
+                    board.activate_op(ALL_OP_SYMBOLS[active_op_index])
+                    break;
+                case 'ArrowUp':
+                    active_space = (board.state.active_space + 1) % N_SPACES
+                    board.setState({active_space: active_space})
+                    break;
+                case 'ArrowDown':
+                    active_space = board.state.active_space - 1
+                    if (active_space < 0) {
+                        active_space = N_SPACES + active_space
+                    }
+                    board.setState({active_space: active_space})
+                    break;
+                default:
+                    return
             }
-            // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
-            else if (event.key === 'r' || event.key === 'R') {
-                this.boardRef.current.handleResetClick();
-            }
+
         }
     }
     

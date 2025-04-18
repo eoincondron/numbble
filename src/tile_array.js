@@ -1,7 +1,6 @@
 
 import {
     random_digit,
-    NUMBERS,
     L_BRACKET,
     R_BRACKET,
     SPACE,
@@ -74,7 +73,7 @@ export class TileArray {
         if (to_right === L_BRACKET) {
             return
         }
-        if (!(NUMBERS.includes(to_left) && NUMBERS.includes(to_right))) {
+        if (!(is_num_string(to_left) && is_num_string(to_right))) {
             throw "Space is adjacent non-numeric characters :".concat(to_left, ', ', to_right)
         }
         this.string_array[space_location - 1] = to_left + to_right; // numbers are represented as strings
@@ -123,11 +122,10 @@ export class TileArray {
         // Insert a bracket to adjacent to the chosen number
         // Throw if array does not contain a number at the given location
         this._check_contains_num_at(num_location, 'insert a bracket')
-        let offset = 0
-        if (bracket_type === R_BRACKET) {
-            offset = 1
-        }
-        this.string_array.splice(num_location + offset, 0, bracket_type)
+        let value = this.string_array[num_location];
+        value = (bracket_type === L_BRACKET) ? L_BRACKET + value: value + R_BRACKET;
+        this.string_array[num_location] = value;
+
         if (this.open_bracket === bracket_type) {
             throw "Inserting a bracket when there is already an open bracket of the same side is not allowed" }
         else if (this.open_bracket === EMPTY) {
@@ -161,20 +159,26 @@ export class TileArray {
         this._insert_bracket(R_BRACKET, num_location)
     }
 
-    remove_brackets(num_location) {
+    _remove_brackets_of_type(bracket_type, location) {
         // Remove brackets adjacent to a number at a given location
         // Throw if the array does not contain a number here
-        this._check_contains_num_at(num_location, "remove brackets")
-        let i = num_location - 1;
-        while (this.string_array[i] === L_BRACKET) {
-            this.string_array.splice(i, 1)
-            i -= 1;
+        this._check_contains_num_at(location, "remove brackets")
+        let opposite = (bracket_type === L_BRACKET) ? R_BRACKET : L_BRACKET
+        while (this.string_array[location].includes(bracket_type)) {
+            this.string_array[location] = this.string_array[location].replace(bracket_type, '')
+            for (let i = location; i < this.string_array.length - 1; i++) {
+                let s = this.string_array[i]
+                if (s.includes(opposite)) {
+                    this.string_array[i] = s.replace(opposite, '')
+                    break
+                }
+            }
         }
-        i = num_location + 1;
-        while (this.string_array[i] === R_BRACKET) {
-            this.string_array.splice(i, 1)
-            i += 1;
-        }
+    }
+
+    remove_brackets(location) {
+        this._remove_brackets_of_type(L_BRACKET, location)
+        this._remove_brackets_of_type(R_BRACKET, location)
     }
 
     negate_number(num_location) {
@@ -188,60 +192,39 @@ export class TileArray {
         }
     }
 
-    _get_sub_lists() {
-        // Split the array into sub-lists where each space defines the start of a new list
-        let i = 0;
-        let content = '';
-        let sub_lists = [];
-        let current_list = [];
-
-        for (i = 0; i < this.string_array.length; i++) {
-            content = this.string_array[i];
-            if (content === SPACE) {
-                sub_lists.push(current_list);
-                current_list = [];
-            } else {
-                current_list.push(content)
+    index_of_nth_space(n) {
+        let space_count = 0;
+        for (let i in this.string_array) {
+            if (this.string_array[i] === SPACE) {
+                if (space_count === n) {
+                    return i
+                }
+                space_count += 1
             }
         }
-        if (current_list.length > 0) {
-            sub_lists.push(current_list)
-        }
-        return sub_lists
+        return -1
     }
 
     build_equation (evaluable = false) {
         // Build a single string containing an equation from the board by concatenating
-        // a the unique sublist containing an equality if such exists.
-        // Returns SPACE if no such sub-list is found and throw if multiple are found.
+        // the unique sublist containing an equality if such exists.
+        // Returns SPACE if no such sub-list is found
         // If evaluable is true then we use characters understood by the eval method, e.g., mapping '=' -> '==='.
 
-        let i;
-        let sub_lists = this._get_sub_lists();
-        let equation = [];
-
-        for (i = 0; i < sub_lists.length; i++) {
-            let sub_list = sub_lists[i];
-            // check if sublist has anything other than numbers
-            let has_ops = sub_list.filter(x => !NUMBERS.includes(x)).length > 0
-            if (!has_ops) {
-                continue;
+        let equation = EMPTY
+        let as_string = this.string_array.join('')
+        let chunks = as_string.split(SPACE)
+        for (let chunk of chunks) {
+            if (chunk.includes(EQUALS)) {
+                equation = chunk
             }
-            if (!sub_list.includes(EQUALS)) {
-                throw "Cannot build valid equation. Array contains an active sub list with no equality";
-            } else if (equation.length === 0) {
-                equation = sub_list;
-            } else {
-                // We may want to allow this later, making it possible to play multiple separate equations
-                throw "Found more than one sub list containing an equality"
-            }
-
         }
-        // We may want to throw if no equation was found, i.e., equation === SPACE
+
         if (evaluable) {
-            equation = equation.map(x => OP_EVAL_MAP[x] || x)
+            for (const s in OP_EVAL_MAP) {
+                equation = equation.replaceAll(s, OP_EVAL_MAP[s])
+            }
         }
-        equation = ''.concat(...equation)
         return equation
     }
 }

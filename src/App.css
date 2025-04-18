@@ -84,7 +84,6 @@
 }
 .block {
   height: 80px;
-  width: 80px;
   position: absolute;
   text-align: center;
   font-size: 36px;
@@ -105,6 +104,7 @@
   transition: all 0.2s ease;
 }
 .num_tile {
+  width: 80px;
   background-color: #FFC107;
   z-index: 0; 
   border-radius: 16px;
@@ -132,30 +132,9 @@
     inset 0 -6px 0 rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
-.bracket_tile {
-  z-index: 0;
-  width: 40px;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 40px;
-  /* 3D effect matching other tiles */
-  border: 2px solid rgba(130, 100, 200, 0.7);
-  box-shadow: 
-    0 6px 10px rgba(0, 0, 0, 0.2),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  transform: perspective(100px) translateZ(0);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
 
-.bracket_tile:hover {
-  transform: perspective(100px) translateZ(5px);
-  box-shadow: 
-    0 10px 14px rgba(0, 0, 0, 0.3),
-    inset 0 -4px 0 rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
 .op_tile {
+  width: 80px;
   background-color: #3F51B5;
   color: white;
   margin-right: 20px;
@@ -186,7 +165,35 @@
     inset 0 -4px 0 rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
+
+
+.bracket_tile {
+  z-index: 0;
+  width: 40px;
+  min-width: 30px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 40px;
+  /* 3D effect matching other tiles */
+  border: 2px solid rgba(130, 100, 200, 0.7);
+  box-shadow:
+          0 6px 10px rgba(0, 0, 0, 0.2),
+          inset 0 -3px 0 rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  transform: perspective(100px) translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bracket_tile:hover {
+  transform: perspective(100px) translateZ(5px);
+  box-shadow:
+          0 10px 14px rgba(0, 0, 0, 0.3),
+          inset 0 -4px 0 rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
 .spacer {
+  width: 80px;
   background-color: transparent;
   z-index: 0; 
 }
@@ -202,6 +209,36 @@
   border: 2px dashed rgba(255, 255, 255, 0.7);
   background-color: rgba(255, 255, 255, 0.1);
   animation: pulse-shadow 1.5s infinite alternate;
+}
+
+/* Drag over state for drop targets */
+.drag-over {
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px dashed rgba(255, 220, 100, 0.9);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 
+              0 0 40px rgba(255, 220, 100, 0.6);
+  transform: scale(1.1);
+}
+
+/* Dragging state for draggable elements */
+.dragging {
+  opacity: 0.8;
+  transform: scale(1.2);
+  cursor: grabbing;
+}
+
+/* Add specific styling for bracket dragging */
+.bracket_tile.dragging {
+  opacity: 0.6;
+  transform: scale(1.1);
+  background-color: rgba(130, 100, 200, 0.8);
+}
+
+/* Add specific styling for number tiles when brackets are dragged over them */
+.num_tile.drag-over {
+  box-shadow: 0 0 10px rgba(130, 100, 200, 0.8) !important;
+  border: 2px dashed rgba(130, 100, 200, 0.8) !important;
+  background-color: rgba(130, 100, 200, 0.1);
 }
 
 /* Pulsing shadow animation for highlighted spaces */
@@ -253,13 +290,6 @@
   position: absolute;
   bottom: 30px;
   left: 30px;
-}
-
-.brackets {
-  font-size: 20px;
-  font-weight: bold;
-  font-family: 'Roboto Mono', monospace;
-  text-align: top;
 }
 
 .play {

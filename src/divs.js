@@ -1,22 +1,45 @@
 import React from "react";
 
 
-export function SingleNumTile(props) {
+export function NumTile(props) {
     // clicking this will remove any adjacent brackets
+    // Add drag and drop handlers for receiving brackets
+    const handleDragOver = (event) => {
+        // Prevent default to allow drop
+        event.preventDefault();
+        event.currentTarget.classList.add("drag-over");
+    };
+    
+    const handleDragLeave = (event) => {
+        event.currentTarget.classList.remove("drag-over");
+    };
+    
+    const handleDrop = (event) => {
+        event.preventDefault();
+        // Remove the drag-over class
+        event.currentTarget.classList.remove("drag-over");
+        
+        // Get the bracket that was dragged
+        const bracket = event.dataTransfer.getData("text/plain");
+        
+        // If we have an onDrop handler, call it with the bracket
+        if (props.onDrop) {
+            props.onDrop(bracket);
+        } else {
+            // Fallback to the click handler if no drop handler
+            props.onClick();
+        }
+    };
+    
     return (
-        <div className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" style={props.style} onClick={props.onClick}>
-            {props.value}
-        </div>
-    );
-}
-
-//  ==================================== ===
-
-
-export function MultiNumTile(props) {
-    // Clicking will split this into single digits
-    return (
-        <div className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" style={props.style} onClick={props.onClick}>
+        <div 
+            className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" 
+            style={props.style} 
+            onClick={props.onClick}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
             {props.value}
         </div>
     );
@@ -27,13 +50,48 @@ export function MultiNumTile(props) {
 
 
 export function Spacer(props) {
-    // Add highlighted class if the prop is true
-    const className = props.isHighlighted 
+    // Add highlighted class if the prop is true 
+    const className = props.isHighlighted && props.isActive
         ? "spacer block placed highlightable highlighted" 
         : "spacer block placed highlightable";
+    
+    // Drag and drop handlers
+    const handleDragOver = (event) => {
+        // Prevent default to allow drop
+        event.preventDefault();
+        event.currentTarget.classList.add("drag-over");
+    };
+    
+    const handleDragLeave = (event) => {
+        event.currentTarget.classList.remove("drag-over");
+    };
+    
+    const handleDrop = (event) => {
+        event.preventDefault();
+        // Remove the drag-over class
+        event.currentTarget.classList.remove("drag-over");
+        
+        // Get the operator that was dragged
+        const operator = event.dataTransfer.getData("text/plain");
+        
+        // If we have an onDrop handler, call it with the operator
+        if (props.onDrop) {
+            props.onDrop(operator);
+        } else {
+            // Fallback to the click handler if no drop handler
+            props.onClick();
+        }
+    };
         
     return (
-        <div className={className} style={props.style} onClick={props.onClick}>
+        <div 
+            className={className} 
+            style={props.style} 
+            onClick={props.onClick}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
         </div>
     );
 }
@@ -43,8 +101,28 @@ export function Spacer(props) {
 
 export function DormantOpTile(props) {
     // Render op tile in the initial state. On click will make it waiting.
+    // Add drag and drop functionality
+    const handleDragStart = (event) => {
+        // Set the operator value as the data being dragged
+        event.dataTransfer.setData("text/plain", props.value);
+        // Add a class for drag styling
+        event.currentTarget.classList.add("dragging");
+    };
+    
+    const handleDragEnd = (event) => {
+        // Remove the dragging class
+        event.currentTarget.classList.remove("dragging");
+    };
+    
     return (
-        <button className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center" style={props.style} onClick={props.onClick}>
+        <button 
+            className="op_tile block dormant rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center"
+            style={props.style} 
+            onClick={props.onClick}
+            draggable="true"
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
             {props.value}
         </button>
     );
@@ -69,7 +147,9 @@ export function PlacedOpTile(props) {
     // Render op tile that has been placed. This will have a different position to the dormant op tile.
     // Clicking will move it back to the dormant state.
     return (
-        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center" style={props.style} onClick={props.onClick}>
+        <button className="placed op_tile block rounded-md shadow-lg flex items-center justify-center"
+                style={props.style}
+                onClick={props.onClick}>
             {props.value}
         </button>
     );
@@ -78,8 +158,28 @@ export function PlacedOpTile(props) {
 // ==================================== ===
 
 export function DormantBracketTile(props) {
+    // Add drag and drop functionality for brackets
+    const handleDragStart = (event) => {
+        // Set the bracket value as the data being dragged
+        event.dataTransfer.setData("text/plain", props.value);
+        // Add a class for drag styling
+        event.currentTarget.classList.add("dragging");
+    };
+    
+    const handleDragEnd = (event) => {
+        // Remove the dragging class
+        event.currentTarget.classList.remove("dragging");
+    };
+    
     return (
-        <div className='dormant bracket_tile op_tile block rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center' style={props.style} onClick={props.onClick}>
+        <div 
+            className='dormant bracket_tile op_tile block rounded-md shadow-sm transition-all hover:shadow-md flex items-center justify-center' 
+            style={props.style} 
+            onClick={props.onClick}
+            draggable="true"
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
             {props.value}
         </div>
     );
@@ -88,22 +188,34 @@ export function DormantBracketTile(props) {
 // ==================================== ===
 
 export function WaitingBracketTile(props) {
+    // Add drag and drop functionality for brackets in waiting state
+    const handleDragStart = (event) => {
+        // Set the bracket value as the data being dragged
+        event.dataTransfer.setData("text/plain", props.value);
+        // Add a class for drag styling
+        event.currentTarget.classList.add("dragging");
+    };
+    
+    const handleDragEnd = (event) => {
+        // Remove the dragging class
+        event.currentTarget.classList.remove("dragging");
+    };
+    
     return (
-        <div className='waiting bracket_tile op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all' style={props.style} onClick={props.onClick}>
+        <div 
+            className='waiting bracket_tile op_tile block rounded-md shadow-md flex items-center justify-center transform scale-110 transition-all' 
+            style={props.style} 
+            onClick={props.onClick}
+            draggable="true"
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
             {props.value}
         </div>
     );
 }
 
-// ==================================== ===
 
-export function PlacedBracketTile(props) {
-    return (
-        <div className='bracket_tile block op_tile placed rounded-md shadow-lg flex items-center justify-center' style={props.style} onClick={props.onClick}>
-            {props.value}
-        </div>
-    );
-}
 
 // ==================================== ===
 

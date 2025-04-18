@@ -8,13 +8,15 @@ export const PLUS = '+'
 export const MINUS = '-'
 export const MULTIPLY = 'X'
 export const DIVIDE = '/'
-export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, EQUALS];
+export const DECIMAL_POINT = '.'
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
+let NUMBRACK = NUMBERS.concat(BRACKETS)
 
 
 export function random_digit(max) {
@@ -30,20 +32,38 @@ export function is_num_string(string) {
     if (chars[0] === '-') {
         chars = chars.slice(1)
     }
-    return (chars.length > 0) && !!Math.min(...chars.map(x => NUMBERS.includes(x)))
+    return (chars.length > 0) && !!Math.min(...chars.map(x => NUMBRACK.includes(x)))
 }
 
 
 export function split_num_string(num_string) {
     // Splits a string into a list of individual characters separated by spaces.
     // Example: split_num_string('123') -. ['1', ' ', '2', ' ', '3']
-    let chars = num_string.split('')
-    if (chars.length === 0 || !NUMBERS.includes(chars[0])) {
-        throw "Cannot split num string: " + num_string;
+    let split_locations = [];
+    for (let i = 0; i < num_string.length - 1; i++) {
+        if (NUMBERS.includes(num_string[i]) && NUMBERS.includes(num_string[i + 1])) {
+            split_locations.push(i)
+        }
     }
-    let n_chars = chars.length;
-    for (let i = 0; i < n_chars - 1; i++) {
-        chars.splice(2*i + 1, 0, SPACE)
+
+    let start = 0;
+    let split = [];
+    for (const loc of split_locations) {
+        split.push(num_string.slice(start, loc + 1))
+        split.push(SPACE)
+        start = loc + 1
     }
-    return chars
+
+    split.push(num_string.slice(start))
+    return split
+}
+
+export function count_element(value, array) {
+    let count = 0;
+    for (let elem of array) {
+         if (elem === value) {
+             count += 1
+         }
+    }
+    return count
 }
