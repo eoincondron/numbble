@@ -1,14 +1,20 @@
 
-export const R_BRACKET = ')';
-export const L_BRACKET = '(';
-export const SPACE = ' ';
+export const EMPTY = ''
+export const R_BRACKET = ')'
+export const L_BRACKET = '('
+export const SPACE = ' '
 export const EQUALS = '='
-export let OPERATIONS = ['+', '-', '/', 'X', '='];
+export const PLUS = '+'
+export const MINUS = '-'
+export const MULTIPLY = 'X'
+export const DIVIDE = '/'
+export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, EQUALS];
 export let OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
 export let NUMBERS = '0123456789'.split('');
+export let BRACKETS = [L_BRACKET, R_BRACKET]
 
 
 export function random_digit(max) {

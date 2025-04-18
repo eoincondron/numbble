@@ -2,16 +2,60 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
-import {MultiNumTile, SingleNumTile, DormantBracketTile, WaitingBracketTile, PlacedBracketTile,
-    PlacedOpTile, DormantOpTile, WaitingOpTile, Spacer, Equation, PlayButton, ResetTile} from './divs';
+import {
+    BackgroundSelector,
+    DormantBracketTile,
+    DormantOpTile,
+    Equation,
+    MultiNumTile,
+    PlacedBracketTile,
+    PlacedOpTile,
+    PlayButton,
+    ResetTile,
+    SingleNumTile,
+    Spacer,
+    WaitingBracketTile,
+    WaitingOpTile
+} from './divs';
 import {TileArray} from "./tile_array";
-import {L_BRACKET, R_BRACKET, SPACE, is_num_string, OPERATIONS} from "./util";
+import {
+    EMPTY,
+    is_num_string,
+    MINUS,
+    OPERATIONS,
+    L_BRACKET,
+    R_BRACKET,
+    BRACKETS,
+    SPACE,
+} from "./util";
+
+
+// Tailwind configuration and custom styles
+const styles = {
+    board: 'bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto',
+    tile: 'inline-block text-center transition-all duration-200 ease-in-out',
+    numTile: 'bg-blue-500 text-white rounded-md hover:bg-blue-600',
+    opTile: 'bg-green-500 text-white rounded-md hover:bg-green-600',
+    bracketTile: 'bg-purple-500 text-white rounded-md hover:bg-purple-600',
+    dormantTile: 'opacity-50 cursor-pointer',
+    activeTile: 'ring-2 ring-blue-400',
+};
+
+// Available background patterns
+const BACKGROUNDS = [
+    { id: 'solid', name: 'Indigo', class: 'bg-solid' },
+    { id: 'grid', name: 'Teal Grid', class: 'bg-grid' },
+    { id: 'dots', name: 'Purple Dots', class: 'bg-dots' },
+    { id: 'waves', name: 'Orange Waves', class: 'bg-waves' },
+    { id: 'circuit', name: 'Blue Circuit', class: 'bg-circuit' }
+];
+
 
 
 let N_TILES = 6;
-let LEFT_MARGIN = 100;
-let TILE_WIDTH = 30;
-let EMPTY = '';
+let TILE_WIDTH = 80;
+// LEFT_MARGIN will be calculated after TILE_WIDTH is defined
+let LEFT_MARGIN;
 
 
 let log = console.log;
@@ -29,7 +73,56 @@ class Board extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.populate_board()
+        // Calculate LEFT_MARGIN here to ensure TILE_WIDTH is defined
+        LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
+        this.state = {
+            ...this.populate_board(),
+            backgroundClass: 'bg-solid',
+            timer: 0,
+            isTimerRunning: false
+        };
+        
+        this.timerInterval = null;
+        this.startTimer = this.startTimer.bind(this);
+        this.stopTimer = this.stopTimer.bind(this);
+        this.resetTimer = this.resetTimer.bind(this);
+        this.formatTime = this.formatTime.bind(this);
+    }
+    
+    componentDidMount() {
+        // Start the timer when component mounts
+        this.startTimer();
+    }
+    
+    componentWillUnmount() {
+        // Clear timer when component unmounts
+        this.stopTimer();
+    }
+    
+    startTimer() {
+        if (!this.timerInterval) {
+            this.setState({ isTimerRunning: true });
+            this.timerInterval = setInterval(() => {
+                this.setState(prevState => ({
+                    timer: prevState.timer + 1
+                }));
+            }, 1000);
+        }
+    }
+    
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+            this.setState({ isTimerRunning: false });
+        }
+    }
+    
+    resetTimer() {
+        this.stopTimer();
+        this.setState({ timer: 0 }, () => {
+            this.startTimer();
+        });
     }
 
     populate_board() {
@@ -46,7 +139,7 @@ class Board extends Component {
     }
 
     renderSingleNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos]
+        let value = this.state.tile_array.string_array[array_pos]
         return (
             <SingleNumTile
                 value={value}
@@ -63,15 +156,17 @@ class Board extends Component {
     _maybeInsertBrackets(array_pos) {
         // Insert brackets at array pos if current active op is a bracket and return boolean indicating if we did
         // This could be the place for automatically activating a second bracket.
-        if (this.state.active_op === R_BRACKET) {
-            this.state.tile_array.insert_right_bracket(array_pos);
+        let outstanding_bracket = EMPTY;
+        if (BRACKETS.includes(this.state.active_op)) {
+            this.state.tile_array._insert_bracket(this.state.active_op, array_pos);
             this.deactive_op()
+            outstanding_bracket = this.state.tile_array._outstanding_bracket();
+            if (outstanding_bracket !== EMPTY) {
+                this.setState({active_op: outstanding_bracket})
+            }
             return true
-        } else if (this.state.active_op === L_BRACKET) {
-            this.state.tile_array.insert_left_bracket(array_pos)
-            this.deactive_op()
-            return true
-        } else {
+        }
+        else {
             return false
         }
     }
@@ -80,11 +175,15 @@ class Board extends Component {
         if (!this._maybeInsertBrackets(array_pos)) {
             this.state.tile_array.remove_brackets(array_pos)
         }
+        if (this.state.active_op === MINUS) {
+            this.state.tile_array.negate_number(array_pos)
+            this.deactive_op()
+        }
         this.setState({})
     }
 
     renderMultiNumTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos]
+        let value = this.state.tile_array.string_array[array_pos]
         return (
             <MultiNumTile
                 value={value}
@@ -207,7 +306,7 @@ class Board extends Component {
     }
 
     renderPlacedOpTile(array_pos, left_position) {
-        let value = this.state.tile_array.tile_array[array_pos];
+        let value = this.state.tile_array.string_array[array_pos];
         return (<PlacedOpTile
                 value={value}
                 style={{
@@ -223,11 +322,19 @@ class Board extends Component {
     handlePlacedOpTileClick(array_pos) {
         this.state.tile_array.remove_operation(array_pos)
         this.setState({})
+        if (OPERATIONS.includes(this.state.active_op)) {
+            this.state.tile_array.insert_operation(array_pos, this.state.active_op);
+            this.deactive_op();
+        }
     }
 
     // SPACE TILES
     renderSpacer(array_pos, left_position) {
+        // Determine if this space should be highlighted (when an operator is active)
+        const isHighlighted = OPERATIONS.includes(this.state.active_op);
+        
         return (<Spacer
+                isHighlighted={isHighlighted}
                 style={{
                     left: left_position + 'px'
                 }}
@@ -260,11 +367,21 @@ class Board extends Component {
     handleResetClick() {
         this.deactive_op();
         this.state.tile_array.reset_board();
+        // Don't reset the timer when the reset button is hit
+        // Only reset timer after successful equation evaluation
         // TODO: this is currently generating a new board
     }
 
     renderEquation() {
-        let eq = this.state.tile_array._build_display_string();
+        let eq;
+        try {
+            // Try to get the evaluable equation instead of the display string
+            eq = this.state.tile_array.build_equation(false);
+        } catch (error) {
+            // If there's an error building the equation (like no equals sign yet),
+            // just display a placeholder message
+            eq = "Build your equation...";
+        }
         return (<Equation
                 equation={eq}
             />
@@ -277,26 +394,78 @@ class Board extends Component {
                 () => this.handlePlayClick()}
         />)
     }
+    
+    renderBackgroundSelector() {
+        return (
+            <BackgroundSelector 
+                backgrounds={BACKGROUNDS}
+                currentBackground={this.state.backgroundClass}
+                onChange={(backgroundClass) => this.setState({ backgroundClass })}
+            />
+        );
+    }
 
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
-            alert(eq + " is correct. Well done !");
+            // Stop the timer on successful solution
+            this.stopTimer();
+            const timeString = this.formatTime(this.state.timer);
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}`);
+            
+            // Reset the board and timer
             this.setState(this.populate_board());
+            this.resetTimer();
         } else {
             alert("Sorry, the equation is invalid: " + eq);
-            log(this.state.tile_array.tile_array)
+            log(this.state.tile_array.string_array)
         }
+    }
+    
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    renderTimer() {
+        const timeString = this.formatTime(this.state.timer);
+        return (
+            <div className="timer">
+                {timeString}
+            </div>
+        );
     }
 
     render() {
-        let left_position = LEFT_MARGIN;
-        let objs = [];
-        let tiles = this.state.tile_array.tile_array;
-
+        // Calculate the total width needed for all tiles
+        let totalWidth = 0;
+        const tiles = this.state.tile_array.string_array;
+        
+        // First pass to calculate the total width
         for (let array_pos = 0; array_pos < tiles.length; array_pos++) {
-            let content = tiles[array_pos];
+            const content = tiles[array_pos];
+            if (content === L_BRACKET || content === R_BRACKET) {
+                totalWidth += TILE_WIDTH / 2;
+            } else if (content === SPACE || OPERATIONS.includes(content)) {
+                totalWidth += TILE_WIDTH;
+            } else {
+                if (content.length === 1) {
+                    totalWidth += TILE_WIDTH;
+                } else {
+                    totalWidth += TILE_WIDTH + (content.length - 1) * TILE_WIDTH / 2;
+                }
+            }
+        }
+        
+        // Center the array horizontally
+        let left_position = (window.innerWidth - totalWidth) / 2;
+        let objs = [];
+        const tiles_array = this.state.tile_array.string_array;
+
+        for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
+            let content = tiles_array[array_pos];
             if (content === L_BRACKET || content === R_BRACKET) {
                 objs.push(this.renderPlacedBracketTile(content === L_BRACKET, left_position));
                 left_position += TILE_WIDTH / 2;
@@ -320,13 +489,18 @@ class Board extends Component {
             }
         }
 
-        left_position = TILE_WIDTH;
+        // Center the operations row
+        const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
+        left_position = (window.innerWidth - totalOperationsWidth) / 2;
+        
         for (let i = 0; i < OPERATIONS.length; i++) {
             let op_string = OPERATIONS[i];
             objs.push(this.renderUnplacedOpTile(op_string, left_position));
             left_position += TILE_WIDTH;
         }
-        left_position += TILE_WIDTH / 2;
+        
+        // Add some spacing between operations and brackets
+        left_position += TILE_WIDTH / 4;
         objs.push(this.renderUnplacedBracketTile(true, left_position));
         left_position += TILE_WIDTH / 2;
         objs.push(this.renderUnplacedBracketTile(false, left_position));
@@ -334,9 +508,11 @@ class Board extends Component {
         objs.push(this.renderReset());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
+        objs.push(this.renderBackgroundSelector());
+        objs.push(this.renderTimer());
 
         return (
-            <div className="board">
+            <div className={`board ${this.state.backgroundClass}`}>
                 {objs}
             </div>
         );
@@ -347,15 +523,76 @@ class Board extends Component {
 
 
 class Game extends Component {
+    constructor(props) {
+        super(props);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.boardRef = React.createRef();
+    }
+    
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+        window.addEventListener('keydown', this.handleKeyDown);
+        // Start the timer when component mounts
+        this.startTimer();
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+        window.removeEventListener('keydown', this.handleKeyDown);
+        // Clear timer when component unmounts
+        this.stopTimer();
+    }
+    
+    startTimer() {
+        if (!this.timerInterval) {
+            this.setState({ isTimerRunning: true });
+            this.timerInterval = setInterval(() => {
+                this.setState(prevState => ({
+                    timer: prevState.timer + 1
+                }));
+            }, 1000);
+        }
+    }
+    
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+            this.setState({ isTimerRunning: false });
+        }
+    }
+    
+    resetTimer() {
+        this.stopTimer();
+        this.setState({ timer: 0 });
+        this.startTimer();
+    }
+    
+    updateWindowDimensions() {
+        LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
+        this.forceUpdate();
+    }
+    
+    handleKeyDown(event) {
+        if (this.boardRef.current) {
+            // If Enter key is pressed, simulate a click on the Play button
+            if (event.key === 'Enter') {
+                this.boardRef.current.handlePlayClick();
+            }
+            // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
+            else if (event.key === 'r' || event.key === 'R') {
+                this.boardRef.current.handleResetClick();
+            }
+        }
+    }
+    
     render() {
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board/>
-                </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
+                    <Board ref={this.boardRef}/>
                 </div>
             </div>
         );
