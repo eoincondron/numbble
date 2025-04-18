@@ -4,7 +4,9 @@ import {
     L_BRACKET,
     R_BRACKET,
     SPACE,
-    OPERATIONS,
+    SQUARE,
+    SQRT,
+    EXPONENTS,
     EMPTY,
     EQUALS,
     split_num_string,
@@ -193,6 +195,30 @@ export class TileArray {
         let num_string = this.string_array[num_location];
         if (!num_string.startsWith('-')) {
             this.string_array[num_location] = '-' + num_string
+        }
+    }
+
+    _appendExponent(array_pos, exponent) {
+        // Append the exponent string to the number at array_pos
+        const currentValue = this.string_array[array_pos];
+        let newValue = currentValue;
+
+        console.assert(EXPONENTS.includes(exponent))
+
+        // Only apply to numeric values
+        if (is_num_string(currentValue)) {
+            // Simply concatenate the exponent to the current value.
+            // This will make entries like "5**2" or "9**(1/2)" that will be evaluated when the equation is calculated
+            // If the number is already exponentiated, replace it with the one passed.
+            if (currentValue.includes(SQRT)) {
+                newValue = currentValue.replace(SQRT, exponent);
+            } else if (currentValue.includes(SQUARE)) {
+                newValue = currentValue.replace(SQUARE, exponent);
+            }
+            else {
+                newValue = currentValue + exponent;
+            }
+            this.string_array[array_pos] = newValue;
         }
     }
 

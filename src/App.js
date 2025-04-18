@@ -202,36 +202,25 @@ class Board extends Component {
     }
 
     handleNumClick(array_pos) {
+        let ta = this.state.tile_array
         if (BRACKETS.includes(this.state.active_op)) {
             this._insertBrackets(array_pos)
         }
         else if (this.state.active_op === MINUS) {
-            this.state.tile_array.negate_number(array_pos)
+            ta.negate_number(array_pos)
             this.deactivate_op()
         }
         else if (this.state.active_op.startsWith('**')) {
             // Apply exponent to the number by concatenating the string
-            this._appendExponent(array_pos, this.state.active_op)
+            ta._appendExponent(array_pos, this.state.active_op)
             this.deactivate_op()
         }
         else {
-            this.state.tile_array.remove_brackets(array_pos)
-            this.state.tile_array.split_numbers(array_pos)
-            this.state.tile_array.remove_exponents(array_pos)
+            ta.remove_brackets(array_pos)
+            ta.split_numbers(array_pos)
+            ta.remove_exponents(array_pos)
         }
         this.setState({})
-    }
-    
-    _appendExponent(array_pos, exponent) {
-        // Append the exponent string to the number at array_pos
-        const currentValue = this.state.tile_array.string_array[array_pos];
-        
-        // Only apply to numeric values
-        if (is_num_string(currentValue)) {
-            // Simply concatenate the exponent to the current value
-            // This will make entries like "5**2" or "10**1/2" that will be evaluated when the equation is calculated
-            this.state.tile_array.string_array[array_pos] = currentValue + exponent;
-        }
     }
 
     // BRACKETS TILES

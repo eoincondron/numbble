@@ -1,5 +1,10 @@
 import React from "react";
-import { OP_SCORES } from "./util";
+import { OP_SCORES, SQRT, SQUARE, EXPONENTS} from "./util";
+
+let EXPONENT_FORMAT_MAP = {
+    [SQRT]: '½',
+    [SQUARE]: '2',
+}
 
 // Helper function to handle exponent display
 function formatExponentDisplay(value) {
@@ -7,15 +12,8 @@ function formatExponentDisplay(value) {
     let exponentValue = null;
     
     // Special handling for exponent operators
-    if (value.startsWith('**')) {
-        // Extract the exponent part after the **
-        exponentValue = value.substring(2);
-        
-        // Format square root (1/2) to look better
-        if (exponentValue === '(1/2)') {
-            exponentValue = '½';
-        }
-        
+    if (EXPONENTS.includes(value)) {
+        exponentValue = EXPONENT_FORMAT_MAP[value]
         displayValue = ''; // Base display is empty so we just show the exponent
     }
     
@@ -23,31 +21,22 @@ function formatExponentDisplay(value) {
 }
 
 // Helper function to parse and format number with exponents
-function formatNumberWithExponent(value) {
+export function formatNumberWithExponent(value) {
     // Check if the value contains an exponent
-    const exponentMatch = value.match(/^(.+)(\*\*.+)$/);
-    
-    if (exponentMatch) {
-        const baseNumber = exponentMatch[1];
-        const exponentPart = exponentMatch[2].substring(2); // Remove '**'
-        
-        // Format square root (1/2) to look better
-        let formattedExponent = exponentPart;
-        if (formattedExponent === '(1/2)') {
-            formattedExponent = '½';
+    for (let exponent of EXPONENTS)
+        if (value.includes(exponent)) {
+            let split = value.split(exponent);
+            let formattedExponent = EXPONENT_FORMAT_MAP[exponent];
+            return {
+                baseNumber: split[0],
+                exponent: formattedExponent,
+                remainder: split[1],
+            };
         }
-        
-        return {
-            hasExponent: true,
-            baseNumber: baseNumber,
-            exponent: formattedExponent
-        };
-    }
-    
     return {
-        hasExponent: false,
         baseNumber: value,
-        exponent: null
+        exponent: null,
+        remainder: null,
     };
 }
 
@@ -83,8 +72,8 @@ export function NumTile(props) {
     };
     
     // Parse and format the number to handle exponents
-    const { hasExponent, baseNumber, exponent } = formatNumberWithExponent(props.value);
-    
+    const {baseNumber, exponent, remainder} = formatNumberWithExponent(props.value);
+
     return (
         <div 
             className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" 
@@ -94,10 +83,11 @@ export function NumTile(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {hasExponent ? (
+            {true ? (
                 <div className="relative">
                     <span>{baseNumber}</span>
                     <span className="num-exponent">{exponent}</span>
+                    <span>{remainder}</span>
                 </div>
             ) : (
                 props.value
