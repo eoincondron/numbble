@@ -12,7 +12,7 @@ import {
     split_num_string,
     is_num_string,
     OP_EVAL_MAP,
-    _isSpaceFiller, count_element
+    _isSpaceFiller, count_element, NUMBERS
 } from './util.js';
 
 
@@ -67,17 +67,14 @@ export class TileArray {
             throw "Cannot join numbers, space contains " + content;
         }
         let to_left = this.string_array[space_location - 1];
-        if (to_left === R_BRACKET) {
-            return
-            // Maybe we want to raise here and catch downstream. Decide Later.
-            // We may also want to allow it if there is a left bracket to the right.
-        }
         let to_right = this.string_array[space_location + 1];
-        if (to_right === L_BRACKET) {
+        if (to_left.includes(SQRT) || to_left.includes(SQUARE)) {
+            alert("Cannot join numbers where the left is exponentiated")
             return
         }
-        if (!(is_num_string(to_left) && is_num_string(to_right))) {
-            throw "Space is adjacent non-numeric characters :".concat(to_left, ', ', to_right)
+        if (!(NUMBERS.includes(to_left.at(-1)) && NUMBERS.includes(to_right[0]))) {
+            alert("Cannot join numbers, space is adjacent non-numeric characters :".concat(to_left, ', ', to_right))
+            return
         }
         this.string_array[space_location - 1] = to_left + to_right; // numbers are represented as strings
         this.string_array.splice(space_location, 2);
