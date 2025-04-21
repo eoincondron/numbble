@@ -73,28 +73,25 @@ export function NumTile(props) {
     
     // Parse and format the number to handle exponents
     const {baseNumber, exponent, remainder} = formatNumberWithExponent(props.value);
-
     return (
-        <div 
-            className="num_tile block placed rounded-lg shadow-md flex items-center justify-center" 
-            style={props.style} 
+        <div
+            className="num_tile block placed rounded-lg shadow-md flex items-center justify-center"
+            style={props.style}
             onClick={props.onClick}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            {true ? (
                 <div className="relative">
                     <span>{baseNumber}</span>
                     <span className="num-exponent">{exponent}</span>
                     <span>{remainder}</span>
                 </div>
-            ) : (
-                props.value
-            )}
+
         </div>
     );
 }
+
 
 //  ==================================== ===
 
