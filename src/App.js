@@ -405,7 +405,8 @@ class Board extends Component {
         
         // Create a new tile array with random numbers
         const newState = this.populate_board();
-        
+        this.resetTimer()
+
         // Reset state with the new board but keep the timer running and total score
         this.setState({
             ...newState,
