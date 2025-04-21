@@ -12,7 +12,7 @@ import {
     split_num_string,
     is_num_string,
     OP_EVAL_MAP,
-    _isSpaceFiller
+    _isSpaceFiller, count_element
 } from './util.js';
 
 
@@ -52,7 +52,7 @@ export class TileArray {
         return tile_array
     }
 
-    reset_board () {
+    reset_board() {
         // return the board by to its original state
         this.string_array = this.build_tile_array_from_numbers(this.num_array)
     }
@@ -126,12 +126,12 @@ export class TileArray {
         // Throw if array does not contain a number at the given location
         this._check_contains_num_at(num_location, 'insert a bracket')
         let value = this.string_array[num_location];
-        value = (bracket_type === L_BRACKET) ? L_BRACKET + value: value + R_BRACKET;
+        value = (bracket_type === L_BRACKET) ? L_BRACKET + value : value + R_BRACKET;
         this.string_array[num_location] = value;
 
         if (this.open_bracket === bracket_type) {
-            throw "Inserting a bracket when there is already an open bracket of the same side is not allowed" }
-        else if (this.open_bracket === EMPTY) {
+            throw "Inserting a bracket when there is already an open bracket of the same side is not allowed"
+        } else if (this.open_bracket === EMPTY) {
             this.open_bracket = bracket_type
         } else {
             this.open_bracket = EMPTY
@@ -162,26 +162,49 @@ export class TileArray {
         this._insert_bracket(R_BRACKET, num_location)
     }
 
-    _remove_brackets_of_type(bracket_type, location) {
+    _remove_left_bracket(location) {
         // Remove brackets adjacent to a number at a given location
         // Throw if the array does not contain a number here
         this._check_contains_num_at(location, "remove brackets")
-        let opposite = (bracket_type === L_BRACKET) ? R_BRACKET : L_BRACKET
-        while (this.string_array[location].includes(bracket_type)) {
-            this.string_array[location] = this.string_array[location].replace(bracket_type, '')
-            for (let i = location; i < this.string_array.length - 1; i++) {
-                let s = this.string_array[i]
-                if (s.includes(opposite)) {
-                    this.string_array[i] = s.replace(opposite, '')
-                    break
-                }
+
+        let n_brackets_preceding = count_element(L_BRACKET, this.string_array.slice(0, location).join(''))
+        this.string_array[location] = this.string_array[location].replace(L_BRACKET, '')
+        let opposite_count = 0;
+        for (let i = this.string_array.length - 1; i >= location; i--) {
+            let s = this.string_array[i]
+            opposite_count += s.includes(R_BRACKET)
+            if (opposite_count > n_brackets_preceding) {
+                this.string_array[i] = s.replace(R_BRACKET, '')
+                break
+            }
+        }
+    }
+
+    _remove_right_bracket(location) {
+        // Remove brackets adjacent to a number at a given location
+        // Throw if the array does not contain a number here
+        this._check_contains_num_at(location, "remove brackets")
+
+        let n_brackets_after = count_element(R_BRACKET, this.string_array.slice(location).join('')) - 1
+        this.string_array[location] = this.string_array[location].replace(R_BRACKET, '')
+        let opposite_count = 0;
+        for (let i = 0; i <= location; i++) {
+            let s = this.string_array[i]
+            opposite_count += s.includes(L_BRACKET)
+            if (opposite_count > n_brackets_after) {
+                this.string_array[i] = s.replace(L_BRACKET, '')
+                break
             }
         }
     }
 
     remove_brackets(location) {
-        this._remove_brackets_of_type(L_BRACKET, location)
-        this._remove_brackets_of_type(R_BRACKET, location)
+        while (this.string_array[location].includes(L_BRACKET)) {
+            this._remove_left_bracket(location)
+        }
+        while (this.string_array[location].includes(R_BRACKET)) {
+            this._remove_right_bracket(location)
+        }
     }
 
     remove_exponents(location) {
