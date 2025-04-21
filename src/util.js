@@ -10,9 +10,10 @@ export const MULTIPLY = 'X'
 export const DIVIDE = '/'
 export const DECIMAL_POINT = '.'
 export const SQUARE = '**2'
-export const SQRT = '**(1/2)'
+export const SQRT = '**.5'
 export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
 export let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
+export let EXPONENTS = [SQUARE, SQRT]
 
 export let OP_EVAL_MAP = {
     '=': '===',
@@ -32,7 +33,7 @@ export const OP_SCORES = {
 };
 export let NUMBERS = '0123456789'.split('');
 export let BRACKETS = [L_BRACKET, R_BRACKET]
-export let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*'])
+export let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*', '.'])
 
 
 export function random_digit(max) {
@@ -41,7 +42,8 @@ export function random_digit(max) {
 
 
 export function is_num_string(string) {
-    // Check if a string contains digits only except for an optional negative sign at the beginning
+    // Check if a string contains digits only characters that can live in a number tile space,
+    // i.e., digits, brackets and exponents
     // Feels like this should be easier but functions like Number do not handle empty strings and '+'
     // the way we want
     let chars = string.split('');
