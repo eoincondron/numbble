@@ -222,8 +222,8 @@ class Board extends Component {
     }
 
     // BRACKETS TILES
-    _getBracketValue(left) {
-        return left ? L_BRACKET : R_BRACKET
+    _getBracketValue(is_left) {
+        return is_left ? L_BRACKET : R_BRACKET
     }
 
     renderDormantBracketTile(is_left, left_position) {
