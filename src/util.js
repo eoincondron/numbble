@@ -1,27 +1,27 @@
 
-export const EMPTY = ''
-export const R_BRACKET = ')'
-export const L_BRACKET = '('
-export const SPACE = ' '
-export const EQUALS = '='
-export const PLUS = '+'
-export const MINUS = '-'
-export const MULTIPLY = 'X'
-export const DIVIDE = '/'
-export const DECIMAL_POINT = '.'
-export const SQUARE = '**2'
-export const SQRT = '**.5'
-export let OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
-export let SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
-export let EXPONENTS = [SQUARE, SQRT]
+const EMPTY = ''
+const R_BRACKET = ')'
+const L_BRACKET = '('
+const SPACE = ' '
+const EQUALS = '='
+const PLUS = '+'
+const MINUS = '-'
+const MULTIPLY = 'X'
+const DIVIDE = '/'
+const DECIMAL_POINT = '.'
+const SQUARE = '**2'
+const SQRT = '**(1/2)'
+const OPERATIONS = [PLUS, MINUS, MULTIPLY, DIVIDE, DECIMAL_POINT, SQUARE, SQRT];
+const SPACE_FILLERS = [PLUS, MINUS, DIVIDE, MULTIPLY, DECIMAL_POINT, EQUALS]
+const EXPONENTS = [SQUARE, SQRT]
 
-export let OP_EVAL_MAP = {
+const OP_EVAL_MAP = {
     '=': '===',
     'X': '*'
 };
 
 // Scoring system for operations
-export const OP_SCORES = {
+const OP_SCORES = {
     [PLUS]: 5,         // Plus: 5 points
     [MINUS]: 5,        // Minus: 5 points
     [MULTIPLY]: 10,    // Multiply: 10 points
@@ -31,17 +31,17 @@ export const OP_SCORES = {
     [SQRT]: 20,        // Square root: 20 points
     [EQUALS]: 0        // Equals: No points
 };
-export let NUMBERS = '0123456789'.split('');
-export let BRACKETS = [L_BRACKET, R_BRACKET]
-export let NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*', '.'])
+const NUMBERS = '0123456789'.split('');
+const BRACKETS = [L_BRACKET, R_BRACKET]
+const NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*'])
 
 
-export function random_digit(max) {
+function random_digit(max) {
     return Math.floor(Math.random() * max);
 }
 
 
-export function is_num_string(string) {
+function is_num_string(string) {
     // Check if a string contains digits only characters that can live in a number tile space,
     // i.e., digits, brackets and exponents
     // Feels like this should be easier but functions like Number do not handle empty strings and '+'
@@ -54,7 +54,7 @@ export function is_num_string(string) {
 }
 
 
-export function split_num_string(num_string) {
+function split_num_string(num_string) {
     // Splits a string into a list of individual characters separated by spaces.
     // Example: split_num_string('123') -. ['1', ' ', '2', ' ', '3']
     let split_locations = [];
@@ -76,7 +76,7 @@ export function split_num_string(num_string) {
     return split
 }
 
-export function count_element(value, array) {
+function count_element(value, array) {
     let count = 0;
     for (let elem of array) {
          if (elem === value) {
@@ -86,6 +86,35 @@ export function count_element(value, array) {
     return count
 }
 
-export function _isSpaceFiller(tile_symbol) {
+function _isSpaceFiller(tile_symbol) {
     return SPACE_FILLERS.includes(tile_symbol)
 }
+
+// Export all functions and constants as CommonJS module
+module.exports = {
+    EMPTY,
+    R_BRACKET,
+    L_BRACKET,
+    SPACE,
+    EQUALS,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    DECIMAL_POINT,
+    SQUARE,
+    SQRT,
+    OPERATIONS,
+    SPACE_FILLERS,
+    EXPONENTS,
+    OP_EVAL_MAP,
+    OP_SCORES,
+    NUMBERS,
+    BRACKETS,
+    NUMERICAL_STRINGS,
+    random_digit,
+    is_num_string,
+    split_num_string,
+    count_element,
+    _isSpaceFiller
+};

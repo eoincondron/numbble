@@ -1,5 +1,5 @@
 
-import {
+const {
     random_digit,
     L_BRACKET,
     R_BRACKET,
@@ -13,10 +13,10 @@ import {
     is_num_string,
     OP_EVAL_MAP,
     _isSpaceFiller, count_element, NUMBERS
-} from './util.js';
+} = require('./util.js');
 
 
-export class TileArray {
+class TileArray {
 
     // Class for storing array of numbers, spaces and active tiles, everything need for the equation
     // Has interface for manipulating an array in allowable ways and knows how to build and resolve its equation.
@@ -291,3 +291,5 @@ export class TileArray {
         return equation
     }
 }
+
+module.exports = {TileArray}
