@@ -218,6 +218,19 @@ export class TileArray {
         }
     }
 
+    undress_number(array_pos) {
+        let content = this.string_array[array_pos]
+        if (content.includes(L_BRACKET) || content.includes(R_BRACKET)) {
+            this.remove_brackets(array_pos)
+        } else if (content.includes('^')) {
+            this.remove_exponents(array_pos)
+        } else if (content.includes('-')) {
+            this.string_array[array_pos] = content.replace('-', '')
+        } else {
+            this.split_numbers(array_pos)
+        }
+    }
+
     _appendExponent(array_pos, exponent) {
         // Append the exponent string to the number at array_pos
         const currentValue = this.string_array[array_pos];

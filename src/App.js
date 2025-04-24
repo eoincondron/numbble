@@ -215,10 +215,8 @@ class Board extends Component {
             ta._appendExponent(array_pos, this.state.active_op)
             this.deactivate_op()
         }
-        else {
-            ta.remove_brackets(array_pos)
-            ta.split_numbers(array_pos)
-            ta.remove_exponents(array_pos)
+        else if (this.state.active_op === EMPTY) {
+            ta.undress_number(array_pos)
         }
         this.setState({})
     }
