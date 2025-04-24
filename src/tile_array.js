@@ -256,14 +256,18 @@ class TileArray {
     }
 
     index_of_nth_space(n) {
+        // Find the array position of the nth space (base 0) in the array.
         let space_count = 0;
-        for (let i in this.string_array) {
-            if (this.string_array[i] === SPACE) {
-                if (space_count === n) {
-                    return i
-                }
+        let spaces_required = n + 1;
+        let array_pos = 0;
+        for (let value of this.string_array) {
+            if (value === SPACE) {
                 space_count += 1
+                if (space_count === spaces_required) {
+                    return array_pos
+                }
             }
+            array_pos += 1
         }
         return -1
     }
