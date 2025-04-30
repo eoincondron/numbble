@@ -418,11 +418,11 @@ class Board extends Component {
         try {
             // Try to get the evaluable equation instead of the display string
             eq = this.state.tile_array.build_equation(false);
-            eq = "Your Equation: " + eq;
+            eq = "Your Equation:\n" + eq;
         } catch (error) {
             // If there's an error building the equation (like no equals sign yet),
             // just display a placeholder message
-            eq = "Your Equation: ";
+            eq = "Your Equation:\n";
         }
         return (<Equation
                 equation={eq}
