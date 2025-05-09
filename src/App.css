@@ -74,7 +74,8 @@
   width: 100vw;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -89,15 +90,19 @@
   font-size: 36px;
   font-weight: bold;
   color: black;
+  max-width: 80px;
+  width: 100%;
+}
+
 }
 .placed {
-  top: 200px;
+  top: 25vh;
 }
 .dormant {
-  top: 400px;
+  top: 50vh;
 }
 .waiting {
-  top: 350px;
+  top: 42vh;
   background-color: #F44336;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   transform: scale(1.1);
@@ -105,6 +110,7 @@
 }
 .num_tile {
   width: 80px;
+  max-width: 100%;
   background-color: #FFC107;
   z-index: 0; 
   border-radius: 16px;
@@ -137,7 +143,7 @@
   width: 80px;
   background-color: #3F51B5;
   color: white;
-  margin-right: 20px;
+  margin-right: 10px;
   z-index: 1;
   border-radius: 12px;
   display: flex;
