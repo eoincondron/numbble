@@ -68,12 +68,12 @@ const BACKGROUNDS = [
 
 let N_TILES = 6;
 let N_SPACES = N_TILES - 1;
-let TILE_WIDTH = 80;
+let TILE_WIDTH = Math.round(window.innerWidth * .06);
 // LEFT_MARGIN will be calculated after TILE_WIDTH is defined
 let LEFT_MARGIN;
 
-
 let log = console.log;
+
 
 
 //  =================================== ===
@@ -82,6 +82,16 @@ let log = console.log;
 // Tile movements are managed as follows; 
 // Each space can be flagged with a number corresponding to an operator and that operator fills the space. 
 // Alternatively, the space can be flagged as a joining space such that the adjacent numbers join together to cover the space. 
+
+
+function get_common_style_attributes(left_position) {
+    return {
+        left: left_position + 'px',
+        width: TILE_WIDTH + 'px',
+        height: TILE_WIDTH + 'px',
+        "font-size": (TILE_WIDTH / 2) + 'px',
+    }
+}
 
 class Board extends Component {
 
@@ -178,9 +188,7 @@ class Board extends Component {
         return (
             <NumTile
                 value={value}
-                style={{
-                    left: left_position + 'px'
-                }}
+                style={get_common_style_attributes(left_position)}
                 onClick={
                     () => this.handleNumClick(array_pos)
                 }
@@ -231,6 +239,8 @@ class Board extends Component {
                 value={this._getBracketValue(is_left)}
                 style={{
                     left: left_position + 'px',
+                    width: TILE_WIDTH / 2 + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={
                     () => this.handleDormantBracketClick(is_left)
@@ -248,6 +258,8 @@ class Board extends Component {
                 value={this._getBracketValue(is_left)}
                 style={{
                     left: left_position + 'px',
+                    width: TILE_WIDTH / 2 + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={
                     () => this.handleWaitingClick()
@@ -277,6 +289,8 @@ class Board extends Component {
                 value={op_string}
                 style={{
                     left: left_position + 'px',
+                    width: TILE_WIDTH + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={
                     () => this.handleDormantOpClick(op_string)
@@ -295,6 +309,8 @@ class Board extends Component {
                 value={op_string}
                 style={{
                     left: left_position + 'px',
+                    width: TILE_WIDTH + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={
                     () => this.handleWaitingClick()
@@ -317,6 +333,8 @@ class Board extends Component {
                 value={value}
                 style={{
                     left: left_position + 'px',
+                    width: TILE_WIDTH + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={
                     () => this.handlePlacedOpTileClick(array_pos)
@@ -354,7 +372,9 @@ class Board extends Component {
                 isHighlighted={isHighlighted}
                 isActive={isActive}
                 style={{
-                    left: left_position + 'px'
+                    left: left_position + 'px',
+                    width: TILE_WIDTH + 'px',
+                    height: TILE_WIDTH + 'px',
                 }}
                 onClick={() => this.handleSpaceClick(array_pos)}
                 onDrop={handleDrop}
@@ -553,6 +573,7 @@ class Board extends Component {
 
     render() {
         // Calculate the total width needed for all tiles
+        TILE_WIDTH = Math.round(window.innerWidth * .06);
         const tiles = this.state.tile_array.string_array;
         let totalWidth = TILE_WIDTH * tiles.length;
 
