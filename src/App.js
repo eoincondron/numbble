@@ -101,7 +101,7 @@ class Board extends Component {
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
         this.state = {
             ...this.populate_board(),
-            backgroundClass: 'bg-solid',
+            backgroundClass: 'bg-grid',
             timer: 0,
             isTimerRunning: false,
             totalScore: 0,
