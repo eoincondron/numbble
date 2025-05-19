@@ -443,3 +443,29 @@
   display: inline-block;
   padding-right: .5vh;
 }
+
+/* Volume control button */
+.volume-control {
+  position: absolute;
+  right: 5vh;
+  bottom: 20vh;
+  width: 10vh;
+  height: 10vh;
+  font-size: 5vh;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1vh;
+  box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.volume-control:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+}

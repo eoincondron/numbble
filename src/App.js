@@ -17,6 +17,8 @@ import {
     WaitingBracketTile,
     WaitingOpTile
 } from './divs';
+import soundManager from './SoundManager';
+import VolumeControl from './VolumeControl';
 import {TileArray} from "./tile_array";
 import {
     _isSpaceFiller,
@@ -250,6 +252,7 @@ class Board extends Component {
     }
 
     handleDormantBracketClick(is_left) {
+        soundManager.playButtonClick();
         this.activate_op(this._getBracketValue(is_left))
     }
 
@@ -301,6 +304,7 @@ class Board extends Component {
 
     //
     handleDormantOpClick(op_string) {
+        soundManager.playButtonClick();
         this.activate_op(op_string)
     }
 
@@ -385,9 +389,11 @@ class Board extends Component {
     //
     handleSpaceClick(array_pos) {
         if (this.state.active_op === EMPTY) {
+            soundManager.playTilePlaced();
             this.state.tile_array.join_numbers(array_pos, this.state.active_op)
             this.setState({});
         } else if (_isSpaceFiller(this.state.active_op)) {
+            soundManager.playTilePlaced();
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactivate_op()
         }
@@ -402,6 +408,7 @@ class Board extends Component {
     }
 
     handleResetClick() {
+        soundManager.playButtonClick();
         this.deactivate_op();
         this.state.tile_array.reset_board();
         // Don't reset the timer when the reset button is hit
@@ -419,8 +426,9 @@ class Board extends Component {
 
     handleSkipClick() {
         // Reset the board and generate a new one with new numbers
+        soundManager.playButtonClick();
         this.deactivate_op();
-        
+
         // Create a new tile array with random numbers
         const newState = this.populate_board();
         this.resetTimer()
@@ -512,25 +520,28 @@ class Board extends Component {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
         if (eval(eval_eq)) {
+            // Play success sound
+            soundManager.playSuccess();
+
             // Stop the timer on successful solution
             this.stopTimer();
             const time = this.state.timer;
             const timeString = this.formatTime(time);
-            
+
             // Calculate the score for this equation with time bonus
             const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
             const scoreResult = this.calculateScore(eq, time, used_all_nums);
-            
+
             // Update the total score and games completed
             const newTotalScore = this.state.totalScore + scoreResult.finalScore;
             const newGamesCompleted = this.state.gamesCompleted + 1;
-            
+
             // Add session total to the score message
-            const updatedScoreMessage = scoreResult.scoreMessage + 
+            const updatedScoreMessage = scoreResult.scoreMessage +
                 `\n\nSession Total: ${newTotalScore} points (${newGamesCompleted} games)`;
 
             alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${updatedScoreMessage}`);
-            
+
             // Reset the board and timer, but keep the total score and games count
             const newState = this.populate_board();
             this.setState({
@@ -540,6 +551,9 @@ class Board extends Component {
             });
             this.resetTimer();
         } else {
+            // Play error sound
+            soundManager.playError();
+
             let sides = eval_eq.split('===')
             let side_vals = sides.map(x => eval(x))
             let simplified = side_vals.join(' = ')
@@ -568,6 +582,12 @@ class Board extends Component {
                 totalScore={this.state.totalScore}
                 gamesCompleted={this.state.gamesCompleted}
             />
+        );
+    }
+
+    renderVolumeControl() {
+        return (
+            <VolumeControl />
         );
     }
 
@@ -635,6 +655,7 @@ class Board extends Component {
         objs.push(this.renderBackgroundSelector());
         objs.push(this.renderTimer());
         objs.push(this.renderSessionScore());
+        objs.push(this.renderVolumeControl());
 
         return (
             <div className={`board ${this.state.backgroundClass}`}>

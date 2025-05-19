@@ -90,8 +90,8 @@ function _isSpaceFiller(tile_symbol) {
     return SPACE_FILLERS.includes(tile_symbol)
 }
 
-// Export all functions and constants as CommonJS module
-module.exports = {
+// Export all functions and constants
+export {
     EMPTY,
     R_BRACKET,
     L_BRACKET,
