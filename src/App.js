@@ -571,6 +571,57 @@ class Board extends Component {
         );
     }
 
+    buildNumberRowElements() {
+        const tiles = this.state.tile_array.string_array;
+        const totalWidth = TILE_WIDTH * tiles.length;
+        // Center the array horizontally
+        let left_position = (window.innerWidth - totalWidth) / 2;
+
+        const tiles_array = this.state.tile_array.string_array;
+        let objs = [];
+
+        for (let array_pos = 0; array_pos < tiles_array.length; array_pos++) {
+            let content = tiles_array[array_pos];
+            if (content === SPACE) {
+                objs.push(this.renderSpacer(array_pos, left_position))
+                left_position += TILE_WIDTH;
+            } else if (_isSpaceFiller(content)) {
+                objs.push(this.renderPlacedOpTile(array_pos, left_position))
+                left_position += TILE_WIDTH;
+            } else {
+                objs.push(this.renderNumTile(array_pos, left_position))
+                left_position += TILE_WIDTH;
+            }
+        }
+        return objs
+    }
+
+    buildOperationsRowElements() {
+        const tiles_array = this.state.tile_array.string_array;
+        let objs = [];
+
+        // Center the operations row
+        const totalOperationsWidth = OPERATIONS.length * TILE_WIDTH + TILE_WIDTH * 2; // Including brackets
+        let left_position = (window.innerWidth - totalOperationsWidth) / 2;
+
+        for (let op_string of OPERATIONS) {
+            let skip = ONE_USE_OPS.includes(op_string) && tiles_array.join('').includes(op_string)
+            if (!skip)
+                objs.push(this.renderUnplacedOpTile(op_string, left_position));
+            left_position += TILE_WIDTH;
+        }
+
+        for (let is_left of [true, false]) {
+            objs.push(this.renderUnplacedBracketTile(is_left, left_position));
+            left_position += TILE_WIDTH / 2;
+        }
+
+        left_position += TILE_WIDTH / 2;
+        objs.push(this.renderUnplacedOpTile(EQUALS, left_position));
+
+        return objs
+    }
+
     render() {
         // Calculate the total width needed for all tiles
         TILE_WIDTH = Math.round(window.innerWidth * .06);
