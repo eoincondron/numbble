@@ -28,7 +28,7 @@ import {
     DECIMAL_POINT,
     DIVIDE,
     EMPTY,
-    EQUALS,
+    EQUALS, EXPONENTS,
     is_num_string,
     L_BRACKET,
     MINUS,
@@ -462,7 +462,15 @@ class Board extends Component {
     calculateScore(equation, time) {
         // Calculate the score based on operators used in the equation
         let score = 0;
-        
+
+        // Score exponents first and then remove as they are multi-character and SQRT contains a decimal point
+        // which we don't want to score twice.
+        for (const exp of EXPONENTS) {
+            if (equation.includes(exp)) {
+                score += OP_SCORES[exp];
+                equation = equation.replace(exp, '')
+            }
+        }
         // Loop through each character in the equation
         for (const char of equation) {
             // If this character is an operator with a score, add it
@@ -471,12 +479,12 @@ class Board extends Component {
             }
         }
         
-        let scoreMessage = `Base Score: ${score} points`;
+        let scoreMessage = `Base Score: ${score} points\n`;
 
         const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
         if (used_all_nums) {
             score += 50
-            scoreMessage += "\n50 Bonus points for using all numbers!!\n"
+            scoreMessage += "50 Bonus points for using all numbers!!\n"
         }
 
         // Apply time bonus multiplier
@@ -484,16 +492,16 @@ class Board extends Component {
         if (time < 15) {
             // Double score if solved under 15 seconds
             timeBonus = 2.0;
-            scoreMessage += "Speed Bonus: 2× (under 15 seconds)";
+            scoreMessage += "Speed Bonus: 2× (under 15 seconds)\n";
         } else if (time < 60) {
             // 1.5× multiplier if solved under 60 seconds
             timeBonus = 1.5;
-            scoreMessage += "Speed Bonus: 1.5× (under 60 seconds)";
+            scoreMessage += "Speed Bonus: 1.5× (under 60 seconds)\n";
         }
         // Calculate final score with time bonus
 
         const finalScore = Math.round(score * timeBonus);
-        scoreMessage += `\nFinal Score: ${finalScore} points`;
+        scoreMessage += `Final Score: ${finalScore} points`;
 
         return { 
             finalScore: finalScore,
