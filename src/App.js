@@ -90,9 +90,8 @@ let log = console.log;
 function get_common_style_attributes(left_position) {
     return {
         left: left_position + 'px',
-        width: TILE_WIDTH + 'px',
-        height: TILE_WIDTH + 'px',
-        "font-size": (TILE_WIDTH / 2) + 'px',
+        width: '6vw',
+        height: '6vw',
     }
 }
 
@@ -242,8 +241,8 @@ class Board extends Component {
                 value={this._getBracketValue(is_left)}
                 style={{
                     left: left_position + 'px',
-                    width: TILE_WIDTH / 2 + 'px',
-                    height: TILE_WIDTH + 'px',
+                    width: '3vw',
+                    height: '6vw',
                 }}
                 onClick={
                     () => this.handleDormantBracketClick(is_left)
@@ -262,8 +261,8 @@ class Board extends Component {
                 value={this._getBracketValue(is_left)}
                 style={{
                     left: left_position + 'px',
-                    width: TILE_WIDTH / 2 + 'px',
-                    height: TILE_WIDTH + 'px',
+                    width: '3vw',
+                    height: '6vw',
                 }}
                 onClick={
                     () => this.handleWaitingClick()
@@ -291,11 +290,7 @@ class Board extends Component {
     renderDormantOpTile(op_string, left_position) {
         return (<DormantOpTile
                 value={op_string}
-                style={{
-                    left: left_position + 'px',
-                    width: TILE_WIDTH + 'px',
-                    height: TILE_WIDTH + 'px',
-                }}
+                style={get_common_style_attributes(left_position)}
                 onClick={
                     () => this.handleDormantOpClick(op_string)
                 }
@@ -312,11 +307,7 @@ class Board extends Component {
     renderWaitingOpTile(op_string, left_position) {
         return (<WaitingOpTile
                 value={op_string}
-                style={{
-                    left: left_position + 'px',
-                    width: TILE_WIDTH + 'px',
-                    height: TILE_WIDTH + 'px',
-                }}
+                style={get_common_style_attributes(left_position)}
                 onClick={
                     () => this.handleWaitingClick()
                 }
@@ -336,11 +327,7 @@ class Board extends Component {
         let value = this.state.tile_array.string_array[array_pos];
         return (<PlacedOpTile
                 value={value}
-                style={{
-                    left: left_position + 'px',
-                    width: TILE_WIDTH + 'px',
-                    height: TILE_WIDTH + 'px',
-                }}
+                style={get_common_style_attributes(left_position)}
                 onClick={
                     () => this.handlePlacedOpTileClick(array_pos)
                 }
@@ -376,11 +363,7 @@ class Board extends Component {
         return (<Spacer
                 isHighlighted={isHighlighted}
                 isActive={isActive}
-                style={{
-                    left: left_position + 'px',
-                    width: TILE_WIDTH + 'px',
-                    height: TILE_WIDTH + 'px',
-                }}
+                style={get_common_style_attributes(left_position)}
                 onClick={() => this.handleSpaceClick(array_pos)}
                 onDrop={handleDrop}
             />
