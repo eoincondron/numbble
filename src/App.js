@@ -459,7 +459,7 @@ class Board extends Component {
         );
     }
 
-    calculateScore(equation, time, used_all_nums) {
+    calculateScore(equation, time) {
         // Calculate the score based on operators used in the equation
         let score = 0;
         
@@ -473,6 +473,7 @@ class Board extends Component {
         
         let scoreMessage = `Base Score: ${score} points`;
 
+        const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
         if (used_all_nums) {
             score += 50
             scoreMessage += "\n50 Bonus points for using all numbers!!\n"
@@ -513,8 +514,7 @@ class Board extends Component {
             const timeString = this.formatTime(time);
 
             // Calculate the score for this equation with time bonus
-            const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
-            const scoreResult = this.calculateScore(eq, time, used_all_nums);
+            const scoreResult = this.calculateScore(eq, time);
 
             // Update the total score and games completed
             const newTotalScore = this.state.totalScore + scoreResult.finalScore;
