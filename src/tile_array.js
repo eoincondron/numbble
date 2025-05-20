@@ -222,7 +222,7 @@ class TileArray {
         let content = this.string_array[array_pos]
         if (content.includes(L_BRACKET) || content.includes(R_BRACKET)) {
             this.remove_brackets(array_pos)
-        } else if (content.includes('^')) {
+        } else if (content.includes('**')) {
             this.remove_exponents(array_pos)
         } else if (content.includes('-')) {
             this.string_array[array_pos] = content.replace('-', '')
