@@ -19,6 +19,7 @@ import {
 } from './divs';
 import soundManager from './SoundManager';
 import VolumeControl from './VolumeControl';
+import LandscapeMessage from './LandscapeMessage';
 import {TileArray} from "./tile_array";
 import {
     _isSpaceFiller,
@@ -777,6 +778,7 @@ class Game extends Component {
     render() {
         return (
             <div className="game">
+                <LandscapeMessage />
                 <div className="game-board">
                     <Board ref={this.boardRef}/>
                 </div>
