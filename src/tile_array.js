@@ -241,7 +241,7 @@ class TileArray {
         // Only apply to numeric values
         if (is_num_string(currentValue)) {
             // Simply concatenate the exponent to the current value.
-            // This will make entries like "5**2" or "9**(1/2)" that will be evaluated when the equation is calculated
+            // This will make entries like "5**2" or "9**.5" that will be evaluated when the equation is calculated
             // If the number is already exponentiated, replace it with the one passed.
             if (currentValue.includes(SQRT)) {
                 newValue = currentValue.replace(SQRT, exponent);

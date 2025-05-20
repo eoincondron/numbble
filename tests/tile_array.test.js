@@ -187,7 +187,7 @@ describe('TileArray', () => {
       expect(tileArray.string_array[0]).toEqual('1**2');
       
       tileArray._appendExponent(2, SQRT);
-      expect(tileArray.string_array[2]).toEqual('2**(1/2)');
+      expect(tileArray.string_array[2]).toEqual('2**.5');
     });
 
     test('_appendExponent replaces existing exponents', () => {
@@ -195,7 +195,7 @@ describe('TileArray', () => {
       expect(tileArray.string_array[0]).toEqual('1**2');
       
       tileArray._appendExponent(0, SQRT);
-      expect(tileArray.string_array[0]).toEqual('1**(1/2)');
+      expect(tileArray.string_array[0]).toEqual('1**.5');
     });
 
     test('remove_exponents removes exponents from a number', () => {
