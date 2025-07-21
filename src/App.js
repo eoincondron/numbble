@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
@@ -20,7 +20,7 @@ import {
 import soundManager from './SoundManager';
 import VolumeControl from './VolumeControl';
 import LandscapeMessage from './LandscapeMessage';
-import {TileArray} from "./tile_array";
+import { TileArray } from "./tile_array";
 import {
     _isSpaceFiller,
     BRACKETS,
@@ -109,24 +109,24 @@ class Board extends Component {
             totalScore: 0,
             gamesCompleted: 0
         };
-        
+
         this.timerInterval = null;
         this.startTimer = this.startTimer.bind(this);
         this.stopTimer = this.stopTimer.bind(this);
         this.resetTimer = this.resetTimer.bind(this);
         this.formatTime = this.formatTime.bind(this);
     }
-    
+
     componentDidMount() {
         // Start the timer when component mounts
         this.startTimer();
     }
-    
+
     componentWillUnmount() {
         // Clear timer when component unmounts
         this.stopTimer();
     }
-    
+
     startTimer() {
         if (!this.timerInterval) {
             this.setState({ isTimerRunning: true });
@@ -137,7 +137,7 @@ class Board extends Component {
             }, 1000);
         }
     }
-    
+
     stopTimer() {
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
@@ -145,7 +145,7 @@ class Board extends Component {
             this.setState({ isTimerRunning: false });
         }
     }
-    
+
     resetTimer() {
         this.stopTimer();
         this.setState({ timer: 0 }, () => {
@@ -163,21 +163,21 @@ class Board extends Component {
         };
     }
 
-    activate_op (op_string) {
-        this.setState({active_op: op_string})
+    activate_op(op_string) {
+        this.setState({ active_op: op_string })
         if (this.state.active_space === -1) {
-            this.setState({active_space: 0})
+            this.setState({ active_space: 0 })
         }
     }
 
-    deactivate_op () {
-        this.setState({active_op: EMPTY})
-        this.setState({active_space: -1})
+    deactivate_op() {
+        this.setState({ active_op: EMPTY })
+        this.setState({ active_space: -1 })
     }
 
     renderNumTile(array_pos, left_position) {
         let value = this.state.tile_array.string_array[array_pos]
-        
+
         // Handle drop for drag and drop of brackets
         const handleDrop = (bracket) => {
             // Set this bracket as active
@@ -186,7 +186,7 @@ class Board extends Component {
                 this.handleNumClick(array_pos);
             });
         };
-        
+
         return (
             <NumTile
                 value={value}
@@ -238,16 +238,16 @@ class Board extends Component {
 
     renderDormantBracketTile(is_left, left_position) {
         return (<DormantBracketTile
-                value={this._getBracketValue(is_left)}
-                style={{
-                    left: left_position + 'px',
-                    width: '3vw',
-                    height: '6vw',
-                }}
-                onClick={
-                    () => this.handleDormantBracketClick(is_left)
-                }
-            />
+            value={this._getBracketValue(is_left)}
+            style={{
+                left: left_position + 'px',
+                width: '3vw',
+                height: '6vw',
+            }}
+            onClick={
+                () => this.handleDormantBracketClick(is_left)
+            }
+        />
         );
     }
 
@@ -258,16 +258,16 @@ class Board extends Component {
 
     renderWaitingBracketTile(is_left, left_position) {
         return (<WaitingBracketTile
-                value={this._getBracketValue(is_left)}
-                style={{
-                    left: left_position + 'px',
-                    width: '3vw',
-                    height: '6vw',
-                }}
-                onClick={
-                    () => this.handleWaitingClick()
-                }
-            />
+            value={this._getBracketValue(is_left)}
+            style={{
+                left: left_position + 'px',
+                width: '3vw',
+                height: '6vw',
+            }}
+            onClick={
+                () => this.handleWaitingClick()
+            }
+        />
         );
     }
 
@@ -280,21 +280,21 @@ class Board extends Component {
     renderUnplacedBracketTile(is_left, left_position) {
         let bracket = this._getBracketValue(is_left);
         if (this.state.active_op === bracket) {
-                return this.renderWaitingBracketTile(is_left, left_position)
-            } else {
-                return this.renderDormantBracketTile(is_left, left_position)
-            }
+            return this.renderWaitingBracketTile(is_left, left_position)
+        } else {
+            return this.renderDormantBracketTile(is_left, left_position)
+        }
     }
 
     // OP TILES
     renderDormantOpTile(op_string, left_position) {
         return (<DormantOpTile
-                value={op_string}
-                style={get_common_style_attributes(left_position)}
-                onClick={
-                    () => this.handleDormantOpClick(op_string)
-                }
-            />
+            value={op_string}
+            style={get_common_style_attributes(left_position)}
+            onClick={
+                () => this.handleDormantOpClick(op_string)
+            }
+        />
         );
     }
 
@@ -306,12 +306,12 @@ class Board extends Component {
 
     renderWaitingOpTile(op_string, left_position) {
         return (<WaitingOpTile
-                value={op_string}
-                style={get_common_style_attributes(left_position)}
-                onClick={
-                    () => this.handleWaitingClick()
-                }
-            />
+            value={op_string}
+            style={get_common_style_attributes(left_position)}
+            onClick={
+                () => this.handleWaitingClick()
+            }
+        />
         );
     }
 
@@ -326,12 +326,12 @@ class Board extends Component {
     renderPlacedOpTile(array_pos, left_position) {
         let value = this.state.tile_array.string_array[array_pos];
         return (<PlacedOpTile
-                value={value}
-                style={get_common_style_attributes(left_position)}
-                onClick={
-                    () => this.handlePlacedOpTileClick(array_pos)
-                }
-            />
+            value={value}
+            style={get_common_style_attributes(left_position)}
+            onClick={
+                () => this.handlePlacedOpTileClick(array_pos)
+            }
+        />
         );
     }
 
@@ -350,7 +350,7 @@ class Board extends Component {
         let space_count = count_element(SPACE, this.state.tile_array.string_array.slice(0, array_pos + 1))
         const isHighlighted = _isSpaceFiller(this.state.active_op);
         const isActive = space_count === this.state.active_space + 1
-        
+
         // Handle drop for drag and drop
         const handleDrop = (operator) => {
             // Set this operator as active
@@ -361,12 +361,12 @@ class Board extends Component {
         };
 
         return (<Spacer
-                isHighlighted={isHighlighted}
-                isActive={isActive}
-                style={get_common_style_attributes(left_position)}
-                onClick={() => this.handleSpaceClick(array_pos)}
-                onDrop={handleDrop}
-            />
+            isHighlighted={isHighlighted}
+            isActive={isActive}
+            style={get_common_style_attributes(left_position)}
+            onClick={() => this.handleSpaceClick(array_pos)}
+            onDrop={handleDrop}
+        />
         );
     }
 
@@ -385,9 +385,9 @@ class Board extends Component {
 
     renderReset() {
         return (<ResetTile
-                onClick={
-                    () => this.handleResetClick()}
-            />
+            onClick={
+                () => this.handleResetClick()}
+        />
         );
     }
 
@@ -399,12 +399,12 @@ class Board extends Component {
         // Only reset timer after successful equation evaluation
         // TODO: this is currently generating a new board
     }
-    
+
     renderSkip() {
         return (<SkipTile
-                onClick={
-                    () => this.handleSkipClick()}
-            />
+            onClick={
+                () => this.handleSkipClick()}
+        />
         );
     }
 
@@ -437,8 +437,8 @@ class Board extends Component {
             eq = "Your Equation:\n";
         }
         return (<Equation
-                equation={eq}
-            />
+            equation={eq}
+        />
         );
     };
 
@@ -448,10 +448,10 @@ class Board extends Component {
                 () => this.handlePlayClick()}
         />)
     }
-    
+
     renderBackgroundSelector() {
         return (
-            <BackgroundSelector 
+            <BackgroundSelector
                 backgrounds={BACKGROUNDS}
                 currentBackground={this.state.backgroundClass}
                 onChange={(backgroundClass) => this.setState({ backgroundClass })}
@@ -478,7 +478,7 @@ class Board extends Component {
                 score += OP_SCORES[char];
             }
         }
-        
+
         let scoreMessage = `Base Score: ${score} points\n`;
 
         const used_all_nums = !this.state.tile_array.string_array.includes(SPACE)
@@ -503,7 +503,7 @@ class Board extends Component {
         const finalScore = Math.round(score * timeBonus);
         scoreMessage += `Final Score: ${finalScore} points`;
 
-        return { 
+        return {
             finalScore: finalScore,
             scoreMessage: scoreMessage
         };
@@ -549,20 +549,17 @@ class Board extends Component {
         } else {
             // Play error sound
             soundManager.playError();
-
-            let sides = eval_eq.split('===')
-            let side_vals = sides.map(x => eval(x))
             let simplified = side_vals.join(' = ')
             alert(`Sorry, the equation is invalid: ${eq} \n (Simplifies to ${simplified})`);
         }
     }
-    
+
     formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    
+
     renderTimer() {
         const timeString = this.formatTime(this.state.timer);
         return (
@@ -571,7 +568,7 @@ class Board extends Component {
             </div>
         );
     }
-    
+
     renderSessionScore() {
         return (
             <SessionScore
@@ -671,7 +668,7 @@ class Game extends Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.boardRef = React.createRef();
     }
-    
+
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
@@ -679,14 +676,14 @@ class Game extends Component {
         // Start the timer when component mounts
         this.startTimer();
     }
-    
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
         window.removeEventListener('keydown', this.handleKeyDown);
         // Clear timer when component unmounts
         this.stopTimer();
     }
-    
+
     startTimer() {
         if (!this.timerInterval) {
             this.setState({ isTimerRunning: true });
@@ -697,7 +694,7 @@ class Game extends Component {
             }, 1000);
         }
     }
-    
+
     stopTimer() {
         if (this.timerInterval) {
             clearInterval(this.timerInterval);
@@ -705,12 +702,12 @@ class Game extends Component {
             this.setState({ isTimerRunning: false });
         }
     }
-    
+
     updateWindowDimensions() {
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
         this.forceUpdate();
     }
-    
+
     handleKeyDown(event) {
         let board = this.boardRef.current
         let active_op_index
@@ -754,14 +751,14 @@ class Game extends Component {
                     break;
                 case 'ArrowUp':
                     active_space = (board.state.active_space + 1) % N_SPACES
-                    board.setState({active_space: active_space})
+                    board.setState({ active_space: active_space })
                     break;
                 case 'ArrowDown':
                     active_space = board.state.active_space - 1
                     if (active_space < 0) {
                         active_space = N_SPACES + active_space
                     }
-                    board.setState({active_space: active_space})
+                    board.setState({ active_space: active_space })
                     break;
                 default:
                     return
@@ -769,13 +766,13 @@ class Game extends Component {
 
         }
     }
-    
+
     render() {
         return (
             <div className="game">
                 <LandscapeMessage />
                 <div className="game-board">
-                    <Board ref={this.boardRef}/>
+                    <Board ref={this.boardRef} />
                 </div>
             </div>
         );
@@ -786,7 +783,7 @@ class Game extends Component {
 // ========================================
 
 ReactDOM.render(
-    <Game/>,
+    <Game />,
     document.getElementById('root')
 )
 
