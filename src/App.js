@@ -512,7 +512,11 @@ class Board extends Component {
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
-        if (eval(eval_eq)) {
+        let sides = eval_eq.split('===')
+        let side_vals = sides.map(x => eval(x))
+
+        const allEqual = side_vals => side_vals.every(val => val === side_vals[0]);
+        if (allEqual) {
             // Play success sound
             soundManager.playSuccess();
 
