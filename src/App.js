@@ -496,7 +496,11 @@ class Board extends Component {
         let sides = eval_eq.split('===')
         let side_vals = sides.map(x => eval(x))
 
-        const allEqual = side_vals => side_vals.every(val => val === side_vals[0]);
+        console.log(`Evaluating equation: ${eval_eq}`);
+        console.log(`Side values: ${side_vals}`);
+
+        const allEqual = side_vals.every(val => val === side_vals[0]);
+
         if (allEqual) {
             // Play success sound
             soundManager.playSuccess();
