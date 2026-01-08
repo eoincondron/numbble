@@ -25,17 +25,12 @@ import {
     _isSpaceFiller,
     BRACKETS,
     count_element,
-    DECIMAL_POINT,
-    DIVIDE,
     EMPTY,
     EQUALS, EXPONENTS,
-    is_num_string,
     L_BRACKET,
     MINUS,
-    MULTIPLY,
     OP_SCORES,
     OPERATIONS,
-    PLUS,
     R_BRACKET,
     SPACE,
     SQRT,
@@ -46,17 +41,6 @@ let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
 let ONE_USE_OPS = [SQUARE, SQRT]
 // Find a better way to state the ordering of the operation tiles.
 
-
-// Tailwind configuration and custom styles
-const styles = {
-    board: 'bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto',
-    tile: 'inline-block text-center transition-all duration-200 ease-in-out',
-    numTile: 'bg-blue-500 text-white rounded-md hover:bg-blue-600',
-    opTile: 'bg-green-500 text-white rounded-md hover:bg-green-600',
-    bracketTile: 'bg-purple-500 text-white rounded-md hover:bg-purple-600',
-    dormantTile: 'opacity-50 cursor-pointer',
-    activeTile: 'ring-2 ring-blue-400',
-};
 
 // Available background patterns
 const BACKGROUNDS = [
@@ -74,9 +58,6 @@ let N_SPACES = N_TILES - 1;
 let TILE_WIDTH = Math.round(window.innerWidth * .06);
 // LEFT_MARGIN will be calculated after TILE_WIDTH is defined
 let LEFT_MARGIN;
-
-let log = console.log;
-
 
 
 //  =================================== ===
