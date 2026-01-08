@@ -64,7 +64,7 @@ class TileArray {
         // If the space has other non-numeric characters adjacent we throw as this is invalid state.
         let content = this.string_array[space_location];
         if (content !== SPACE) {
-            throw "Cannot join numbers, space contains " + content;
+            throw new Error("Cannot join numbers, space contains " + content);
         }
         let to_left = this.string_array[space_location - 1];
         let to_right = this.string_array[space_location + 1];
@@ -95,7 +95,7 @@ class TileArray {
         if (content === SPACE) {
             this.string_array[space_location] = operation;
         } else {
-            throw "Cannot insert operation, space contains " + content;
+            throw new Error("Cannot insert operation, space contains " + content);
         }
     }
 
@@ -106,7 +106,7 @@ class TileArray {
         if (_isSpaceFiller(content)) {
             this.string_array[op_location] = SPACE;
         } else {
-            throw "Cannot remove operation, space contains " + content;
+            throw new Error("Cannot remove operation, space contains " + content);
         }
     }
 
@@ -114,7 +114,7 @@ class TileArray {
         let content = this.string_array[num_location];
         let msg = "Cannot " + action;
         if (!is_num_string(content)) {
-            throw msg.concat(" as there is no number at ", num_location, ". Content: ", content)
+            throw new Error(msg.concat(" as there is no number at ", num_location, ". Content: ", content));
         }
     }
 
@@ -127,7 +127,7 @@ class TileArray {
         this.string_array[num_location] = value;
 
         if (this.open_bracket === bracket_type) {
-            throw "Inserting a bracket when there is already an open bracket of the same side is not allowed"
+            throw new Error("Inserting a bracket when there is already an open bracket of the same side is not allowed")
         } else if (this.open_bracket === EMPTY) {
             this.open_bracket = bracket_type
         } else {
