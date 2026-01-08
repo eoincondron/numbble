@@ -2,6 +2,7 @@
   "name": "numbble",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "type": "module",
   "dependencies": {
     "lucide-react": "^0.487.0",
