@@ -18,6 +18,7 @@ import {
 } from './divs';
 import soundManager from './SoundManager';
 import SettingsMenu from './SettingsMenu';
+import EndGameScreen from './EndGameScreen';
 import LandscapeMessage from './LandscapeMessage';
 import { TileArray } from "./tile_array";
 import {
@@ -69,8 +70,22 @@ class Board extends Component {
         super(props);
         // Calculate LEFT_MARGIN here to ensure TILE_WIDTH is defined
         LEFT_MARGIN = window.innerWidth / 2 - (N_TILES * TILE_WIDTH / 2);
+
+        const roundsPerGame = 5; // Default value
+        const preGeneratedRounds = this.generateRounds(roundsPerGame);
+
         this.state = {
-            ...this.populate_board(),
+            // Game structure
+            roundsPerGame: roundsPerGame,
+            preGeneratedRounds: preGeneratedRounds,
+            currentRoundIndex: 0,
+            gameScore: 0,
+            isGameComplete: false,
+
+            // Current round state
+            ...this.loadRound(preGeneratedRounds[0]),
+
+            // UI state
             backgroundClass: 'bg-grid',
             timer: 0,
             isTimerRunning: false,
@@ -124,6 +139,24 @@ class Board extends Component {
         });
     }
 
+    generateRounds(count) {
+        // Pre-generate all rounds for the game
+        const rounds = [];
+        for (let i = 0; i < count; i++) {
+            rounds.push(new TileArray(N_TILES));
+        }
+        return rounds;
+    }
+
+    loadRound(tileArray) {
+        // Load a specific round into the board state
+        return {
+            tile_array: tileArray,
+            active_op: EMPTY,
+            active_space: -1
+        };
+    }
+
     populate_board() {
         let tile_array = new TileArray(N_TILES);
 
@@ -132,6 +165,61 @@ class Board extends Component {
             active_op: EMPTY,
             active_space: -1
         };
+    }
+
+    startNewGame() {
+        // Start a completely new game with new rounds
+        const preGeneratedRounds = this.generateRounds(this.state.roundsPerGame);
+
+        this.setState({
+            preGeneratedRounds: preGeneratedRounds,
+            currentRoundIndex: 0,
+            gameScore: 0,
+            totalScore: 0,
+            gamesCompleted: 0,
+            isGameComplete: false,
+            ...this.loadRound(preGeneratedRounds[0])
+        });
+
+        this.resetTimer();
+    }
+
+    advanceToNextRound(scoreForThisRound) {
+        const nextIndex = this.state.currentRoundIndex + 1;
+        const newGameScore = this.state.gameScore + scoreForThisRound;
+
+        if (nextIndex >= this.state.roundsPerGame) {
+            // Game is complete
+            this.stopTimer();
+            this.setState({
+                isGameComplete: true,
+                gameScore: newGameScore,
+                totalScore: this.state.totalScore + newGameScore,
+                gamesCompleted: this.state.gamesCompleted + 1
+            });
+        } else {
+            // Load next round
+            this.setState({
+                currentRoundIndex: nextIndex,
+                gameScore: newGameScore,
+                ...this.loadRound(this.state.preGeneratedRounds[nextIndex])
+            });
+            this.resetTimer();
+        }
+    }
+
+    updateRoundsPerGame(newValue) {
+        // Update the setting and start a new game
+        const preGeneratedRounds = this.generateRounds(newValue);
+        this.setState({
+            roundsPerGame: newValue,
+            preGeneratedRounds: preGeneratedRounds,
+            currentRoundIndex: 0,
+            gameScore: 0,
+            isGameComplete: false,
+            ...this.loadRound(preGeneratedRounds[0])
+        });
+        this.resetTimer();
     }
 
     activate_op(op_string) {
@@ -380,20 +468,10 @@ class Board extends Component {
     }
 
     handleSkipClick() {
-        // Reset the board and generate a new one with new numbers
+        // Skip to the next round in the game with 0 score
         soundManager.playButtonClick();
         this.deactivate_op();
-
-        // Create a new tile array with random numbers
-        const newState = this.populate_board();
-        this.resetTimer()
-
-        // Reset state with the new board but keep the timer running and total score
-        this.setState({
-            ...newState,
-            totalScore: this.state.totalScore,
-            gamesCompleted: this.state.gamesCompleted
-        });
+        this.advanceToNextRound(0);
     }
 
     renderEquation() {
@@ -434,7 +512,16 @@ class Board extends Component {
         );
     }
 
+    renderEndGameScreen() {
+        if (!this.state.isGameComplete) return null;
+
         return (
+            <EndGameScreen
+                gameScore={this.state.gameScore}
+                roundsCompleted={this.state.roundsPerGame}
+                sessionTotalScore={this.state.totalScore}
+                gamesCompleted={this.state.gamesCompleted}
+                onNewGame={() => this.startNewGame()}
             />
         );
     }
@@ -520,24 +607,12 @@ class Board extends Component {
             // Calculate the score for this equation with time bonus
             const scoreResult = this.calculateScore(eq, time);
 
-            // Update the total score and games completed
-            const newTotalScore = this.state.totalScore + scoreResult.finalScore;
-            const newGamesCompleted = this.state.gamesCompleted + 1;
+            // Show success message
+            const roundNumber = this.state.currentRoundIndex + 1;
+            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreResult.scoreMessage}\n\nRound ${roundNumber}/${this.state.roundsPerGame} complete!`);
 
-            // Add session total to the score message
-            const updatedScoreMessage = scoreResult.scoreMessage +
-                `\n\nSession Total: ${newTotalScore} points (${newGamesCompleted} games)`;
-
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${updatedScoreMessage}`);
-
-            // Reset the board and timer, but keep the total score and games count
-            const newState = this.populate_board();
-            this.setState({
-                ...newState,
-                totalScore: newTotalScore,
-                gamesCompleted: newGamesCompleted
-            });
-            this.resetTimer();
+            // Advance to next round or complete the game
+            this.advanceToNextRound(scoreResult.finalScore);
         } else {
             // Play error sound
             soundManager.playError();
@@ -565,6 +640,7 @@ class Board extends Component {
         return (
             <SessionScore
                 totalScore={this.state.totalScore}
+                gameScore={this.state.gameScore}
                 gamesCompleted={this.state.gamesCompleted}
                 currentRound={this.state.currentRoundIndex + 1}
                 totalRounds={this.state.roundsPerGame}
@@ -641,6 +717,7 @@ class Board extends Component {
         return (
             <div className={`board ${this.state.backgroundClass}`}>
                 {objs}
+                {this.renderEndGameScreen()}
             </div>
         );
     }
