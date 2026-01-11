@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 // import logo from './logo.svg';
 import './App.css';
 import {
-    BackgroundSelector,
     DormantBracketTile,
     DormantOpTile,
     Equation,
@@ -18,7 +17,7 @@ import {
     WaitingOpTile
 } from './divs';
 import soundManager from './SoundManager';
-import VolumeControl from './VolumeControl';
+import SettingsMenu from './SettingsMenu';
 import LandscapeMessage from './LandscapeMessage';
 import { TileArray } from "./tile_array";
 import {
@@ -40,18 +39,6 @@ import {
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
 let ONE_USE_OPS = [SQUARE, SQRT]
 // Find a better way to state the ordering of the operation tiles.
-
-
-// Available background patterns
-const BACKGROUNDS = [
-    { id: 'solid', name: 'Indigo', class: 'bg-solid' },
-    { id: 'grid', name: 'Teal Grid', class: 'bg-grid' },
-    { id: 'dots', name: 'Purple Dots', class: 'bg-dots' },
-    { id: 'waves', name: 'Orange Waves', class: 'bg-waves' },
-    { id: 'circuit', name: 'Blue Circuit', class: 'bg-circuit' }
-];
-
-
 
 let N_TILES = 6;
 let N_SPACES = N_TILES - 1;
@@ -87,6 +74,9 @@ class Board extends Component {
             backgroundClass: 'bg-grid',
             timer: 0,
             isTimerRunning: false,
+            isSettingsOpen: false,
+
+            // Session state
             totalScore: 0,
             gamesCompleted: 0
         };
@@ -430,12 +420,21 @@ class Board extends Component {
         />)
     }
 
-    renderBackgroundSelector() {
+    renderSettingsMenu() {
         return (
-            <BackgroundSelector
-                backgrounds={BACKGROUNDS}
-                currentBackground={this.state.backgroundClass}
-                onChange={(backgroundClass) => this.setState({ backgroundClass })}
+            <SettingsMenu
+                backgroundClass={this.state.backgroundClass}
+                onBackgroundChange={(backgroundClass) => this.setState({ backgroundClass })}
+                roundsPerGame={this.state.roundsPerGame}
+                onRoundsPerGameChange={(value) => this.updateRoundsPerGame(value)}
+                isOpen={this.state.isSettingsOpen}
+                onToggleMenu={() => this.setState(prevState => ({ isSettingsOpen: !prevState.isSettingsOpen }))}
+                onCloseMenu={() => this.setState({ isSettingsOpen: false })}
+            />
+        );
+    }
+
+        return (
             />
         );
     }
@@ -567,15 +566,12 @@ class Board extends Component {
             <SessionScore
                 totalScore={this.state.totalScore}
                 gamesCompleted={this.state.gamesCompleted}
+                currentRound={this.state.currentRoundIndex + 1}
+                totalRounds={this.state.roundsPerGame}
             />
         );
     }
 
-    renderVolumeControl() {
-        return (
-            <VolumeControl />
-        );
-    }
 
     buildNumberRowElements() {
         const tiles = this.state.tile_array.string_array;
@@ -638,10 +634,9 @@ class Board extends Component {
         objs.push(this.renderSkip());
         objs.push(this.renderEquation());
         objs.push(this.renderPlay());
-        objs.push(this.renderBackgroundSelector());
         objs.push(this.renderTimer());
         objs.push(this.renderSessionScore());
-        objs.push(this.renderVolumeControl());
+        objs.push(this.renderSettingsMenu());
 
         return (
             <div className={`board ${this.state.backgroundClass}`}>
@@ -706,6 +701,15 @@ class Game extends Component {
         let active_op_index
         let active_space
         if (board) {
+            // Don't process keyboard events if settings menu is open
+            if (board.state.isSettingsOpen) {
+                // Allow Escape or Enter key to close settings menu
+                if (event.key === 'Escape' || event.key === 'Enter') {
+                    board.setState({ isSettingsOpen: false });
+                }
+                return;
+            }
+
             switch (event.key) {
                 case 'Enter':
                     // If Enter key is pressed, simulate a click on the Play button
