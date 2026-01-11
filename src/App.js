@@ -493,6 +493,14 @@ class Board extends Component {
     handlePlayClick() {
         let eq = this.state.tile_array.build_equation(false);
         let eval_eq = this.state.tile_array.build_equation(true);
+
+        // Check if there's at least one equals sign
+        if (!eval_eq.includes('===')) {
+            soundManager.playError();
+            alert('Please include at least one equals sign (=) in your equation.');
+            return;
+        }
+
         let sides = eval_eq.split('===')
         let side_vals = sides.map(x => eval(x))
 
