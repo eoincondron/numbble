@@ -539,10 +539,17 @@ class Board extends Component {
             }
         }
         // Loop through each character in the equation
+        let current_num = '';
         for (const char of equation) {
             // If this character is an operator with a score, add it
             if (OP_SCORES[char] !== undefined) {
                 score += OP_SCORES[char];
+                if (current_num.length > 1) {
+                    score += (current_num.length - 1) * 25;
+                }
+                current_num = '';
+            } else {
+                current_num += char;
             }
         }
 
