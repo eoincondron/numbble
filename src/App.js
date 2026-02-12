@@ -197,6 +197,7 @@ class Board extends Component {
         if (nextIndex >= this.state.roundsPerGame) {
             // Game is complete
             this.stopTimer();
+            soundManager.playGameComplete();
             this.setState({
                 isGameComplete: true,
                 gameScore: newGameScore,

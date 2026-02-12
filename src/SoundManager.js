@@ -12,6 +12,7 @@ class SoundManager {
     this.loadSound('pop', '/sounds/mixkit-light-button-2580.wav');
     this.loadSound('success', '/sounds/pop.mp3');
     this.loadSound('error', '/sounds/error.mp3');
+    this.loadSound('gameComplete', '/sounds/mixkit-long-pop-2358.wav');
   }
   
   // Load a sound file
@@ -74,6 +75,11 @@ class SoundManager {
   // Error sound (incorrect equation)
   playError() {
     this.playSound('error');
+  }
+
+  // Game complete sound (all rounds finished)
+  playGameComplete() {
+    this.playSound('gameComplete');
   }
 }
 
