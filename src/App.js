@@ -19,6 +19,7 @@ import {
 import soundManager from './SoundManager';
 import SettingsMenu from './SettingsMenu';
 import EndGameScreen from './EndGameScreen';
+import RoundCompleteScreen from './RoundCompleteScreen';
 import LandscapeMessage from './LandscapeMessage';
 import { TileArray } from "./tile_array";
 import {
@@ -91,6 +92,8 @@ class Board extends Component {
             timer: 0,
             isTimerRunning: false,
             isSettingsOpen: false,
+            isRoundComplete: false,
+            roundCompleteData: null,
 
             // Session state
             totalScore: 0,
@@ -179,6 +182,8 @@ class Board extends Component {
             totalScore: 0,
             gamesCompleted: 0,
             isGameComplete: false,
+            isRoundComplete: false,
+            roundCompleteData: null,
             ...this.loadRound(preGeneratedRounds[0])
         });
 
@@ -521,6 +526,21 @@ class Board extends Component {
         );
     }
 
+    renderRoundCompleteScreen() {
+        if (!this.state.isRoundComplete || !this.state.roundCompleteData) return null;
+
+        return (
+            <RoundCompleteScreen
+                equation={this.state.roundCompleteData.equation}
+                timeString={this.state.roundCompleteData.timeString}
+                scoreResult={this.state.roundCompleteData.scoreResult}
+                currentRound={this.state.roundCompleteData.currentRound}
+                totalRounds={this.state.roundCompleteData.totalRounds}
+                onContinue={() => this.handleContinueToNextRound()}
+            />
+        );
+    }
+
     renderEndGameScreen() {
         if (!this.state.isGameComplete) return null;
 
@@ -533,6 +553,19 @@ class Board extends Component {
                 onNewGame={() => this.startNewGame()}
             />
         );
+    }
+
+    handleContinueToNextRound() {
+        const score = this.state.roundCompleteData.score;
+
+        // Hide the round complete screen
+        this.setState({
+            isRoundComplete: false,
+            roundCompleteData: null
+        });
+
+        // Advance to next round or complete the game
+        this.advanceToNextRound(score);
     }
 
     calculateScore(equation, time) {
@@ -623,12 +656,18 @@ class Board extends Component {
             // Calculate the score for this equation with time bonus
             const scoreResult = this.calculateScore(eq, time);
 
-            // Show success message
-            const roundNumber = this.state.currentRoundIndex + 1;
-            alert(`${eq} is correct. Well done!\nYou solved it in: ${timeString}\n\n${scoreResult.scoreMessage}\n\nRound ${roundNumber}/${this.state.roundsPerGame} complete!`);
-
-            // Advance to next round or complete the game
-            this.advanceToNextRound(scoreResult.finalScore);
+            // Show round complete screen
+            this.setState({
+                isRoundComplete: true,
+                roundCompleteData: {
+                    equation: eq,
+                    timeString: timeString,
+                    scoreResult: scoreResult,
+                    currentRound: this.state.currentRoundIndex + 1,
+                    totalRounds: this.state.roundsPerGame,
+                    score: scoreResult.finalScore
+                }
+            });
         } else {
             // Play error sound
             soundManager.playError();
@@ -733,6 +772,7 @@ class Board extends Component {
         return (
             <div className={`board ${this.state.backgroundClass}`}>
                 {objs}
+                {this.renderRoundCompleteScreen()}
                 {this.renderEndGameScreen()}
             </div>
         );

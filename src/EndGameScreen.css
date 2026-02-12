@@ -14,18 +14,18 @@
 
 .end-game-panel {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 3vh;
-    padding: 5vh 6vh;
-    min-width: 60vh;
-    max-width: 90vh;
-    box-shadow: 0 3vh 6vh rgba(0, 0, 0, 0.5);
+    border-radius: min(3dvh, 2.25vw);
+    padding: min(5dvh, 3.75vw) min(6dvh, 4.5vw);
+    min-width: min(60dvh, 45vw);
+    max-width: min(90dvh, 67.5vw);
+    box-shadow: 0 min(3dvh, 2.25vw) min(6dvh, 4.5vw) rgba(0, 0, 0, 0.5);
     animation: slideInScale 0.4s ease;
     text-align: center;
 }
 
 @keyframes slideInScale {
     from {
-        transform: translateY(-10vh) scale(0.8);
+        transform: translateY(min(-10dvh, -7.5vw)) scale(0.8);
         opacity: 0;
     }
     to {
@@ -35,8 +35,8 @@
 }
 
 .end-game-title {
-    margin: 0 0 4vh 0;
-    font-size: 6vh;
+    margin: 0 0 min(4dvh, 3vw) 0;
+    font-size: min(6dvh, 4.5vw);
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     color: #FFC107;
@@ -49,39 +49,39 @@
         transform: translateY(0);
     }
     40% {
-        transform: translateY(-2vh);
+        transform: translateY(min(-2dvh, -1.5vw));
     }
     60% {
-        transform: translateY(-1vh);
+        transform: translateY(min(-1dvh, -0.75vw));
     }
 }
 
 .end-game-stats {
     display: flex;
     flex-direction: column;
-    gap: 2vh;
-    margin-bottom: 4vh;
+    gap: min(2dvh, 1.5vw);
+    margin-bottom: min(4dvh, 3vw);
 }
 
 .stat-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2vh 3vh;
+    padding: min(2dvh, 1.5vw) min(3dvh, 2.25vw);
     background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 1vh;
+    border-radius: min(1dvh, 0.75vw);
     transition: all 0.2s ease;
 }
 
 .stat-item:hover {
     background-color: rgba(255, 255, 255, 0.25);
-    transform: translateX(1vh);
+    transform: translateX(min(1dvh, 0.75vw));
 }
 
 .main-stat {
     background-color: rgba(255, 193, 7, 0.2);
     border: 2px solid rgba(255, 193, 7, 0.5);
-    padding: 3vh;
+    padding: min(3dvh, 2.25vw);
 }
 
 .main-stat:hover {
@@ -89,7 +89,7 @@
 }
 
 .stat-label {
-    font-size: 3vh;
+    font-size: min(3dvh, 2.25vw);
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     color: white;
@@ -97,7 +97,7 @@
 }
 
 .stat-value {
-    font-size: 4vh;
+    font-size: min(4dvh, 3vw);
     font-family: 'Roboto Mono', monospace;
     font-weight: bold;
     color: white;
@@ -105,38 +105,68 @@
 }
 
 .game-score {
-    font-size: 5vh;
+    font-size: min(5dvh, 3.75vw);
     color: #FFC107;
 }
 
 .stat-divider {
     height: 2px;
     background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
-    margin: 1vh 0;
+    margin: min(1dvh, 0.75vw) 0;
 }
 
 .new-game-button {
     width: 100%;
-    padding: 2.5vh 4vh;
-    font-size: 4vh;
+    padding: min(2.5dvh, 1.9vw) min(4dvh, 3vw);
+    font-size: min(4dvh, 3vw);
     font-weight: 700;
     font-family: 'Inter', sans-serif;
     color: white;
     background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
     border: none;
-    border-radius: 1.5vh;
+    border-radius: min(1.5dvh, 1.1vw);
     cursor: pointer;
-    box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+    box-shadow: 0 min(1dvh, 0.75vw) min(2dvh, 1.5vw) rgba(0, 0, 0, 0.3);
     transition: all 0.2s ease;
 }
 
 .new-game-button:hover {
-    transform: translateY(-0.5vh);
-    box-shadow: 0 1.5vh 3vh rgba(0, 0, 0, 0.4);
+    transform: translateY(min(-0.5dvh, -0.375vw));
+    box-shadow: 0 min(1.5dvh, 1.1vw) min(3dvh, 2.25vw) rgba(0, 0, 0, 0.4);
     background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
 }
 
 .new-game-button:active {
     transform: translateY(0);
-    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.3);
+    box-shadow: 0 min(0.5dvh, 0.375vw) min(1dvh, 0.75vw) rgba(0, 0, 0, 0.3);
+}
+
+/* Round Complete Screen specific styles */
+.round-equation {
+    font-size: min(4dvh, 3vw);
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
+    color: #FFC107;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: min(2dvh, 1.5vw) min(3dvh, 2.25vw);
+    border-radius: min(1.5dvh, 1.1vw);
+    margin-bottom: min(3dvh, 2.25vw);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    word-wrap: break-word;
+}
+
+.bonus-item {
+    background-color: rgba(76, 175, 80, 0.2);
+    border-left: 4px solid #4CAF50;
+}
+
+.bonus-item:hover {
+    background-color: rgba(76, 175, 80, 0.3);
+}
+
+.bonus-label {
+    font-size: min(2.5dvh, 1.9vw);
+    color: #A5D6A7;
+    flex: 1;
+    text-align: left;
 }
