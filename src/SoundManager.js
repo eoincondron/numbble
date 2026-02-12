@@ -6,7 +6,8 @@ class SoundManager {
     this.sounds = {};
     this.isMuted = false;
     this.volume = 0.5; // Default volume (0-1)
-    
+    this.isUnlocked = false; // Track if audio context is unlocked
+
     // Preload sounds
     this.loadSound('click', '/sounds/mixkit-message-pop-alert-2354.mp3');
     this.loadSound('pop', '/sounds/mixkit-light-button-2580.wav');
@@ -15,21 +16,46 @@ class SoundManager {
     this.loadSound('gameComplete', '/sounds/mixkit-long-pop-2358.wav');
   }
   
+  // Unlock audio on first user interaction (required for browsers)
+  unlock() {
+    if (this.isUnlocked) return;
+
+    // Try to play and immediately pause each sound to unlock audio
+    Object.values(this.sounds).forEach(sound => {
+      const promise = sound.play();
+      if (promise !== undefined) {
+        promise.then(() => {
+          sound.pause();
+          sound.currentTime = 0;
+        }).catch(() => {
+          // Ignore errors during unlock
+        });
+      }
+    });
+
+    this.isUnlocked = true;
+  }
+
   // Load a sound file
   loadSound(name, path) {
     const audio = new Audio(path);
     audio.volume = this.volume;
     this.sounds[name] = audio;
   }
-  
+
   // Play a sound by name
   playSound(name) {
     if (this.isMuted || !this.sounds[name]) return;
-    
+
+    // Unlock audio on first play attempt
+    if (!this.isUnlocked) {
+      this.unlock();
+    }
+
     // Create a new audio element from the original to allow overlapping sounds
     const soundToPlay = this.sounds[name].cloneNode();
     soundToPlay.volume = this.volume;
-    
+
     // Play the sound
     soundToPlay.play().catch(error => {
       // Handle any autoplay restrictions quietly

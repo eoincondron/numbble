@@ -795,6 +795,9 @@ class Game extends Component {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
         window.addEventListener('keydown', this.handleKeyDown);
+        // Add click listener to unlock audio on first user interaction
+        window.addEventListener('click', () => soundManager.unlock(), { once: true });
+        window.addEventListener('keydown', () => soundManager.unlock(), { once: true });
         // Start the timer when component mounts
         this.startTimer();
     }
@@ -831,6 +834,9 @@ class Game extends Component {
     }
 
     handleKeyDown(event) {
+        // Unlock audio on first keydown
+        soundManager.unlock();
+
         let board = this.boardRef.current
         let active_op_index
         let active_space
