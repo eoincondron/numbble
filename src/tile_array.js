@@ -76,6 +76,12 @@ class TileArray {
             alert("Cannot join numbers, space is adjacent non-numeric characters :".concat(to_left, ', ', to_right))
             return
         }
+
+        if (to_left === "0") {
+            alert("Cannot join numbers where the left is 0 as this creates leading zeros")
+            return
+        }
+
         this.string_array[space_location - 1] = to_left + to_right; // numbers are represented as strings
         this.string_array.splice(space_location, 2);
     }
@@ -272,7 +278,7 @@ class TileArray {
         return -1
     }
 
-    build_equation (evaluable = false) {
+    build_equation(evaluable = false) {
         // Build a single string containing an equation from the board by concatenating
         // the unique sublist containing an equality if such exists.
         // Returns SPACE if no such sub-list is found
@@ -296,4 +302,4 @@ class TileArray {
     }
 }
 
-module.exports = {TileArray}
+module.exports = { TileArray }
