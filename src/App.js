@@ -844,11 +844,34 @@ class Game extends Component {
                 return;
             }
 
+            // Handle Enter key when round complete screen is showing
+            if (board.state.isRoundComplete) {
+                if (event.key === 'Enter') {
+                    board.handleContinueToNextRound();
+                }
+                return;
+            }
+
             switch (event.key) {
                 case 'Enter':
                     // If Enter key is pressed, simulate a click on the Play button
-                    board.handlePlayClick();
+                    if (board.state.isRoundComplete) {
+                        board.handleContinueToNextRound();
+                    } else if (board.state.isGameComplete) {
+                        board.startNewGame();
+                    } else if (board.state.isSettingsOpen) {
+                        board.setState({ isSettingsOpen: false });
+                    }
+                    else {
+                        board.handlePlayClick();
+                    }
                     break;
+                case 'Escape':
+                    if (board.state.isRoundComplete) { board.handleContinueToNextRound(); }
+                    else if (board.state.isGameComplete) { board.startNewGame(); }
+                    else if (board.state.isSettingsOpen) { board.setState({ isSettingsOpen: false }); }
+                    else { board.handleResetClick(); }
+                    break
                 case 'r':
                     // Use 'r' key for reset instead of Escape which browsers prioritize for exiting fullscreen
                     board.handleResetClick();
