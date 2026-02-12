@@ -440,6 +440,14 @@ class Board extends Component {
             soundManager.playTilePlaced();
             this.state.tile_array.insert_operation(array_pos, this.state.active_op)
             this.deactivate_op()
+        } else if (L_BRACKET === this.state.active_op) {
+            this.state.tile_array.insert_left_bracket(array_pos + 1)
+            this.deactivate_op()
+        } else if (R_BRACKET === this.state.active_op) {
+            this.state.tile_array.insert_right_bracket(array_pos - 1)
+            this.deactivate_op()
+        } else {
+            alert("Cannot place that " + this.state.active_op + " in the space. Please select a valid operator or join the numbers.")
         }
     }
 
