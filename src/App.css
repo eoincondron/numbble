@@ -24,32 +24,41 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
 /* Background patterns with vibrant, distinct colors */
 .bg-solid {
-  background-color: #303F9F; /* Indigo */
+  background-color: #303F9F;
+  /* Indigo */
 }
 
 .bg-grid {
-  background-color: #00695C; /* Teal */
+  background-color: #00695C;
+  /* Teal */
   background-image: linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .bg-dots {
-  background-color: #6A1B9A; /* Purple */
+  background-color: #6A1B9A;
+  /* Purple */
   background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 .bg-waves {
-  background-color: #D84315; /* Deep Orange */
-  background-image: 
+  background-color: #D84315;
+  /* Deep Orange */
+  background-image:
     linear-gradient(135deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
     linear-gradient(225deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
     linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
@@ -59,8 +68,9 @@
 }
 
 .bg-circuit {
-  background-color: #0D47A1; /* Blue */
-  background-image: 
+  background-color: #0D47A1;
+  /* Blue */
+  background-image:
     radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px),
     radial-gradient(rgba(255, 255, 255, 0.15) 2px, transparent 2px);
   background-size: 30px 30px;
@@ -70,8 +80,9 @@
 .board {
   color: rgb(240, 200, 200);
   align-content: center;
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  /* Dynamic viewport height - excludes browser UI */
+  width: 100dvw;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -83,46 +94,59 @@
   position: relative;
   transition: background-color 0.5s ease;
 }
+
+/* Fallback for browsers that don't support dvh */
+@supports not (height: 100dvh) {
+  .board {
+    height: 100dvh;
+  }
+}
+
 .block {
   position: absolute;
   text-align: center;
-  font-size: 4vh;
+  font-size: min(6dvh, 3dvw);
+  /* Responsive to both dimensions */
   font-weight: 500;
   color: black;
   width: 100%;
   max-width: 100%;
-  margin-right: 1vh;
+  margin-right: min(1dvh, 0.75dvw);
   z-index: 1;
-  border-radius: 2vh;
+  border-radius: min(2dvh, 1dvw);
+  /* Proportional border radius */
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Roboto Mono', monospace;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow:
-      0 .5vh 1vh rgba(0, 0, 0, 0.2),
-      inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  transform: perspective(10vh) translateZ(0);
+    0 .5dvh 1dvh rgba(0, 0, 0, 0.2),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transform: perspective(10dvh) translateZ(0);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .placed {
-  top: 25vh;
+  top: 25dvh;
 }
+
 .dormant {
-  top: 50vh;
+  top: 50dvh;
 }
+
 .waiting {
-  top: 46vh;
+  top: 46dvh;
   background-color: #F44336;
   transform: scale(1.1);
   transition: all 0.2s ease;
   box-shadow:
-        0 1vh 2vh rgba(0, 0, 0, 0.2),
-        inset 0 -6px 0 rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 1dvh 2dvh rgba(0, 0, 0, 0.2),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
+
 .num_tile {
   background-color: #FFC107;
   z-index: 0;
@@ -132,9 +156,9 @@
 }
 
 .num_tile:hover {
-  transform: perspective(10vh) translateZ(5px);
-  box-shadow: 
-    0 1vh 2vh rgba(0, 0, 0, 0.2),
+  transform: perspective(10dvh) translateZ(5px);
+  box-shadow:
+    0 1dvh 2dvh rgba(0, 0, 0, 0.2),
     inset 0 -6px 0 rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
@@ -148,9 +172,9 @@
 }
 
 .op_tile:hover {
-  transform: perspective(10vh) translateZ(5px);
-  box-shadow: 
-    0 1vh 1.5vh rgba(0, 0, 0, 0.3),
+  transform: perspective(10dvh) translateZ(5px);
+  box-shadow:
+    0 1dvh 1.5dvh rgba(0, 0, 0, 0.3),
     inset 0 -4px 0 rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
@@ -158,24 +182,24 @@
 
 .bracket_tile {
   font-family: ".SF NS Mono";
-  font-size: 7vh;
+  font-size: 7dvh;
   font-weight: 200;
   /* 3D effect matching other tiles */
   border: 2px solid rgba(130, 100, 200, 0.7);
-  /*transform: perspective(10vh) translateZ(0);*/
+  /*transform: perspective(10dvh) translateZ(0);*/
 }
 
 .bracket_tile:hover {
-  transform: perspective(10vh) translateZ(.5vh);
+  transform: perspective(10dvh) translateZ(.5dvh);
   box-shadow:
-          0 1vh 1.5vh rgba(0, 0, 0, 0.3),
-          inset 0 -4px 0 rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 1dvh 1.5dvh rgba(0, 0, 0, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .spacer {
   background-color: transparent;
-  z-index: 0; 
+  z-index: 0;
 }
 
 /* Styling for highlightable spaces */
@@ -195,8 +219,8 @@
 .drag-over {
   background-color: rgba(255, 255, 255, 0.3);
   border: 2px dashed rgba(255, 220, 100, 0.9);
-  box-shadow: 0 0 2vh rgba(255, 255, 255, 0.8),
-              0 0 4vh rgba(255, 220, 100, 0.6);
+  box-shadow: 0 0 2dvh rgba(255, 255, 255, 0.8),
+    0 0 4dvh rgba(255, 220, 100, 0.6);
   transform: scale(1.1);
 }
 
@@ -216,7 +240,7 @@
 
 /* Add specific styling for number tiles when brackets are dragged over them */
 .num_tile.drag-over {
-  box-shadow: 0 0 1vh rgba(130, 100, 200, 0.8) !important;
+  box-shadow: 0 0 1dvh rgba(130, 100, 200, 0.8) !important;
   border: 2px dashed rgba(130, 100, 200, 0.8) !important;
   background-color: rgba(130, 100, 200, 0.1);
 }
@@ -226,66 +250,75 @@
   0% {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
   }
+
   100% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 
-                0 0 30px rgba(100, 120, 255, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 30px rgba(100, 120, 255, 0.4);
   }
 }
-.reset_tile, .skip_tile {
-  background-color: #4CAF50;
+
+.reset_tile,
+.skip_tile, 
+.timer {
   color: white;
-  width: 24vh;
-  height: 10vh;
-  font-size: 3.5vh;
+  width: min(25dvh, 18dvw);
+  height: min(9dvh, 5dvw);
+  top: min(5dvh, 3.75dvw);
+  font-size: min(3dvh, 1.5dvw);
   font-weight: 500;
   font-family: 'Inter', sans-serif;
-  border-radius: 1vh;
+  border-radius: min(1dvh, 0.75dvw);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
   position: absolute;
-  top: 5vh;
-  right: 25vh;
 }
 
 .skip_tile {
   background-color: #FF9800;
-  width: 20vh;
-  right: 3vh;
+  right: min(10dvh, 2.25dvw);
 }
-.equation, .play {
+
+.reset_tile {
+  background-color: #4CAF50;
+  right: min(37dvh, 20.75dvw);
+}
+
+.equation,
+.play,
+.session-score {
   background-color: #E8F5E9;
   color: #333;
   text-align: center;
-  width: 40vh;
-  height: 10vh;
-  font-size: 3.5vh;
+  width: min(40dvh, 30dvw);
+  height: min(10dvh, 7.5dvw);
+  font-size: min(3dvh, 2.25dvw);
   font-weight: 500;
   font-family: 'Inter', sans-serif;
-  border-radius: 2vh;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 1.5vh 2vh;
+  border-radius: min(2dvh, 1.5dvw);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: min(1.5dvh, 1.1dvw) min(2dvh, 1.5dvw);
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: 5vh;
+  bottom: min(5dvh, 3.75dvw);
 }
 
 .equation {
-  left: 5vh;
+  left: min(5dvh, 3.75dvw);
 }
 
 .play {
-  right: 5vh;
+  right: min(5dvh, 3.75dvw);
   background-color: #E91E63;
   color: white;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease;
   line-height: 1.2;
 }
@@ -301,9 +334,8 @@
 }
 
 
-.timer, .session-score {
-  left: 40vw;
-  width: 20vw;
+.timer,
+.session-score {
   position: absolute;
   z-index: 10;
   display: flex;
@@ -312,120 +344,108 @@
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
   font-family: 'Roboto Mono', monospace;
-  font-size: 4vh;
+  font-size: min(3.5dvh, 2.5dvw);
   font-weight: bold;
-  padding: 1vh 0;
-  border-radius: 0 0 1vh 1vh;
-  box-shadow: 0 .5vh 1vw rgba(0, 0, 0, 0.3);
+  /* padding: min(1dvh, 0.75dvw) 0; */
+  /* border-radius: 0 0 min(1dvh, 0.75dvw) min(1dvh, 0.75dvw); */
+  box-shadow: 0 min(.5dvh, 0.4dvw) 1dvw rgba(0, 0, 0, 0.3);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  margin-top: -1px;
+  /* margin-top: -1px; */
   /*box-sizing: border-box;*/
   border-top: none;
 }
 
-.timer {
-  top: 5vh;
-}
 
 
 .session-score {
-  font-size: 3.5vh;
-  bottom: 5vh;
+  width: min(28dvw, 50dvh);
+  font-size: min(3.5dvh, 2dvw);
+  bottom: 5dvh;
   z-index: 10;
-  /*padding: 15px 0 10px 0;*/
+  /* padding: min(2.5dvh, 1.5dvw) min(2dvh, 1.5dvw); */
+  border-radius: min(1dvh, 0.75dvw) min(1dvh, 0.75dvw);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  gap: 1dvw;
   margin-bottom: 0;
 }
 
-.session-score-title {
+.session-score-label {
   font-family: 'Inter', sans-serif;
-  margin-bottom: 8px;
-  text-transform: uppercase;
   color: #FFC107;
+  font-weight: 500;
 }
 
-.session-score-points {
+.session-score-value {
   font-family: 'Roboto Mono', monospace;
-  font-size: 32px;
   font-weight: bold;
-  margin-bottom: 5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: white;
 }
 
-.session-score-round {
-  font-family: 'Inter', sans-serif;
-  font-size: 3vh;
-  color: #FFC107;
-  font-weight: 600;
-  margin-bottom: 1vh;
-}
-
-.session-score-games {
-  font-family: 'Inter', sans-serif;
-  font-size: 2.5vh;
-  opacity: 0.7;
-  margin-bottom: 2vh;
+.session-score-separator {
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0 0.5dvw;
 }
 
 .bg-selector {
   position: absolute;
-  top: 5vh;
-  left: 5vh;
+  top: 5dvh;
+  left: 5dvh;
   z-index: 10;
   display: flex;
   font-family: 'Inter', sans-serif;
-  font-size: 3vh;
+  font-size: 3dvh;
   font-weight: 500;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 1vh 2vh;
-  border-radius: 1vh;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 1dvh 2dvh;
+  border-radius: 1dvh;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .bg-selector-label {
   color: #333;
-  margin-right:.8vh;
+  margin-right: .8dvh;
 }
 
 .bg-selector-dropdown {
   border: none;
-  padding: .5vh 1vh;
+  padding: .5dvh 1dvh;
   border-radius: 4px;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.6);
   transition: all 0.2s ease;
 }
 
-.bg-selector-dropdown:hover, 
+.bg-selector-dropdown:hover,
 .bg-selector-dropdown:focus {
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   outline: none;
 }
 
 /* Score display in the operation tiles */
 .score {
   position: absolute;
-  bottom: 1vh;
-  right: 1vh;
-  font-size: 1.5vh;
+  bottom: 1dvh;
+  right: 1dvh;
+  font-size: 1.5dvh;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.8);
-  border-radius: .5vh;
+  border-radius: .5dvh;
   background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Exponent display for the square operation */
 .exponent {
   position: absolute;
-  top: .5vh;
-  right: .5vh;
-  font-size: 3.5vh;
+  top: .5dvh;
+  right: .5dvh;
+  font-size: min(4dvh, 1.8dvw);
   font-weight: 400;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -433,9 +453,9 @@
 /* Exponent display for numbers with exponents */
 .num-exponent {
   position: absolute;
-  top: -1vh;
-  right: -1vh;
-  font-size: 3vh;
+  top: -1dvh;
+  right: -1dvh;
+  font-size: min(2.5dvh, 1.5dvw);
   font-weight: bold;
   color: inherit;
 }
@@ -444,17 +464,17 @@
 .num_tile .relative {
   position: relative;
   display: inline-block;
-  padding-right: .5vh;
+  padding-right: .5dvh;
 }
 
 /* Volume control button */
 .volume-control {
   position: absolute;
-  right: 5vh;
-  bottom: 20vh;
-  width: 10vh;
-  height: 10vh;
-  font-size: 5vh;
+  right: 5dvh;
+  bottom: 20dvh;
+  width: 10dvh;
+  height: 10dvh;
+  font-size: 5dvh;
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.8);
   border: none;
@@ -462,15 +482,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 1vh;
-  box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
+  border-radius: 1dvh;
+  box-shadow: 0 .5dvh 1dvh rgba(0, 0, 0, 0.2);
   z-index: 100;
 }
 
 .volume-control:hover {
   transform: scale(1.1);
   background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1dvh 2dvh rgba(0, 0, 0, 0.3);
 }
 
 /* Landscape orientation handling */

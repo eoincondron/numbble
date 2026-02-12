@@ -35,6 +35,7 @@ import {
     SPACE,
     SQRT,
     SQUARE,
+    DECIMAL_POINT,
 } from "./util";
 
 let ALL_OP_SYMBOLS = OPERATIONS.concat(BRACKETS).concat([EQUALS])
@@ -59,8 +60,8 @@ let LEFT_MARGIN;
 function get_common_style_attributes(left_position) {
     return {
         left: left_position + 'px',
-        width: '6vw',
-        height: '6vw',
+        width: 'max(6dvw, 8dvh)',
+        height: 'max(6dvw, 8dvh)',
     }
 }
 
@@ -300,8 +301,8 @@ class Board extends Component {
             value={this._getBracketValue(is_left)}
             style={{
                 left: left_position + 'px',
-                width: '3vw',
-                height: '6vw',
+                width: 'max(3dvw, 4dvh)',
+                height: 'max(6dvw, 8dvh)',
             }}
             onClick={
                 () => this.handleDormantBracketClick(is_left)
@@ -320,8 +321,8 @@ class Board extends Component {
             value={this._getBracketValue(is_left)}
             style={{
                 left: left_position + 'px',
-                width: '3vw',
-                height: '6vw',
+                width: 'max(3dvw, 4dvh)',
+                height: 'max(6dvw, 8dvh)',
             }}
             onClick={
                 () => this.handleWaitingClick()

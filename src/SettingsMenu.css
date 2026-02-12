@@ -1,7 +1,7 @@
 .settings-container {
     position: fixed;
-    top: 5vh;
-    left: 5vh;
+    top: min(5vh, 3.75vw);
+    left: min(5vh, 3.75vw);
     z-index: 1000;
 }
 
@@ -9,16 +9,16 @@
     position: relative;
     top: 0;
     left: 0;
-    width: 10vh;
-    height: 10vh;
+    width: min(10vh, 7.5vw);
+    height: min(10vh, 7.5vw);
     background-color: rgba(255, 255, 255, 0.8);
     border: none;
-    border-radius: 1vh;
+    border-radius: min(1vh, 0.75vw);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.2);
+    box-shadow: 0 min(.5vh, 0.375vw) min(1vh, 0.75vw) rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
     color: #333;
 }
@@ -26,16 +26,16 @@
 .settings-button:hover {
     transform: scale(1.1);
     background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 1vh 2vh rgba(0, 0, 0, 0.3);
+    box-shadow: 0 min(1vh, 0.75vw) min(2vh, 1.5vw) rgba(0, 0, 0, 0.3);
 }
 
 .settings-icon {
-    font-size: 5vh;
+    font-size: min(5vh, 3.75vw);
     display: inline-block;
 }
 
 .close-icon {
-    font-size: 4vh;
+    font-size: min(3.5vh, 2.6vw);
     display: inline-block;
     font-weight: bold;
 }
@@ -65,17 +65,17 @@
 
 .settings-panel {
     background-color: white;
-    border-radius: 2vh;
-    padding: 3vh 4vh;
-    min-width: 50vh;
-    max-width: 80vh;
-    box-shadow: 0 2vh 4vh rgba(0, 0, 0, 0.3);
+    border-radius: min(2vh, 1.5vw);
+    padding: min(3vh, 2.25vw) min(4vh, 3vw);
+    min-width: min(50vh, 37.5vw);
+    max-width: min(80vh, 60vw);
+    box-shadow: 0 min(2vh, 1.5vw) min(4vh, 3vw) rgba(0, 0, 0, 0.3);
     animation: slideIn 0.3s ease;
 }
 
 @keyframes slideIn {
     from {
-        transform: translateY(-5vh);
+        transform: translateY(min(-5vh, -3.75vw));
         opacity: 0;
     }
     to {
@@ -88,14 +88,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3vh;
+    margin-bottom: min(3vh, 2.25vw);
     border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 2vh;
+    padding-bottom: min(2vh, 1.5vw);
 }
 
 .settings-header h2 {
     margin: 0;
-    font-size: 4vh;
+    font-size: min(3.5vh, 2.6vw);
     font-family: 'Inter', sans-serif;
     color: #333;
 }
@@ -104,11 +104,11 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 1vh;
+    padding: min(1vh, 0.75vw);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5vh;
+    border-radius: min(0.5vh, 0.375vw);
     transition: background-color 0.2s ease;
     color: #666;
 }
@@ -121,28 +121,28 @@
 .settings-content {
     display: flex;
     flex-direction: column;
-    gap: 3vh;
+    gap: min(3vh, 2.25vw);
 }
 
 .setting-item {
     display: flex;
     flex-direction: column;
-    gap: 1vh;
+    gap: min(1vh, 0.75vw);
 }
 
 .setting-item label {
-    font-size: 3vh;
+    font-size: min(2.5vh, 1.9vw);
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     color: #333;
 }
 
 .rounds-input {
-    padding: 1.5vh 2vh;
-    font-size: 3vh;
+    padding: min(1.5vh, 1.1vw) min(2vh, 1.5vw);
+    font-size: min(2.5vh, 1.9vw);
     font-family: 'Roboto Mono', monospace;
     border: 2px solid #e0e0e0;
-    border-radius: 1vh;
+    border-radius: min(1vh, 0.75vw);
     background-color: #f5f5f5;
     transition: all 0.2s ease;
 }
@@ -156,11 +156,11 @@
 }
 
 .background-select {
-    padding: 1.5vh 2vh;
-    font-size: 3vh;
+    padding: min(1.5vh, 1.1vw) min(2vh, 1.5vw);
+    font-size: min(2.5vh, 1.9vw);
     font-family: 'Inter', sans-serif;
     border: 2px solid #e0e0e0;
-    border-radius: 1vh;
+    border-radius: min(1vh, 0.75vw);
     background-color: #f5f5f5;
     cursor: pointer;
     transition: all 0.2s ease;

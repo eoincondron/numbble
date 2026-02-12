@@ -356,12 +356,11 @@ export function SessionScore(props) {
     const currentScore = props.totalScore + props.gameScore;
     return (
         <div className='session-score'>
-            <div className="session-score-title">Score</div>
-            <div className="session-score-points">{currentScore}</div>
-            <div className="session-score-round">Round {props.currentRound}/{props.totalRounds}</div>
-            {props.totalScore > 0 && (
-                <div className="session-score-session">Session: {props.totalScore}</div>
-            )}
+            <span className="session-score-label">Score:</span>
+            <span className="session-score-value">{currentScore}</span>
+            <span className="session-score-separator">|</span>
+            <span className="session-score-label">Round:</span>
+            <span className="session-score-value">{props.currentRound}/{props.totalRounds}</span>
         </div>
     );
 }

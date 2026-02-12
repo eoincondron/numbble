@@ -33,7 +33,7 @@ const OP_SCORES = {
 };
 const NUMBERS = '0123456789'.split('');
 const BRACKETS = [L_BRACKET, R_BRACKET]
-const NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*'])
+const NUMERICAL_STRINGS = NUMBERS.concat(BRACKETS).concat(['*', DECIMAL_POINT])
 
 
 function random_digit(max) {
@@ -42,7 +42,7 @@ function random_digit(max) {
 
 
 function is_num_string(string) {
-    // Check if a string contains digits only characters that can live in a number tile space,
+    // Check if a string contains only characters that can live in a number tile space,
     // i.e., digits, brackets and exponents
     // Feels like this should be easier but functions like Number do not handle empty strings and '+'
     // the way we want
